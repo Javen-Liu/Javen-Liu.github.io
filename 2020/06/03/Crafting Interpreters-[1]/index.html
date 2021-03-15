@@ -1,194 +1,25 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Crafting Interpreters -  Introduction | Into the Matrix</title><meta name="description" content="Crafting Interpreters - [1-1] Introduction介绍 童话故事比事实更有用，不是因为故事告诉我们龙存在，而是因为这些故事让我们明白，龙是可以被打败的 ​"><meta name="keywords" content="Crafting Interpreters"><meta name="author" content="Javen-Liu"><meta name="copyright" content="Javen-Liu"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/Flickr.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://hm.baidu.com"/><link rel="dns-prefetch" href="https://hm.baidu.com"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><link rel="dns-prefetch" href="https://fonts.googleapis.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="dns-prefetch" href="//busuanzi.ibruce.info"/><meta name="baidu-site-verification" content="1quvJQkaYT3evaaS"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Crafting Interpreters -  Introduction"><meta name="twitter:description" content="Crafting Interpreters - [1-1] Introduction介绍 童话故事比事实更有用，不是因为故事告诉我们龙存在，而是因为这些故事让我们明白，龙是可以被打败的 ​"><meta name="twitter:image" content="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-6-3-1591197410391.png"><meta property="og:type" content="article"><meta property="og:title" content="Crafting Interpreters -  Introduction"><meta property="og:url" content="https://javen-liu.github.io/2020/06/03/Crafting%20Interpreters-[1]/"><meta property="og:site_name" content="Into the Matrix"><meta property="og:description" content="Crafting Interpreters - [1-1] Introduction介绍 童话故事比事实更有用，不是因为故事告诉我们龙存在，而是因为这些故事让我们明白，龙是可以被打败的 ​"><meta property="og:image" content="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-6-3-1591197410391.png"><meta property="article:published_time" content="2020-06-03T15:19:00.000Z"><meta property="article:modified_time" content="2020-06-04T09:26:04.581Z"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = 'false'
-var t = Cookies.get("theme")
-if (autoChangeMode == '1'){
-  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
-  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
-  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+extends includes/layout.pug
 
-  if (t === undefined){
-    if (isLightMode) activateLightMode()
-    else if (isDarkMode) activateDarkMode()
-    else if (isNotSpecified || hasNoSupport){
-      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
-      var now = new Date()
-      var hour = now.getHours()
-      var isNight = hour < 6 || hour >= 18
-      isNight ? activateDarkMode() : activateLightMode()
-  }
-  } else if (t == 'light') activateLightMode()
-  else activateDarkMode()
+block content
+  article#post(class="")
+    #article-container.post-content!=page.content
+    include includes/post/post-copyright.pug
+    .tag_share
+      if (theme.post_meta.post.tags)
+        .post-meta__tag-list
+          each item, index in page.tags.data
+            a(href=url_for(item.path)).post-meta__tags #[=item.name]
+      !=partial('includes/share/index', {}, {cache:theme.fragment_cache})
+        
+    if theme.reward.enable
+      !=partial('includes/post/reward', {}, {cache:theme.fragment_cache})
 
-} else if (autoChangeMode == '2'){
-  now = new Date();
-  hour = now.getHours();
-  isNight = hour < 6 || hour >= 18
-  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
-  else if (t === 'light') activateLightMode()
-  else activateDarkMode() 
-} else {
-  if ( t == 'dark' ) activateDarkMode()
-  else if ( t == 'light') activateLightMode()
-}
+    //- ad
+    if theme.ad && theme.ad.post
+      .post-ad!=theme.ad.post
 
-function activateDarkMode(){
-  document.documentElement.setAttribute('data-theme', 'dark')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
-  }
-}
-function activateLightMode(){
-  document.documentElement.setAttribute('data-theme', 'light')
-  if (document.querySelector('meta[name="theme-color"]') !== null){
-  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
-  }
-}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css"><link rel="canonical" href="https://javen-liu.github.io/2020/06/03/Crafting%20Interpreters-[1]/"><link rel="prev" title="Crafting Interpreters -  A Map of the Territory" href="https://javen-liu.github.io/2020/06/04/Crafting%20Interpreters-[2]/"><link rel="next" title="leetcode-31 next permutation" href="https://javen-liu.github.io/2020/05/12/[leetcode]-31%20next%20permutation/"><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?da9e9551b8bd3e9ae9c4cbb811816c40";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
-  copy: {
-    success: '复制成功',
-    error: '复制错误',
-    noSupport: '浏览器不支持'
-  },
-  bookmark: {
-    message_prev: '按',
-    message_next: '键将本页加入书签'
-  },
-  runtime_unit: '天',
-  runtime: true,
-  copyright: undefined,
-  ClickShowText: undefined,
-  medium_zoom: true,
-  fancybox: false,
-  Snackbar: {"bookmark":{"message_prev":"按","message_next":"键将本页加入书签"},"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#2d3035","position":"top-right"},
-  baiduPush: false,
-  highlightCopy: true,
-  highlightLang: true,
-  highlightShrink: 'none',
-  isFontAwesomeV5: true,
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isanchor: true
-  
-}</script><script>var GLOBAL_CONFIG_SITE = { 
-  isPost: true,
-  isHome: false,
-  isSidebar: true  
-  }</script><noscript><style>
-#page-header {
-  opacity: 1
-}
-.justified-gallery img{
-  opacity: 1
-}
-</style></noscript><meta name="generator" content="Hexo 4.2.1"></head><body><canvas class="fireworks"></canvas><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/dog.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">33</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">23</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">11</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 留言</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Crafting-Interpreters-1-1-Introduction"><span class="toc-number">1.</span> <span class="toc-text">Crafting Interpreters - [1-1] Introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#介绍"><span class="toc-number">1.1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-为什么学习这些东西？"><span class="toc-number">1.2.</span> <span class="toc-text">1.1 为什么学习这些东西？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-1-“Little-Language”到处都是"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1.1 “Little Language”到处都是</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-2-语言是很好的实践"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.1.2 语言是很好的实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-3-最后一个理由"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.1.3 最后一个理由</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-这本书的构成"><span class="toc-number">1.3.</span> <span class="toc-text">1.2 这本书的构成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-1-The-code（代码）"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.2.1 The code（代码）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-2-小片段"><span class="toc-number">1.3.2.</span> <span class="toc-text">1.2.2 小片段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-3-此外"><span class="toc-number">1.3.3.</span> <span class="toc-text">1.2.3 此外</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-4-挑战"><span class="toc-number">1.3.4.</span> <span class="toc-text">1.2.4 挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-5-设计笔记"><span class="toc-number">1.3.5.</span> <span class="toc-text">1.2.5 设计笔记</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-3-第一个解释器"><span class="toc-number">1.4.</span> <span class="toc-text">1.3 第一个解释器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-4-第二个解释器"><span class="toc-number">1.5.</span> <span class="toc-text">1.4 第二个解释器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DESIGN-NOTE"><span class="toc-number">1.6.</span> <span class="toc-text">DESIGN NOTE</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-6-3-1591197410391.png)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Into the Matrix</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 留言</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">Crafting Interpreters -  Introduction</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date"><span class="post-meta__date-created" title="发表于 2020-06-03 23:19:00"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2020-06-03</span><span class="post-meta__separator">|</span><span class="post-meta__date-updated" title="更新于 2020-06-04 17:26:04"><i class="fa fa-history" aria-hidden="true"></i> 更新于 2020-06-04</span></time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Crafting-Interpreters/">Crafting Interpreters</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="fa fa-eye post-meta__icon" aria-hidden="true"> </i><span>阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="Crafting-Interpreters-1-1-Introduction"><a href="#Crafting-Interpreters-1-1-Introduction" class="headerlink" title="Crafting Interpreters - [1-1] Introduction"></a>Crafting Interpreters - [1-1] Introduction</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><blockquote>
-<p>童话故事比事实更有用，不是因为故事告诉我们龙存在，而是因为这些故事让我们明白，龙是可以被打败的</p>
-<p>​                                                                                                                                    - Neil Gaiman, Coraline</p>
-</blockquote>
-<p>我非常高兴我们可以一起走进这一段旅程。这是一本关于实现编程语言解释器的数；同时是一本关于设计一门值得实现的语言的书；也是一本我希望我在第一次接触到编程语言时就有的书；更是一本在将近十年里写在我脑子中的一本书。</p>
-<p>在这本书中，我们将要一步步地走进两个功能齐全的语言解释器。我假设这是你第一次涉足语言，所以我会介绍构建完整、可用、快速语言实现所需的每个概念和代码行。</p>
-<p>为了将两个语言解释器放入到一本书中，并不使其成为《XXX从入门到放弃》（笑），这些语言词汇在概念上会比其他的书要更加浅显一些。在我们构建这个系统的每一块时，我都会介绍其背后的历史和概念。我会尝试带你熟悉这些词汇术语，这样，当你参加全是编程语言研究人员的party时，你会很自然地混入其中，当（至少装作）大佬。</p>
-<p>但我们很大概率会绞尽脑汁地理解这些，以让我们的语言活起来，跑起来。这并不是说理论不重要，当学习一门语言时，能够准确且正式地推理语法和语义是一项很重要的技能。但是我个人还是在实践中学的最快（me too），对我来说理解充满了抽象概念的书本并吸收它实在太hard了。但是当我码了些东西，让它运行起来，并debug它，慢慢地我就开始理解并get到点了。</p>
-<p>对于读者们，这就是我的目标。我希望你在阶数这段旅程时，可以带着明白一个真正的语言如何生存和呼吸（就是如何构成，运作）离开。我的愿望也是当你去阅读其他更加理论、专业的书籍时，那里的概念将牢牢地粘在你的脑海里，粘在这个有形的基础上。</p>
-<h2 id="1-1-为什么学习这些东西？"><a href="#1-1-为什么学习这些东西？" class="headerlink" title="1.1 为什么学习这些东西？"></a>1.1 为什么学习这些东西？</h2><p>似乎每一本关于编程语言书的简介都有这部分，我不知道是什么编程语言导致了这种存在性的怀疑。同样我也不认为关于鸟类学的书担心证明其存在的合理性。他们假设读者喜欢鸟儿并且开始行动。</p>
-<p>但是编程语言则有点不一样。我想，我们创造出一种广泛成功的通用编程语言的可能性是很小的。世界上广泛使用的语言的设计者们可以在一辆大众汽车上安装这些语言，甚至不需要把蓬顶帐篷竖起来。如果加入精英团体是学习一门编程语言的唯一理由，那就很难说了。但幸运的是，并不是这样的。</p>
-<h3 id="1-1-1-“Little-Language”到处都是"><a href="#1-1-1-“Little-Language”到处都是" class="headerlink" title="1.1.1 “Little Language”到处都是"></a>1.1.1 “Little Language”到处都是</h3><p>每一种成功的通用语言背后，都有上千种成功的小众语言。我们习惯称他们是“Little Language”（小众语言？），但是，术语经济中的通货膨胀导致了今天的名称领域特定的语言。这些是为特定任务定制的pidgins。比如应用程序脚本语言、模板引擎、标记格式和配置文件。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200603214600.png" alt=""></p>
-<p>几乎每个大型软件工程都需要很多这些小语言。当你有选择时，使用已经存在的语言比你自己造一个语言要更容易些。一旦你将文档、调试器、编辑器支持、语法高亮和所以的其他问题考虑进来时，自己造一个语言轮子简直是难得有些离谱。</p>
-<p>但是自己造轮子还是有些好处的，尤其是当你发现你需要一个解析器或者满足你需求的东西不存在时，甚至就算有可以重用的，你也不可避免的要去调试和维护，并对其进行深入的研究。</p>
-<h3 id="1-1-2-语言是很好的实践"><a href="#1-1-2-语言是很好的实践" class="headerlink" title="1.1.2 语言是很好的实践"></a>1.1.2 语言是很好的实践</h3><p>长跑选手们有时在膝盖上添加负重来进行负重训练或者到海拔高度很高、大气层稀薄的地方进行训练。当他们不再有这些限制他们的条条框框时，在轻装上阵并且氧气充足的地方时，他们能跑的比以前更快。</p>
-<p>实现一个语言是对编程能力的一大考验，代码很复杂，表现性能也很关键。你必须掌握递归、动态数组、树、图、哈希表这些知识。你可能每天都至少会用到一次哈希表，但你真的理解哈希表以及其内部的原理吗？不过，当我们从头开始制作这些之后，我保证你能懂的。</p>
-<p>虽然我试图想表达编程语言并不像你想象的那样困难，但它对于每个人来说仍然是个挑战。面对它，你会成为一个更加强大的程序员，并能更加聪明地在日常生活中使用数据结构和算法。</p>
-<h3 id="1-1-3-最后一个理由"><a href="#1-1-3-最后一个理由" class="headerlink" title="1.1.3 最后一个理由"></a>1.1.3 最后一个理由</h3><p>最后一个理由虽然我不想承认，但是它确实是我所想的。当我还是一个孩子的时候，我认为编程语言非常的神奇。当我第一次按一个键打开BASIC程序时，我无法想象BASIC本身是如何形成的。</p>
-<p>后来，我的大学朋友们在提到他们的编译器课程时，既敬畏又恐惧，这足以让我相信语言黑客（或者说研究这些计算机编程语言的人）是另一种人类（不做人）。某些巫师被授予接触神秘艺术的特权！</p>
-<p>这是一个迷人的形象，但也有黑暗的一面。我觉得自己不像个巫师，所以我觉得自己缺乏加入阴谋集团所必需的与生俱来的品质。虽然从我在笔记本上乱涂乱画关键词开始，我就对语言着迷了，但我还是花了几十年的时间才鼓起勇气去真正地学习它们。那种不可思议的特质，那种排他感，把我拒之门外。</p>
-<p>当我最终开始拼凑我自己的小解释器时，我很快就明白了，根本没有什么魔法。它只是代码，而破解语言的人只是人。</p>
-<p>有一些技术是你在语言之外不常遇到的，而且有些部分有些困难。但并不比你所克服的其他障碍更难。我希望，如果你对语言感到恐惧，这本书可以帮助你克服这种恐惧，也许我会让你比以前更勇敢一点。</p>
-<p>谁知道呢，或许你就可以创造出下一个伟大的语言！一定会有人做到的</p>
-<h2 id="1-2-这本书的构成"><a href="#1-2-这本书的构成" class="headerlink" title="1.2 这本书的构成"></a>1.2 这本书的构成</h2><p>这本书分为了三个部分，而你正在读的就是第一部分。我用了几章来引导你，教你一些黑客（神仙）使用的行话，并向您介绍Lox，我们将实现的语言。</p>
-<p>其他两个部分分别构建了一个完整的LOX解释器。在这些部分中，每个章节的结构都是一样的。每一个都完成了一个单一的功能，告诉你其中的概念，并带你走过其实现的每一步。在我这方面，我花了不少时间反复试验，但我还是成功地将两个解释器分割成章节大小的块，这样每个解释器都可以在前面的解释器的基础上进行构建。从第一章开始，你就会有一个可以运行和玩的程序。随着每一个章节的结束，它的功能会越来越丰富，直到你最终完成了一门完整的语言。</p>
-<p>除了丰富的，闪烁的英语散文，章节有其他一些愉快的方面：</p>
-<h3 id="1-2-1-The-code（代码）"><a href="#1-2-1-The-code（代码）" class="headerlink" title="1.2.1 The code（代码）"></a>1.2.1 The code（代码）</h3><p>我们是关于制作解释器的，所以这本书包含了真正的代码。需要的每一行代码都包括在内，并且每个代码片段都告诉你在不断增长的实现中插入代码的位置。</p>
-<p>许多其他的语言书籍和语言实现都使用Lex和Yacc这样的工具，编译器-编译器自动地从一些更高级的描述生成一些实现的源文件。这类工具有利有弊，有些人可能会说双方都有强烈的宗教信仰。</p>
-<p>我们将拒绝使用这些工具。我希望的是确保没有魔法和困惑所藏匿的黑暗角落存在，所以我们将完全靠自己手把手地写出所有东西。如你所见，似乎并听起来没有那么糟糕，并且意味着你将明白代码中每一行的意思，理解每个解释器如何工作的。</p>
-<p>一本书有不同于现实世界的约束，因此这里的编码风格可能并不总是反映编写可维护的生产软件的最佳方式。如果我对省略private或声明全局变量显得有些漫不经心，请理解我这样做是为了让你更容易地理解代码。这里的页面没有IDE那么宽，每个字符都很重要。</p>
-<p>另外，该代码没有太多注释。 那是因为每一行都由几段诚实到上帝的散文来解释。 当你编写一本书以伴随您的程序时，也欢迎你省略评论。 否则，你应该比我多使用//（注释）。</p>
-<p>本书没有包含编译和运行代码所需的机制。我假设你可以在您选择的IDE中拼凑一个makefile或一个项目，以便让代码运行。</p>
-<h3 id="1-2-2-小片段"><a href="#1-2-2-小片段" class="headerlink" title="1.2.2 小片段"></a>1.2.2 小片段</h3><p>由于该书包含了实现所需的每一行代码，所以代码片段非常精确。此外，即使解释器已经实现了一半，但我为了试图保持程序处于可运行状态，所以添加临时代码，这些代码将在以后的代码片段中替换。</p>
-<p>包含所有附加功能的代码片段是这样的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">default</span>:</span><br><span class="line">	<span class="keyword">if</span> (isDigit(c)) &#123;</span><br><span class="line">        number();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        Lox.error(line, <span class="string">"Unexpected character."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
-
-<p>在中间，你可以在这个代码片段中添加新代码。它可能会在上面或下面有一些淡出的行，向你显示在现有代码中插入它的位置。还有一个小的简介告诉你文件的位置。如果它说的是替换行，那么在褪色的行之间有一些先前的代码，你需要用这个代码片段来删除和替换。</p>
-<h3 id="1-2-3-此外"><a href="#1-2-3-此外" class="headerlink" title="1.2.3 此外"></a>1.2.3 此外</h3><p>除此之外，还包括生平简介，历史背景，相关主题的参考文献，以及其他领域的探索建议。书中没有什么内容是你需要知道这些生平简介之类的才能理解的，所以你可以跳过它们。我不会多说别的，但是跳过这些我可能会有点难过和失望的。</p>
-<h3 id="1-2-4-挑战"><a href="#1-2-4-挑战" class="headerlink" title="1.2.4 挑战"></a>1.2.4 挑战</h3><p>每一章节结尾都会有少许练习。不像教科书上的习题集，它倾向于重述你已经学过的内容那样，这些练习是为了帮助你学到比这一章更多的东西。它们迫使你离开规划好的线路，让你自己去探索，会让你研究其他语言，弄清楚如何实现特性，或者让你自己去创造。</p>
-<p>战胜他们，你会对他们有更广泛的了解，可能还会遇到一些磕磕碰碰。如果你想待在旅游巴士舒适的范围内，也可以跳过它们。这是你的书，所以你来决定。</p>
-<h3 id="1-2-5-设计笔记"><a href="#1-2-5-设计笔记" class="headerlink" title="1.2.5 设计笔记"></a>1.2.5 设计笔记</h3><p>大多数编程语言书籍都是严格意义上的编程语言实现书籍。他们很少讨论如何设计正在实现的语言。实现非常有趣，因为它的定义非常精确。我们程序员似乎对黑与白、1与0有一种亲和感（同感）。</p>
-<p>就我个人而言，我认为世界只需要这么多fortran77的实现。有时候，你会发现自己在设计一种新的语言。一旦你开始玩这个有趣的游戏，那么等式中更温和、更人性化的一面就变得至关重要。比如什么功能容易学习，如何平衡创新和熟悉度，什么语法更容易读，对谁更容易。</p>
-<p>所有这些都深刻地影响着你的新语言的成功。我希望你们的语言能够成功，所以在一些章节中，我以一个设计笔记，一篇关于编程语言的人性方面的小短文作为结尾。我不是这方面的专家，我不知道是否有人真的是这样的，所以要对这些持保留态度。这应该会让它们成为更美味的精神食粮，这是我的主要目标。</p>
-<h2 id="1-3-第一个解释器"><a href="#1-3-第一个解释器" class="headerlink" title="1.3 第一个解释器"></a>1.3 第一个解释器</h2><p>我们将用Java编写第一个解释器jlox。 重点是概念。 我们将编写最简单，最简洁的代码，以正确实现该语言的语义。 这将使我们熟悉基本技术，并磨练对语言的确切理解。</p>
-<p>Java是一种很棒的语言。 因为其是高级语言，为我们屏蔽了底层原理，所以我们不会被繁琐的实施细节所淹没。 与脚本语言不同的是，它的底层没有那么神奇，你可以使用静态类型来查看正在处理的数据结构</p>
-<p>我还特意选择了它，因为它是一种面向对象的语言。这种模式在90年代席卷了编程界，现在是数百万程序员的主要思维方式。很有可能你已经习惯了把东西组织成类和方法，所以我们会让你保持舒适区。</p>
-<p>尽管学术语言人员有时会鄙视面向对象的语言，但事实是，它们甚至被广泛用于语言工作。 与大多数JavaScript虚拟机一样，GCC和LLVM用C ++编写。 面向对象的语言无处不在，并且针对该语言的工具和编译器通常使用相同的语言编写。</p>
-<p>最后，Java非常流行。这意味着很有可能你已经知道了，所以在书中你需要学习的东西就少了。如果你对Java不是很熟悉，不要惊慌。我尽量保持它的最小子集。我使用Java 7中的diamond操作符使事情更简洁一些，但这就是高级特性的全部内容。如果你了解另一种面向对象的语言，如c#或c++，你可能会应付得很好。</p>
-<p>在第2部分结束时，我们将有一个简单的、可读的实现。我们还没有实现的只是其运行更快的版本。它也依赖于Java虚拟机的运行时功能，但是我们想了解Java本身是如何实现这些功能的。</p>
-<h2 id="1-4-第二个解释器"><a href="#1-4-第二个解释器" class="headerlink" title="1.4 第二个解释器"></a>1.4 第二个解释器</h2><p>所以在下一部分中，我们将重新开始，但这次是用C语言，C语言是理解实现如何真正工作的最佳语言，一直到内存中的字节和流经CPU的代码。</p>
-<p>我们使用C的一个重要原因是这样我可以向你展示C特别擅长的东西，但这确实意味着你需要非常熟练地使用它。你不必成为丹尼斯·里奇的转世，但你也不应该被指针吓到。</p>
-<blockquote>
-<p>ps：丹尼斯·里奇，Dennis Ritchie，c语言之父，UNIX之父，其与布莱恩·科尔尼干（Brian W. Kernighan）一起出版了名著《C程序设计语言（The C Programming Language）》，被誉为C语言的圣经。</p>
-</blockquote>
-<p>如果你还没到那一步，拿起一本关于C语言的入门书，细细咀嚼，读完后再回到这里。作为回报，你会通过这本书中变成一个更强的C程序员。考虑到Lua、CPython和Ruby s MRI等很多语言实现是用C语言编写的，所以学习这是很有用。</p>
-<p>在我们的C解释器clox中，我们被迫自己实现Java免费提供给我们的所有东西。我们将编写自己的动态数组和哈希表。我们将决定对象在内存中是如何表示的，并构建一个垃圾收集器来回收它。</p>
-<p>我们的Java实现关注的是正确，即跑起来即可。现在我们已经完成了那一步，我们将转向实现更快速的版本。我们的C解释器将包含一个编译器，编译器将代码转换为高效的字节码表示(不用担心，我们很快就会进入了解是什么意思)，然后执行。Lua、Python、Ruby、PHP和许多其他成功语言的实现都使用了相同的技术。</p>
-<p>我们甚至会尝试基准测试和优化。到最后，我们将拥有一个健壮、准确、快速的语言解释器，能够跟上其他专业水准的实现。对于一本书和几千行代码来说，这已经很不错了。</p>
-<h2 id="DESIGN-NOTE"><a href="#DESIGN-NOTE" class="headerlink" title="DESIGN NOTE"></a>DESIGN NOTE</h2><p>语言命名中有什么注意的地方？</p>
-<p>编写本书时，最困难的挑战之一是为它所实现的语言起一个名字。我看了好几页的候选人名单才找到一个合适的。在开始构建自己的语言的第一天，你就会发现，命名非常困难。好名字满足下面几个条件：</p>
-<ol>
-<li>它没有被使用过。如果你不小心踩到别人的名字，你可能会遇到各种各样的麻烦，包括法律上的和社会上的。</li>
-<li>它很容易发音。如果一切顺利，很多开发者都会使用并谈论你的语言名字。任何超过几个音节或几个字母的单词都会让他们烦恼不已。</li>
-<li>它很特别，以至于可以很有区分度地让人们搜索到。人们会通过你的语言名称来找到相应的文档，所以你需要一个足够罕见的词，让搜索中大多数结果都会指向你的文档。不过，鉴于如今大多数搜索引擎都充斥着大量人工智能，这倒不是什么大问题。尽管如此，如果你给自己的语言命名为 for，那恐怕用户找一年都找不到你的文档。</li>
-<li>它在很多文化中并没有负面的含义。这很难避免啊，但值得考虑。“Nimrod”的设计者最终将他的语言重新命名为“Nim”，因为太多的人只记得“兔八哥”用“Nimrod”作为一种侮辱。</li>
-</ol>
-<p>如果你的名字符合上面的条件，那就选用吧。不过不要纠结于寻找一个能够抓住你语言精髓的称谓。如果说世界上其他成功的语言教会了我们什么的话，那就是它们的名字并不重要。你所需要的只是一个合理的惟一标记。</p>
-<blockquote>
-<p>原文链接：<a href="https://www.craftinginterpreters.com/introduction.html" target="_blank" rel="noopener">Introduction</a></p>
-<p>阅读并翻译者：Javen Liu</p>
-</blockquote>
-</div><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Javen-Liu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://javen-liu.github.io/2020/06/03/Crafting%20Interpreters-[1]/">https://javen-liu.github.io/2020/06/03/Crafting%20Interpreters-[1]/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://javen-liu.github.io" target="_blank">Into the Matrix</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%A7%A3%E9%87%8A%E5%99%A8/">解释器</a><a class="post-meta__tags" href="/tags/%E5%A4%96%E6%96%87%E4%B9%A6%E7%B1%8D/">外文书籍</a><a class="post-meta__tags" href="/tags/Crafting-Interpreters/">Crafting Interpreters</a></div><div class="post_share"><div class="social-share" data-image="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200830131154_1.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="post-qr-code__img" src="/img/wechat.png" alt="微信"/><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="post-qr-code__img" src="/img/alipay.jpg" alt="支付宝"/><div class="post-qr-code__desc">支付宝</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2020/06/04/Crafting%20Interpreters-%5B2%5D/"><img class="prev_cover" src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-6-3-1591197410391.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Crafting Interpreters -  A Map of the Territory</div></div></a></div><div class="next-post pull_right"><a href="/2020/05/12/%5Bleetcode%5D-31%20next%20permutation/"><img class="next_cover" src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/leetcode.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">leetcode-31 next permutation</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/06/04/Crafting Interpreters-[2]/" title="Crafting Interpreters -  A Map of the Territory"><img class="relatedPosts_cover" src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-6-3-1591197410391.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-04</div><div class="relatedPosts_title">Crafting Interpreters -  A Map of the Territory</div></div></a></div><div class="relatedPosts_item"><a href="/2020/07/14/Crafting Interpreters-[3]/" title="Crafting Interpreters -  The Lox Language"><img class="relatedPosts_cover" src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-6-3-1591197410391.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-07-14</div><div class="relatedPosts_title">Crafting Interpreters -  The Lox Language</div></div></a></div></div><div class="clear_both"></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fa fa-comments fa-fw" aria-hidden="true"></i><span> 评论</span></div><div class="vcomment" id="vcomment"></div><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var requestSetting = function (from,set) {
-  var from = from
-  var setting = set.split(',').filter(function(item){
-  return from.indexOf(item) > -1
-  });
-  setting = setting.length == 0 ? from :setting;
-  return setting
-}
-
-var guestInfo = requestSetting(['nick','mail','link'],'nick,mail,link')
-var requiredFields = requestSetting(['nick','mail','link'],'nick,mail')
-
-window.valine = new Valine({
-  el:'#vcomment',
-  appId: 'BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz',
-  appKey: 'zUznNRS8dG9TQFJI3lQ181VE',
-  notify: false,
-  verify: false,
-  placeholder: '留下你的足迹吧',
-  avatar: 'robohash',
-  meta: guestInfo,
-  pageSize: '10',
-  lang: 'zh-CN',
-  recordIP: false,
-  serverURLs: '',
-  emojiCDN: 'https://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/',
-  emojiMaps: {"tv_doge":"6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png","tv_亲亲":"a8111ad55953ef5e3be3327ef94eb4a39d535d06.png","tv_偷笑":"bb690d4107620f1c15cff29509db529a73aee261.png","tv_再见":"180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png","tv_冷漠":"b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png","tv_发怒":"34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png","tv_发财":"34db290afd2963723c6eb3c4560667db7253a21a.png","tv_可爱":"9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png","tv_吐血":"09dd16a7aa59b77baa1155d47484409624470c77.png","tv_呆":"fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png","tv_呕吐":"9f996894a39e282ccf5e66856af49483f81870f3.png","tv_困":"241ee304e44c0af029adceb294399391e4737ef2.png","tv_坏笑":"1f0b87f731a671079842116e0991c91c2c88645a.png","tv_大佬":"093c1e2c490161aca397afc45573c877cdead616.png","tv_大哭":"23269aeb35f99daee28dda129676f6e9ea87934f.png","tv_委屈":"d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png","tv_害羞":"a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png","tv_尴尬":"7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png","tv_微笑":"70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png","tv_思考":"90cf159733e558137ed20aa04d09964436f618a1.png","tv_惊吓":"0d15c7e2ee58e935adc6a7193ee042388adc22af.png"},
-  enableQQ: true,
-  requiredFields: requiredFields
-});</script></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2020 By Javen-Liu</div><div class="framework-info"><span>驱动 </span><a href="https://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly" target="_blank" rel="noopener"><span>Butterfly</span></a></div><div class="footer_custom_text">Let us make some noise <a href="https://jerryc.me/" target="_blank" rel="noopener">into the Matrix</a>!</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">簡</a><i class="darkmode far fa-moon" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fa fa-comments">  </i></a><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/medium-zoom/dist/medium-zoom.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="/js/third-party/fireworks.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script id="ribbon_piao" mobile="false" src="/js/third-party/piao.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@3/instantpage.min.js" type="module"></script></body></html>
+    include includes/pagination.pug
+    if theme.related_post && theme.related_post.enable
+      != related_posts(page,site.posts)
+    if page.comments !== false
+      include includes/comments/index.pug
