@@ -1,0 +1,5 @@
+baseURL = "http://example.org/"
+languageCode = "en-us"
+title = "Into The Matrix"
+theme = "m10c"
+baseUrl = "https://javen-liu.github.io/"

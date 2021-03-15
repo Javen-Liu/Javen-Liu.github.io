@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on Into The Matrix</title>
+    <link>https://javen-liu.github.io/tags/java/</link>
+    <description>Recent content in Java on Into The Matrix</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Dec 2019 19:34:06 +0000</lastBuildDate><atom:link href="https://javen-liu.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDEA热部署</title>
+      <link>https://javen-liu.github.io/post/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</guid>
+      <description>1. 引入spring-devtools 在项目的pom.xml文件中，添加spring-devtools的依赖
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-devtools&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; 同时在其中的标签的内添加
+&amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;fork&amp;gt;true&amp;lt;/fork&amp;gt; &amp;lt;/configuration&amp;gt; &amp;lt;/plugin&amp;gt; 2. 设置idea  在File =&amp;gt; Settings =&amp;gt; Build, Execution, Deployment =&amp;gt; Compiler 中勾选Build Project automatically   快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running  </description>
+    </item>
+    
+    <item>
+      <title>Java实现TCP / IP协议下的聊天室</title>
+      <link>https://javen-liu.github.io/post/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</guid>
+      <description>&lt;h1 id=&#34;java实现tcp--ip协议下的聊天室运用多线程&#34;&gt;Java实现TCP / IP协议下的聊天室（运用多线程）&lt;/h1&gt;
+&lt;p&gt;分为了6个文件，总共分为两个大块：其中一个为Client客户端，另一个是Server服务器端，每一个大块里分别有主运行块以及发送和接受模块，然后用多线程来实现实时的收和发&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】1.策略模式</title>
+      <link>https://javen-liu.github.io/post/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式1策略模式&#34;&gt;【Java设计模式】1.策略模式&lt;/h1&gt;
+&lt;h1 id=&#34;写在文章的最前面&#34;&gt;写在文章的最前面&lt;/h1&gt;
+&lt;p&gt;本人是java小白，自学没多久，在之前学校的课程中学习了java，并对java产生了一定的兴趣，不过只学习了一些最基本的语法。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】2.装饰者模式</title>
+      <link>https://javen-liu.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式2装饰者模式&#34;&gt;【Java设计模式】2.装饰者模式&lt;/h1&gt;
+&lt;h1 id=&#34;问题的引入&#34;&gt;问题的引入&lt;/h1&gt;
+&lt;p&gt;在本市最繁华的一条街上，开了一家星巴菲（没错，不是星巴克&lt;del&gt;为了避嫌&lt;/del&gt; ）。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】3.观察者模式</title>
+      <link>https://javen-liu.github.io/post/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式3观察者模式&#34;&gt;【Java设计模式】3.观察者模式&lt;/h1&gt;
+&lt;h1 id=&#34;问题的引入&#34;&gt;问题的引入&lt;/h1&gt;
+&lt;p&gt;前几天我们刚完成了制造&amp;quot;鸭子&amp;quot;以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】4.单件模式</title>
+      <link>https://javen-liu.github.io/post/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式4单件模式&#34;&gt;【Java设计模式】4.单件模式&lt;/h1&gt;
+&lt;h1 id=&#34;关于单件模式&#34;&gt;关于单件模式&lt;/h1&gt;
+&lt;p&gt;本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>会话技术</title>
+      <link>https://javen-liu.github.io/post/%E4%BC%9A%E8%AF%9D%E6%8A%80%E6%9C%AF/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E4%BC%9A%E8%AF%9D%E6%8A%80%E6%9C%AF/</guid>
+      <description>会话技术  会话：一次会话中包含多次请求和响应  一次会话：浏览器第一次给服务器资源发送请求，会话建立。直到有一方断开为止   功能：在一次会话的范围内，共享数据 方式：  客户端会话技术：Cookie 服务器会话技术：Session    1. Cookie 1.概念：客户端会话技术，将数据保存在客户端的技术 2.快速入门  使用步骤：  创建Cookie对象，绑定数据  new Cookie(String name,String value)   发送Cookie对象  response.addCookie(Cookie cookie)   获取Cookie对象，拿到数据  Cookierequest.getCookie( )      3.实现原理  基于响应头的set-cookie和请求头cookie实现  4.cookie的细节   一次可不可以发送多个cookie？
+ 可以 可以创建多个Cookie对象，使用response调用多次addcookie方法发送cookie即可    cookie在浏览器中保存多长时间？
+  默认情况下，当浏览器关闭时，Cookie数据被销毁
+  持久化储存
+ setMaxAge(int seconds)：  正数：将Cookie数据写到硬盘的文件中。持久化存储，cookie存活时间可设置 负数：默认值，存储在内存中，浏览器关闭cookie就销毁 零：删除cookie信息        cookie能不能存中文？</description>
+    </item>
+    
+    <item>
+      <title>经典生产者与消费者问题</title>
+      <link>https://javen-liu.github.io/post/%E7%BB%8F%E5%85%B8%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E7%BB%8F%E5%85%B8%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E9%97%AE%E9%A2%98/</guid>
+      <description>&lt;h1 id=&#34;经典生产者与消费者问题&#34;&gt;经典生产者与消费者问题&lt;/h1&gt;
+&lt;h2 id=&#34;1-问题的引入&#34;&gt;1. 问题的引入&lt;/h2&gt;
+&lt;p&gt;​	如同日常生活中一样，我们每天所消费的东西，都是生产部门进行生产，我们才有商品来进行消费。&lt;/p&gt;
+&lt;p&gt;​	那么就有一个很现实的问题，生产部门如果没有生产，我们是没有任何商品来消费的。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>运用线程池来查找含有指定字符的文件</title>
+      <link>https://javen-liu.github.io/post/%E8%BF%90%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E6%9F%A5%E6%89%BE%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%9A%84%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E8%BF%90%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E6%9F%A5%E6%89%BE%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%9A%84%E6%96%87%E4%BB%B6/</guid>
+      <description>&lt;h1 id=&#34;运用线程池来查找含有指定字符的文件&#34;&gt;运用线程池来查找含有指定字符的文件&lt;/h1&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

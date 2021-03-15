@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>设计模式 on Into The Matrix</title>
+    <link>https://javen-liu.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</link>
+    <description>Recent content in 设计模式 on Into The Matrix</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Dec 2019 19:34:06 +0000</lastBuildDate><atom:link href="https://javen-liu.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【Java设计模式】1.策略模式</title>
+      <link>https://javen-liu.github.io/post/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式1策略模式&#34;&gt;【Java设计模式】1.策略模式&lt;/h1&gt;
+&lt;h1 id=&#34;写在文章的最前面&#34;&gt;写在文章的最前面&lt;/h1&gt;
+&lt;p&gt;本人是java小白，自学没多久，在之前学校的课程中学习了java，并对java产生了一定的兴趣，不过只学习了一些最基本的语法。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】2.装饰者模式</title>
+      <link>https://javen-liu.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式2装饰者模式&#34;&gt;【Java设计模式】2.装饰者模式&lt;/h1&gt;
+&lt;h1 id=&#34;问题的引入&#34;&gt;问题的引入&lt;/h1&gt;
+&lt;p&gt;在本市最繁华的一条街上，开了一家星巴菲（没错，不是星巴克&lt;del&gt;为了避嫌&lt;/del&gt; ）。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】3.观察者模式</title>
+      <link>https://javen-liu.github.io/post/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式3观察者模式&#34;&gt;【Java设计模式】3.观察者模式&lt;/h1&gt;
+&lt;h1 id=&#34;问题的引入&#34;&gt;问题的引入&lt;/h1&gt;
+&lt;p&gt;前几天我们刚完成了制造&amp;quot;鸭子&amp;quot;以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>【Java设计模式】4.单件模式</title>
+      <link>https://javen-liu.github.io/post/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</guid>
+      <description>&lt;h1 id=&#34;java设计模式4单件模式&#34;&gt;【Java设计模式】4.单件模式&lt;/h1&gt;
+&lt;h1 id=&#34;关于单件模式&#34;&gt;关于单件模式&lt;/h1&gt;
+&lt;p&gt;本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

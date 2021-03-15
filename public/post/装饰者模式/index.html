@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>【Java设计模式】2.装饰者模式 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【Java设计模式】2.装饰者模式"/>
+<meta name="twitter:description" content="【Java设计模式】2.装饰者模式
+问题的引入
+在本市最繁华的一条街上，开了一家星巴菲（没错，不是星巴克为了避嫌 ）。"/>
+
+    <meta property="og:title" content="【Java设计模式】2.装饰者模式" />
+<meta property="og:description" content="【Java设计模式】2.装饰者模式
+问题的引入
+在本市最繁华的一条街上，开了一家星巴菲（没错，不是星巴克为了避嫌 ）。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">【Java设计模式】2.装饰者模式</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="java设计模式2装饰者模式">【Java设计模式】2.装饰者模式</h1>
+<h1 id="问题的引入">问题的引入</h1>
+<p>在本市最繁华的一条街上，开了一家星巴菲（没错，不是星巴克<del>为了避嫌</del> ）。</p>
+<p>这家星巴菲咖啡由于初来乍到，只能付费算账系统还未完善。不过，由于星巴菲的咖啡非常香醇、提神，并且价格优惠（简直就是教科书般的物美价廉），收到了广大上班族的推崇，甚至几个街区外的白领们宁愿上班多绕路来这里买咖啡，也不愿意去公司附近的开封菜去买 &ldquo;<strong>咖啡</strong>&rdquo; 。</p>
+<p>不久之后，每天早上店里都人满为患，也正是因为来的顾客太多，原来的人为计算最终咖啡加配料价格的方式显然不能满足快速的结账。</p>
+<p>所以，星巴菲的经理找到了你，也就是这个街区最优秀的程序员来帮他们设计这样一个结账结算系统。</p>
+<h2 id="首先进行系统框架的构思">首先进行系统框架的构思</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190219220653859.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" alt="最初的简单构思"></p>
+<p>可以看到，我们设计了一个Beverage类，有description变量，为字符串，用来记录这杯咖啡的类型，例如拿铁之类的。接着milk、soy、mocha以及whip为布尔值类型变量，其值代表了是否加入这些调料。下面的方法有得到这杯饮料的信息、计算整杯饮料的价钱以及给这杯饮料增加或删减调料。</p>
+<p>从目前来看，Beverage类里的成员变量以及所包含的方法可以满足最开始的要求，即根据一杯饮料以及其加的配料，可以得到最终这杯饮料的名称以及总价钱。</p>
+<p><strong>但是</strong>！如果一位顾客想要一杯<strong>加了双倍摩卡</strong>的咖啡，该怎么办呢？并且，如果店里突然加了一种新的咖啡调料，那我们就要修改代码。</p>
+<p>可以看到，如果要增加一种咖啡调料，那必须要增加一个对应布朗类型的成员变量，并且还要有对应加调料的方法，以及在cost()方法中写入对应新加调料的价格。</p>
+<p>这么一看，那不就是把这个类进行大修改嘛！我们知道，编程序中，最忌讳的就是代码量太大，并且做出调整时，要把总代码进行修改，这样可能新代码还没实现，结果老代码也出现了问题。</p>
+<p>所以有没有一种方法，让我们的程序代码  &ldquo;<strong>对扩展开放，对修改关闭</strong>&rdquo; 呢？</p>
+<h1 id="装饰者模式">装饰者模式</h1>
+<p>对于本篇文章的星巴菲咖啡问题，我用装饰者模式来为其构思整个系统：</p>
+<ol>
+<li>
+<p>拿一个深焙咖啡（也就是DarkRoast咖啡）对象
+ps：此处的对象是指在堆上new出来的一个对象</p>
+</li>
+<li>
+<p>用摩卡（Mocha）对象来装饰它</p>
+</li>
+<li>
+<p>用奶泡（Whip）对象来装饰它</p>
+</li>
+<li>
+<p>最终得到了摩卡奶泡深焙咖啡，并且用cost()方法计算了其最终价格 下面用一组图来表达这种关系：</p>
+<p>在这幅关系图中，看得出来，DarkRoast是咖啡的品种，首先Mocha调料作为装饰者类将其包含在里面，同样Whip调料类再将Mocha类包含在里面。以此类推，想要添加什么，就添加什么调料。并且其解决了刚刚提出的问题，问题以及解决方法都如下：</p>
+</li>
+<li>
+<p>一位顾客想要一杯加了双倍摩卡的咖啡
+解决方法：由于不用类里面的成员变量来表达是否添加调料，但是在这种方法下，顾客想加多少摩卡就加多少，甚至加一杯都可以。</p>
+</li>
+<li>
+<p>添加一种新的调料并添加与调料相关的部分数据
+解决方法：既然我们添加调料都是将原来调好的咖啡类都包含在其中，那么也就是说，调料的添加无需在咖啡类中做出修改。我们只需要另外写一个调料类，然后将原咖啡或已经加了一些调料的咖啡类包含进来即可。</p>
+</li>
+</ol>
+<h1 id="具体框架设计">具体框架设计</h1>
+<p><img src="https://img-blog.csdnimg.cn/20190221125416926.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" alt="框架"></p>
+<h1 id="代码实现">代码实现</h1>
+<h2 id="beverage类">Beverage类</h2>
+<pre><code>public abstract class Beverage {
+    String description = &quot;Unknown Beverage&quot;;
+
+    public String getDescription(){
+        return description;
+    }
+    public abstract double cost();
+}
+</code></pre><h2 id="4种咖啡类">4种咖啡类</h2>
+<p>HouseBlend</p>
+<pre><code>public class HouseBlend extends Beverage {
+    public HouseBlend(){
+        description = &quot;HouseBlend&quot;;
+    }
+
+    @Override
+    public double cost() {
+        return 1.99;
+    }
+}
+</code></pre><p>DarkRoast</p>
+<pre><code>public class DarkRoast extends Beverage {
+    public DarkRoast(){
+        description = &quot;DarkRoast&quot;;
+    }
+
+    @Override
+    public double cost() {
+        // TODO Auto-generated method stub
+        return 1.29;
+    }
+}
+</code></pre><p>Decaf</p>
+<pre><code>public class Decaf extends Beverage {
+    public Decaf(){
+        description = &quot;Decaf&quot;;
+    }
+
+    @Override
+    public double cost() {
+        // TODO Auto-generated method stub
+        return 1.36;
+    }
+}
+</code></pre><p>Espresso</p>
+<pre><code>public class Espresso extends Beverage {
+    public Espresso(){
+        description = &quot;Espresso&quot;;
+    }
+
+    @Override
+    public double cost() {
+        // TODO Auto-generated method stub
+        return 1.59;
+    }
+}
+</code></pre><h2 id="调料抽象类">调料抽象类</h2>
+<pre><code>public abstract class Condiment extends Beverage {
+    public abstract String getDescription();
+}
+</code></pre><h2 id="四种调料类">四种调料类</h2>
+<p>Milk</p>
+<pre><code>public class Milk extends Condiment {
+    Beverage beverage;
+
+    public Milk(Beverage b){
+        this.beverage = b;
+    }
+
+    public String getDescription(){
+        return beverage.getDescription()+&quot;,Milk&quot;;
+    }
+
+    public double cost(){
+        return 0.85+beverage.cost();
+    }
+}
+</code></pre><p>Mocha</p>
+<pre><code>public class Mocha extends Condiment {
+    Beverage beverage;
+
+    public Mocha(Beverage b){
+        this.beverage = b;
+    }
+
+    public String getDescription(){
+        return beverage.getDescription()+&quot;,Mocha&quot;;
+    }
+
+    public double cost(){
+        return 0.75+beverage.cost();
+    }
+}
+</code></pre><p>Whip</p>
+<pre><code>public class Whip extends Condiment {
+    Beverage beverage;
+
+    public Whip(Beverage b){
+        this.beverage = b;
+    }
+
+    public String getDescription(){
+        return beverage.getDescription()+&quot;,Whip&quot;;
+    }
+
+    public double cost(){
+        return 0.95+beverage.cost();
+    }
+}
+</code></pre><p>Soy</p>
+<pre><code>public class Soy extends Condiment {
+    Beverage beverage;
+
+    public Soy(Beverage b){
+        this.beverage = b;
+    }
+
+    public String getDescription(){
+        return beverage.getDescription()+&quot;,Soy&quot;;
+    }
+
+    public double cost(){
+        return 1.05+beverage.cost();
+    }
+}
+</code></pre><h2 id="测试类">测试类</h2>
+<pre><code>public class BeverageTest {
+    public static void main(String[] args){
+        Beverage beverage1 = new Decaf();
+        beverage1 = new Milk(beverage1);
+        beverage1 = new Milk(beverage1);
+        beverage1 = new Whip(beverage1);
+        beverage1 = new Mocha(beverage1);
+        System.out.println(beverage1.getDescription()+&quot; $ &quot;+beverage1.cost());
+    }
+}
+</code></pre><h1 id="最终运行结果">最终运行结果</h1>
+<p><img src="https://img-blog.csdnimg.cn/20190221131019214.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" alt="运行结果"></p>
+<h1 id="总结">总结</h1>
+<p>装饰者模式是一个较为典型的 &ldquo;<strong>对扩展开放，对修改关闭</strong>&rdquo; 模式。
+装饰者可以在被装饰者的行为前面与后面加上自己的行为，甚至将被装饰者的行为整个替代掉，而达到特定的目的。
+但是装饰者会导致设计中出现许多小对象，如果过度使用，会让程序变得很复杂，所以设计时也要注意使用的次数。</p>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

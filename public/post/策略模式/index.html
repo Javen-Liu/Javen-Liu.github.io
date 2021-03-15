@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>【Java设计模式】1.策略模式 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【Java设计模式】1.策略模式"/>
+<meta name="twitter:description" content="【Java设计模式】1.策略模式
+写在文章的最前面
+本人是java小白，自学没多久，在之前学校的课程中学习了java，并对java产生了一定的兴趣，不过只学习了一些最基本的语法。"/>
+
+    <meta property="og:title" content="【Java设计模式】1.策略模式" />
+<meta property="og:description" content="【Java设计模式】1.策略模式
+写在文章的最前面
+本人是java小白，自学没多久，在之前学校的课程中学习了java，并对java产生了一定的兴趣，不过只学习了一些最基本的语法。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">【Java设计模式】1.策略模式</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="java设计模式1策略模式">【Java设计模式】1.策略模式</h1>
+<h1 id="写在文章的最前面">写在文章的最前面</h1>
+<p>本人是java小白，自学没多久，在之前学校的课程中学习了java，并对java产生了一定的兴趣，不过只学习了一些最基本的语法。</p>
+<p>课上老师给我们提了一个题目，让我们自己去写，当时是写售货机的系统，参考了很多才勉强写出来。后来经同学推荐，开始看设计模式的书，所以想以写博客的方式来激励自己学习，并作一些记录。</p>
+<p>本人典型理工科 <strong>小白</strong>，所以文笔不好，也借此机会锻炼锻炼自己的文笔，有写的语言不通和错误的地方，请大佬勿喷，同为初学者的大家一起交流交流，私信我，再次感激不尽！！</p>
+<h1 id="什么是设计模式">什么是设计模式？</h1>
+<p>设计模式即为java项目设计中的一种设计方法，通过这些前辈总结的方法以及设计思想，可以让我们在实际java项目开发的时候有规律可循，通过对于具体项目的解剖以及思考，使我们可以对应使用相应的<strong>设计模式</strong>，大大简化了设计难度，使用科学有效的设计模式，能少走一些不必要的弯路。</p>
+<h1 id="问题的引出">问题的引出</h1>
+<p>现在，我们想要做出一个 &ldquo;<strong>鸭子</strong>&rdquo; 产品，这个鸭子产品拥有下面几个 <strong>属性</strong> 或 <strong>功能</strong> ：</p>
+<ol>
+<li>这个 &ldquo;<strong>鸭子</strong>&rdquo; 它会叫，并且不同的鸭子叫声是不一样的；</li>
+<li>这个 &ldquo;<strong>鸭子</strong>&rdquo; 它会飞，而且有的鸭子会飞，有的鸭子飞不起来，飞不起来的原因有很多，比如翅膀坏了，又或是这个 &ldquo;<strong>鸭子</strong>&rdquo; 根本没有翅膀，最简单的例子：洗澡的橡皮鸭，对吧！它确实是没有翅膀；</li>
+<li>这个 &ldquo;<strong>鸭子</strong>&rdquo; 它会呈现给我们一个信息，就像一个按钮，当你按下去的时候，它会告诉你一些东西，可以是关于它是什么鸭子，或者它是否能飞，当然这取决于你，对，就是程序员或者…你的老板（<del>微笑中透露出了些许无奈，毕竟要恰饭的</del> ）   。</li>
+</ol>
+<h2 id="第一步也即最开始的想法">第一步，也即最开始的想法</h2>
+<p>首先创建一个Duck类，这个Duck类包含了一些属性，比如重量、品种、毛皮颜色等，这里可以设置几个以protected为访问控制符的成员变量，变量名称用对应英文即可，例如Weight、Variety、FurColor。</p>
+<p>然后就是为Duck这个类创建方法，方法包含了叫、飞以及&quot;自我介绍&quot;的动作。</p>
+<p>但是，迎面而来的问题就是，不同的 &ldquo;<strong>鸭子</strong>&rdquo; 拥有不同的属性、行为（即方法），这样当你想创建多个不同鸭子的时候，则要创建对应数量的类。</p>
+<p>这样就完全没有运用到代码的复用，不仅复杂而且低效。所以对于代码复用，像我一样的初学者一般想到的就是继承。</p>
+<p>个人认为 <strong>继承</strong> 这个机制有利也有弊，当继承过于复杂时，继承的缺点就暴露出来了，最大的问题就是一个类无法继承两个即两个以上的父类，这就限制了继承的使用。</p>
+<p>那么我们先来使用继承父类来试试，首先写一个Duck类，把各种属性以及方法写好，而子类继承父类后，如果子类未进行重写，则方法以及属性仍然默认 &ldquo;运用&rdquo; 父类的方法以及属性。</p>
+<p>但是我们要编写的是好几个属性以及方法可能不同的 &ldquo;鸭子&rdquo; 类。也就意味着代码仍然无法很好的服用，假如多个类之间几乎没有相同的属性以及方法，那继承的属性以及方法基本都是无用的，都要重写，这样代码复用仍然没有很好的实现。</p>
+<p>同时，如果这时候，你的老板或者策划突然萌生了一个别的想法，给这些 &ldquo;<strong>鸭子</strong>&rdquo; 加一个动作，比如下蛋，或者迁徙。</p>
+<p>这个时候如果要加这样一个方法，那么Duck父类以及下面所有的子类几乎都要手动添加这样一个方法，明显很难实现，在具体工程项目的实践过程中，这样低效率的代码在面临反复多次的修改时会显得很无力，几乎每次修改添加都是重写，而且要重写很多次。</p>
+<h2 id="策略模式的引出">策略模式的引出</h2>
+<p>因此要解决这样一个问题，即我们要编写一群类，这些类都有一些共通的属性或者方法，这些属性或方法在大的方面属于一类，但每一类都或多或少有些区别，就比如鸭子的叫声有正常鸭子的&quot;呱呱呱&quot;的叫也有橡皮鸭的&quot;叽叽叽&quot;的叫，这都属于发出叫声这样一个行为，但又有所不同，在这种情况下，引用比较专业的说法，就是将这样一种模式细分为下面三种组成：</p>
+<ol>
+<li>抽象策略角色这个是一个抽象的角色，通常情况下使用接口或者抽象类去实现。对比来说，就是我们的下面代码例子中的FlyBehavior以及QuackBehavior接口。</li>
+<li>具体策略角色包装了具体的算法和行为。对比来说，就是实现了FlyBehavior以及QuackBehavior接口的实现一组实现类。</li>
+<li>环境角色内部会持有一个抽象角色的引用，给客户端调用。对比来说，就是我们的具体 &ldquo;<strong>鸭子</strong>&rdquo; 类别。说明：具体的Duck类内部一定会有一个策略类的一个成员变量，这样做的目的在于可以当我们在去创建具体的Duck对象如NormalDuck的时候，可以接收我们向NormalDuck类中传递的具体的策略类。</li>
+</ol>
+<h1 id="具体实现代码以及分析">具体实现代码以及分析</h1>
+<h2 id="1duck抽象类">1.Duck抽象类</h2>
+<pre><code>public abstract class Duck {
+    FlyBehavior flybehavior;
+    QuackBehavior quackbehavior;
+
+    public abstract void display();
+
+    public void performFly(){
+        flybehavior.fly();
+    }
+
+    public void performQuack(){
+        quackbehavior.quack();
+    }
+
+    public Duck(){
+
+    }
+
+    public void setFly(FlyBehavior fb){
+        flybehavior = fb;
+    }
+
+//    public void setDuckWithWings(){
+//        flybehavior = new FlyWithWings();
+//    }
+
+//    public void setDuckWithoutWings(){
+//        flybehavior = new FlyWithoutWings();
+//    }
+
+    public void setQuack(QuackBehavior qk){
+        quackbehavior = qk;
+    }
+
+//    public void setDuckCanQuack(){
+//        quackbehavior = new Quack();
+//    }
+
+//    public void setDuckCantQuack(){
+//        quackbehavior = new CantQuack();
+//    }
+}
+</code></pre><p>Duck抽象类中包含了一个抽象的方法display()，用来让鸭子 &ldquo;<strong>声明</strong>&rdquo; 自己的一些信息，或者其他功能，而所有继承Duck抽象类的具体duck类都必须要重写此抽象方法。同时申明了两个抽象策略角色，即flybehavior以及quackbehavior，在后续实例化时，再对这两个变量进行具体的实例化。具体下面代码会解释。</p>
+<h2 id="2flybehavior以及quackbehavior接口">2.FlyBehavior以及QuackBehavior接口</h2>
+<h3 id="flybehavior">FlyBehavior</h3>
+<pre><code>public interface FlyBehavior {
+    public void fly();
+}
+</code></pre><h3 id="quackbehavior">QuackBehavior</h3>
+<pre><code>public interface QuackBehavior {
+    public void quack();
+}
+</code></pre><h2 id="3flywithwings以及flywithoutwings">3.FlyWithWings以及FlyWithoutWings</h2>
+<h3 id="flywithwings">FlyWithWings</h3>
+<pre><code>public class FlyWithWings implements FlyBehavior {
+    public void fly(){
+        System.out.println(&quot;I am flying!&quot;);
+    }
+}
+</code></pre><h3 id="flywithoutwings">FlyWithoutWings</h3>
+<pre><code>public class FlyWithoutWings implements FlyBehavior {
+    public void fly(){
+        System.out.println(&quot;I can't fly!&quot;);
+    }
+}
+</code></pre><h2 id="4quack以及cantquack">4.Quack以及CantQuack</h2>
+<h3 id="quack">Quack</h3>
+<pre><code>public class Quack implements QuackBehavior {
+    public void quack(){
+        System.out.println(&quot;Gua Gua&quot;);
+    }
+}
+</code></pre><h3 id="cantquack">CantQuack</h3>
+<pre><code>public class CantQuack implements QuackBehavior {
+    public void quack(){
+        System.out.println(&quot;&lt;&lt;Slience&gt;&gt;&quot;);
+    }
+}
+</code></pre><h2 id="5normalduck以及modelduck环境角色">5.normalduck以及modelduck（环境角色）</h2>
+<h3 id="normalduck">normalduck</h3>
+<pre><code>public class normalduck extends Duck {
+    public normalduck(){
+        flybehavior = new FlyWithWings();
+        quackbehavior = new Quack();
+    }   
+
+    public void display(){
+        System.out.println(&quot;I am a normal duck&quot;);
+    }
+
+}
+</code></pre><h3 id="modelduck">modelduck</h3>
+<pre><code>public class modelduck extends Duck {
+    public modelduck(){
+        flybehavior = new FlyWithoutWings();
+        quackbehavior = new Quack();
+    }
+
+    public void display() {
+        System.out.println(&quot;I am a model duck&quot;);
+    }
+}
+</code></pre><p>以上两个就是环境角色，一个是普通鸭子，另一个是模型鸭子。</p>
+<h1 id="总结及分析">总结及分析</h1>
+<ol>
+<li>可以看到，每种不同的鸭子类都可以直接使用已有的一些方法，我们需要做的就是选择当前鸭子类所包含的方法（即行为），当我们想改变这个鸭子类的一种方法，我们只需要将其改为我们提前设定好的一种方法，而不是将代码返工重写，提高了复用率。</li>
+<li>如果我们想增加一种另一类的方法，比如给鸭子类增加一个 &ldquo;<strong>迁徙</strong>&rdquo; 行为（方法），则我们可以再写接口，即 &ldquo;<strong>迁徙</strong>&rdquo; 接口，然后再对迁徙这个行为具体的实现方式进行实现，比如向南迁徙或向北迁徙，这些&quot;行为类&quot;实现了 &ldquo;<strong>迁徙</strong>&rdquo; 接口。这样我们就可以很方便的给当前已经写好的环境角色类添加行为（方法）</li>
+</ol>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

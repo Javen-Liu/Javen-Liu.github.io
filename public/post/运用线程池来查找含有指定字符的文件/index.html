@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>运用线程池来查找含有指定字符的文件 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="运用线程池来查找含有指定字符的文件"/>
+<meta name="twitter:description" content="运用线程池来查找含有指定字符的文件"/>
+
+    <meta property="og:title" content="运用线程池来查找含有指定字符的文件" />
+<meta property="og:description" content="运用线程池来查找含有指定字符的文件" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E8%BF%90%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E6%9F%A5%E6%89%BE%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%9A%84%E6%96%87%E4%BB%B6/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">运用线程池来查找含有指定字符的文件</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/demo/">Demo</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="运用线程池来查找含有指定字符的文件">运用线程池来查找含有指定字符的文件</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> threadPool<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.io.File<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.FileReader<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.Scanner<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.concurrent.LinkedBlockingQueue<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.concurrent.ThreadPoolExecutor<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.concurrent.TimeUnit<span style="color:#f92672">;</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"> * @author 刘建雯
+</span><span style="color:#75715e">   */</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FileSearching</span> <span style="color:#f92672">{</span>
+  	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    	Scanner scanner <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Scanner<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">in</span><span style="color:#f92672">);</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[ Please input path ]&#34;</span><span style="color:#f92672">);</span>
+        String path <span style="color:#f92672">=</span> scanner<span style="color:#f92672">.</span><span style="color:#a6e22e">nextLine</span><span style="color:#f92672">();</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[ Please input end words ]&#34;</span><span style="color:#f92672">);</span>
+        String endWords <span style="color:#f92672">=</span> scanner<span style="color:#f92672">.</span><span style="color:#a6e22e">nextLine</span><span style="color:#f92672">();</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[ Please input the special words you wanna find ]&#34;</span><span style="color:#f92672">);</span>
+        String specialWords <span style="color:#f92672">=</span> scanner<span style="color:#f92672">.</span><span style="color:#a6e22e">nextLine</span><span style="color:#f92672">();</span>
+        FileSearching fileSearching <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileSearching<span style="color:#f92672">();</span>
+        fileSearching<span style="color:#f92672">.</span><span style="color:#a6e22e">fileSearch</span><span style="color:#f92672">(</span>path<span style="color:#f92672">,</span>endWords<span style="color:#f92672">,</span>specialWords<span style="color:#f92672">);</span>
+	<span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">private</span> ThreadPoolExecutor threadPool <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>10<span style="color:#f92672">,</span>20<span style="color:#f92672">,</span>30<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">SECONDS</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;&gt;());</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fileSearch</span><span style="color:#f92672">(</span>String path<span style="color:#f92672">,</span> String endStr<span style="color:#f92672">,</span> String specialStr<span style="color:#f92672">){</span>
+            File filePath <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>path<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>filePath<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">()){</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[warning] file not exist&#34;</span><span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span><span style="color:#f92672">(!</span>filePath<span style="color:#f92672">.</span><span style="color:#a6e22e">isDirectory</span><span style="color:#f92672">()){</span>
+                <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>filePath<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">().</span><span style="color:#a6e22e">endsWith</span><span style="color:#f92672">(</span>endStr<span style="color:#f92672">)){</span>
+                    threadPool<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(()</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                            <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> content <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">[(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span>filePath<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()];</span>
+                            FileReader fileReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileReader<span style="color:#f92672">(</span>filePath<span style="color:#f92672">);</span>
+                            fileReader<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>content<span style="color:#f92672">);</span>
+                            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">valueOf</span><span style="color:#f92672">(</span>content<span style="color:#f92672">).</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>specialStr<span style="color:#f92672">)){</span>
+                                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;[file found] &#34;</span><span style="color:#f92672">+</span>filePath<span style="color:#f92672">.</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">());</span>
+                                FileSearching<span style="color:#f92672">.</span><span style="color:#a6e22e">countUp</span><span style="color:#f92672">();</span>
+                            <span style="color:#f92672">}</span>
+                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+                        <span style="color:#f92672">}</span>
+                    <span style="color:#f92672">});</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span><span style="color:#66d9ef">else</span><span style="color:#f92672">{</span>
+                File<span style="color:#f92672">[]</span> files <span style="color:#f92672">=</span> filePath<span style="color:#f92672">.</span><span style="color:#a6e22e">listFiles</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">assert</span> files <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">for</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">:</span>files<span style="color:#f92672">){</span>
+                    fileSearch<span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">(),</span>endStr<span style="color:#f92672">,</span>specialStr<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;find &#34;</span><span style="color:#f92672">+</span>count<span style="color:#f92672">+</span><span style="color:#e6db74">&#34; files end with &#34;</span><span style="color:#f92672">+</span>endStr<span style="color:#f92672">+</span><span style="color:#e6db74">&#34; and contain \&#34;&#34;</span><span style="color:#f92672">+</span>specialStr<span style="color:#f92672">+</span><span style="color:#e6db74">&#34;\&#34;&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">countUp</span><span style="color:#f92672">(){</span>
+            count<span style="color:#f92672">++;</span>
+        <span style="color:#f92672">}</span>
+    
+    <span style="color:#f92672">}</span>
+</code></pre></div>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

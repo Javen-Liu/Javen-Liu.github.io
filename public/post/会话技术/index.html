@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>会话技术 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="会话技术"/>
+<meta name="twitter:description" content="会话技术  会话：一次会话中包含多次请求和响应  一次会话：浏览器第一次给服务器资源发送请求，会话建立。直到有一方断开为止   功能：在一次会话的范围内，共享数据 方式：  客户端会话技术：Cookie 服务器会话技术：Session    1. Cookie 1.概念：客户端会话技术，将数据保存在客户端的技术 2.快速入门  使用步骤：  创建Cookie对象，绑定数据  new Cookie(String name,String value)   发送Cookie对象  response.addCookie(Cookie cookie)   获取Cookie对象，拿到数据  Cookierequest.getCookie( )      3.实现原理  基于响应头的set-cookie和请求头cookie实现  4.cookie的细节   一次可不可以发送多个cookie？
+ 可以 可以创建多个Cookie对象，使用response调用多次addcookie方法发送cookie即可    cookie在浏览器中保存多长时间？
+  默认情况下，当浏览器关闭时，Cookie数据被销毁
+  持久化储存
+ setMaxAge(int seconds)：  正数：将Cookie数据写到硬盘的文件中。持久化存储，cookie存活时间可设置 负数：默认值，存储在内存中，浏览器关闭cookie就销毁 零：删除cookie信息        cookie能不能存中文？"/>
+
+    <meta property="og:title" content="会话技术" />
+<meta property="og:description" content="会话技术  会话：一次会话中包含多次请求和响应  一次会话：浏览器第一次给服务器资源发送请求，会话建立。直到有一方断开为止   功能：在一次会话的范围内，共享数据 方式：  客户端会话技术：Cookie 服务器会话技术：Session    1. Cookie 1.概念：客户端会话技术，将数据保存在客户端的技术 2.快速入门  使用步骤：  创建Cookie对象，绑定数据  new Cookie(String name,String value)   发送Cookie对象  response.addCookie(Cookie cookie)   获取Cookie对象，拿到数据  Cookierequest.getCookie( )      3.实现原理  基于响应头的set-cookie和请求头cookie实现  4.cookie的细节   一次可不可以发送多个cookie？
+ 可以 可以创建多个Cookie对象，使用response调用多次addcookie方法发送cookie即可    cookie在浏览器中保存多长时间？
+  默认情况下，当浏览器关闭时，Cookie数据被销毁
+  持久化储存
+ setMaxAge(int seconds)：  正数：将Cookie数据写到硬盘的文件中。持久化存储，cookie存活时间可设置 负数：默认值，存储在内存中，浏览器关闭cookie就销毁 零：删除cookie信息        cookie能不能存中文？" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E4%BC%9A%E8%AF%9D%E6%8A%80%E6%9C%AF/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">会话技术</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/cookie%E4%B8%8Esession/">cookie与session</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/web%E6%8A%80%E6%9C%AF/">web技术</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="会话技术">会话技术</h1>
+<ol>
+<li>会话：一次会话中包含多次请求和响应
+<ul>
+<li>一次会话：浏览器第一次给服务器资源发送请求，会话建立。直到有一方断开为止</li>
+</ul>
+</li>
+<li>功能：在一次会话的范围内，共享数据</li>
+<li>方式：
+<ol>
+<li>客户端会话技术：Cookie</li>
+<li>服务器会话技术：Session</li>
+</ol>
+</li>
+</ol>
+<h2 id="1-cookie">1. Cookie</h2>
+<h3 id="1概念客户端会话技术将数据保存在客户端的技术">1.概念：客户端会话技术，将数据保存在客户端的技术</h3>
+<h3 id="2快速入门">2.快速入门</h3>
+<ul>
+<li>使用步骤：
+<ol>
+<li>创建Cookie对象，绑定数据
+<ul>
+<li>new Cookie(String name,String value)</li>
+</ul>
+</li>
+<li>发送Cookie对象
+<ul>
+<li>response.addCookie(Cookie cookie)</li>
+</ul>
+</li>
+<li>获取Cookie对象，拿到数据
+<ul>
+<li>Cookie<input disabled="" type="checkbox"> request.getCookie( )</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="3实现原理">3.实现原理</h3>
+<ul>
+<li>基于响应头的set-cookie和请求头cookie实现</li>
+</ul>
+<h3 id="4cookie的细节">4.cookie的细节</h3>
+<ol>
+<li>
+<p>一次可不可以发送多个cookie？</p>
+<ul>
+<li><strong>可以</strong></li>
+<li>可以创建多个Cookie对象，使用response调用多次addcookie方法发送cookie即可</li>
+</ul>
+</li>
+<li>
+<p>cookie在浏览器中保存多长时间？</p>
+<ol>
+<li>
+<p>默认情况下，当浏览器关闭时，Cookie数据被销毁</p>
+</li>
+<li>
+<p>持久化储存</p>
+<ul>
+<li>setMaxAge(int seconds)：
+<ol>
+<li>正数：将Cookie数据写到硬盘的文件中。持久化存储，cookie存活时间可设置</li>
+<li>负数：默认值，存储在内存中，浏览器关闭cookie就销毁</li>
+<li>零：删除cookie信息</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>cookie能不能存中文？</p>
+<ul>
+<li>在tomcat 8 之前不能（需要将中文数据转码）</li>
+<li>在tomcat 8 之后可以</li>
+</ul>
+</li>
+<li>
+<p>cookie获取范围多大？</p>
+<ol>
+<li>假设在一个tomcat服务器中，部署了多个web项目，那么在这些web项目中cookie能不能共享？
+<ul>
+<li>默认情况下cookie不能共享</li>
+<li>setPath(String path)：设置cookie的获取范围。一般设置当前的虚拟目录</li>
+</ul>
+</li>
+<li>不用的tomcat服务器间cookie共享问题？
+<ul>
+<li>setDomain(String path) ：如果设置一级域名相同，那么多个服务器之间的cookie可以共享</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="5cookie的特点">5.cookie的特点</h3>
+<ol>
+<li>cookie存储数据在客户端浏览器</li>
+<li>浏览器对于单个cookie的大小又限制，以及对同一个域名下的总cookie数量也有限制</li>
+<li><strong>作用</strong>：
+<ul>
+<li>cookie一般用于存储少量的不太敏感的数据</li>
+<li>在不登陆的情况下保存一定的用户设置偏好</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="2-session">2. Session</h2>
+<h3 id="1概念服务器端会话技术在一次会话的多次请求间共享数据将数据保存在服务器端的对象中httpsession">1.概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession</h3>
+<h3 id="2快速入门-1">2.快速入门</h3>
+<ul>
+<li>获取HttpSession对象
+<ul>
+<li>HttpSession session = request.getSession( )</li>
+</ul>
+</li>
+<li>使用HttpSession对象
+<ul>
+<li>void setAttribute(String name,String value)</li>
+<li>String getAttribute(String name)</li>
+<li>void removeAttribute(String name)</li>
+</ul>
+</li>
+</ul>
+<h3 id="3原理">3.原理</h3>
+<ul>
+<li>Session的实现是依赖于cookie的</li>
+</ul>
+<h3 id="4细节">4.细节</h3>
+<pre><code>1. 当客户端关闭后，服务器不关闭，两次获取的Session是否为同一个？
+ * 默认情况下不是
+ * 如果需要相同，那么可以设置响应头中的cookie地址未固定值
+2. 客户端不关闭，服务器关闭后，两次获取的session是同一个吗？
+</code></pre>
+<ul>
+<li>不是同一个，但要确保数据不丢失
+<ul>
+<li>session的钝化：
+<ul>
+<li>在服务器正常关闭之前，将session对象序列化到硬盘中</li>
+</ul>
+</li>
+<li>session的活化：
+<ul>
+<li>在服务器启动后，将session文件转化为内存中的session对象即可</li>
+</ul>
+</li>
+<li><strong>tomcat将session的钝化和活化都自动做了，虽然对象不同，但是数据还是相同的</strong></li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>session什么时候被销毁
+<ol>
+<li>服务器关闭</li>
+<li>session对象调用invalidate( )</li>
+<li>session默认失效时间为30分钟</li>
+</ol>
+</li>
+<li>session特点
+<ol>
+<li>session用于存储一次会话的多次请求数据，存在服务器端</li>
+<li>session可以存储任意类型，任意大小的数据</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="3sessions和cookie的区别">3.Sessions和Cookie的区别</h2>
+<pre><code>1. session存储数据在服务器端，cookie在客户端
+2. session没有数据大小限制，cookie有
+3. session数据安全，cookie相对于不安全</code></pre>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

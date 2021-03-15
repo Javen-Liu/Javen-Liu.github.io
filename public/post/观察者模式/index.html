@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>【Java设计模式】3.观察者模式 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【Java设计模式】3.观察者模式"/>
+<meta name="twitter:description" content="【Java设计模式】3.观察者模式
+问题的引入
+前几天我们刚完成了制造&quot;鸭子&quot;以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。"/>
+
+    <meta property="og:title" content="【Java设计模式】3.观察者模式" />
+<meta property="og:description" content="【Java设计模式】3.观察者模式
+问题的引入
+前几天我们刚完成了制造&quot;鸭子&quot;以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">【Java设计模式】3.观察者模式</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="java设计模式3观察者模式">【Java设计模式】3.观察者模式</h1>
+<h1 id="问题的引入">问题的引入</h1>
+<p>前几天我们刚完成了制造&quot;鸭子&quot;以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。</p>
+<p>电话的那头传来了焦急地声音：“嗨，我们听说你是这座城市里最厉害的程序员，请你帮帮我们解决一个技术上的难题！！”电话那头的人太过于紧张以至于连自己来自哪里，叫什么都还没有交代，就想请我们出山去为他们解除<strong>警报</strong>，“嗨老兄，我至少得知道你们是哪个公司，有什么方面的难题啊！我也不是神通广大，什么都会啊！”。</p>
+<p>经过一番交谈后，原来这是气象站来找我们，他们现在的天气实时检测系统与第三方的公司之间出现了交换数据的问题。还好这在我们java可以解决的业务范围内，看来我们的度假是要泡汤了，不过没事，我们可以当作把休息时间用来加班赚外快，有了钱犒劳犒劳自己。</p>
+<h2 id="还是老样子先来思考框架">还是老样子，先来思考框架</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190222131348848.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" alt="基础框架"></p>
+<p>气象站目前可以为我们提供一些基础的信息，而我们则需要根据这些信息设计一个布告板，为大家显示这些信息。（当然也可以用现在更为现代的说法叫手机app天气实时推送）</p>
+<p>也就是说，图中左半边的部分无需我们来设计，气象站有他们自己的一套设备，我们只需要把WeatherData类以及布告板设计好就行。</p>
+<p>那么让我们来设计一下这个WeatherData类以及布告板吧！</p>
+<h2 id="初版weatherdata类">初版WeatherData类</h2>
+<pre><code>public class WeatherData {
+    //实例变量声明
+    public void measurementsChanged(){
+        float temp = getTemperature();
+        float humidity = getHumidity();
+        float pressure = getPressure();
+        //三个假设已经实现的获取信息的方法
+
+        statisticsDisplay.update(temp,humidity,pressure);
+        normalConditionsDisplay.update(temp,humidity,pressure);
+        //布告板更新显示信息
+    }
+    //WeatherData的其他方法
+    //目前这只是一个简化的类，很多都是简要的标出，具体实现在下面部分
+}
+</code></pre><p>这就是初版的实现方法，确实可以实现将信息从气象站中取出并更新布告板中的信息。但是不要高兴的太早，这时候需要读者你来思考一下，这个实现中，存在以下哪些问题？</p>
+<ul>
+<li><input disabled="" type="checkbox"> 我们现在是针对具体实现编程，而非针对接口。</li>
+<li><input disabled="" type="checkbox"> 对于每个新的布告板，我们都要改变代码。</li>
+<li><input disabled="" type="checkbox"> 我们无法在运行时动态的增加或减少布告板。</li>
+<li><input disabled="" type="checkbox"> 我们未封装改变的部分。</li>
+<li><input disabled="" type="checkbox"> 每当气象站信息出现改变时，我们手动得去获取信息不能保证我们实时的更新我们的布告板。</li>
+</ul>
+<p>很遗憾的是，对于上面所说的几种问题，我们的第一个实现都存在。
+是的，我们的程序确实存在这么多的问题。那么有没有一种方法可以解决呢？</p>
+<h1 id="观察者模式">观察者模式</h1>
+<p><img src="https://img-blog.csdnimg.cn/20190223225347925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" alt="观察者模式"></p>
+<p>其实，这样一种情况很多程序员前辈都注意到了这个问题，在Java中内置了这种模式，我们只需要了解如何使用即可。（具体的使用方法可以自行查看java.util包，里面包含了java.util.Observer以及java.util.Observable）下面用一个关系图来解释这种模式。</p>
+<h1 id="最终版实现">最终版实现</h1>
+<p>那么我们就只弄一个最简单的，布告板只设置一个最简单的NormalConditionDisplay()类，由于Observable是Java中内置的类，所以我们直接拿来用就好。下面是具体代码</p>
+<h2 id="displayelement即上图中的observer类">DisplayElement（即上图中的Observer类）</h2>
+<pre><code>public interface DisplayElement {
+    public void display();
+}
+</code></pre><h2 id="weatherdata类">WeatherData类</h2>
+<pre><code>package weather;
+import java.util.Observer;
+import java.util.Observable;
+
+@SuppressWarnings(&quot;unused&quot;)
+public class WeatherData extends Observable {
+    private float temperature;
+    private float humidity;
+    private float pressure;
+    public WeatherData(){
+    };
+    public void measurementsChanged(){
+        setChanged();
+        notifyObservers();
+    }
+    public void setMeasurements(float temperature,float humidity,float pressure){
+        this.temperature = temperature;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        measurementsChanged();
+    }
+    public float getTemperature(){
+        return temperature;
+    }
+    public float getHumidity(){
+        return humidity;
+    }
+    public float getPressure(){
+        return pressure;
+    }
+}
+}
+</code></pre><h2 id="normalconditiondisplay类">NormalConditionDisplay()类</h2>
+<pre><code>import java.util.Observer;
+import java.util.Observable;
+
+public class NormalConditionDisplay implements Observer,DisplayElement {
+    Observable observable;
+    float temperature;
+    float humidity;
+    float pressure;
+    public NormalConditionDisplay(Observable a) {
+        // TODO Auto-generated constructor stub
+        this.observable = a;
+        a.addObserver(this);
+    }
+    @Override
+    public void update(Observable o, Object arg) {
+        if(o instanceof WeatherData){
+            this.temperature = ((WeatherData) o).getTemperature();
+            this.humidity = ((WeatherData) o).getHumidity();
+            this.pressure = ((WeatherData) o).getPressure();
+            display();
+        }
+    }
+    @Override
+    public void display() {
+        // TODO Auto-generated method stub
+        System.out.println(&quot;Current conditions:\ntemperature:&quot;+temperature+&quot;\nhumidity:&quot;+humidity
+                +&quot;\npressure&quot;+pressure);
+    }
+}
+</code></pre><h2 id="weathersystem类即测试类">WeatherSystem类（即测试类）</h2>
+<pre><code>public class WeatherSystem {
+    public static void main(String[] args){
+        WeatherData w = new WeatherData();
+        NormalConditionDisplay n = new NormalConditionDisplay(w);
+        w.setMeasurements(27, 11, 30);
+    }
+}
+}
+</code></pre><h2 id="最终运行结果">最终运行结果</h2>
+<p><img src="https://img-blog.csdnimg.cn/20190223233437864.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" alt="运行结果"></p>
+<h1 id="总结">总结</h1>
+<p>观察者模式可以让我们实现这样一种关系：即主题与观察者一对多，观察者依赖于此主题，只要主题状态一有变化，观察者就会被通知，而无须观察者手动地去接收信息。</p>
+<p>并且我们可以随时增加我们想要添加的Observer类，在例子中也就是&quot;布告板&quot;，并且对于不对已经编好的代码进行修改。</p>
+<p>但是，需要注意的是，Java内置的Observable类是一个&quot;类&quot;，而非接口，它是一个类导致它的实现只能对其进行  <strong>继承</strong>  ,目前为止，我们已经有三篇文章讲解了关于设计模式，大家应该都明白，在一个设计的系统中，最好少用继承，继承制约了代码的使用和复用。</p>
+<p>并且在设计模式中有一个很重要的概念，那就是不要对 <strong>具体的类</strong> 进行编程，要对 <strong>接口</strong> 进行编程，在学习过程中，慢慢的有些理解这句话的含义，虽然理解得不够透彻。</p>
+<p>之前听Java课的时候，老师曾给我们输入了一个概念，那就是一个Java项目由很多人来进行负责、编代码，每个人都完成自己的任务，如果对于具体的类进行编程，那么就意味着别人写的代码里的一个类你借用了，那么别人一旦修改了代码，你也要进行修改，而一个大的项目必然是很多类之间进行数据交换，那么如果都针对具体的类编程，那么一旦修改一个地方，必然会牵一发而动全身地修改。所以针对 <strong>接口</strong> 编程，可以让每个程序员之间拥有一定的独立性，而中间的联系就让专门的人写好接口，我们用即可，我们在自己类中进行编程只需要使用接口中定义了的属性以及方法即可，至于最终使用的是那个类的方法，则是在程序运行时，由编译器自己进行决定，这也就是Java基础中所讲到的 <strong>多态</strong>。</p>
+<p>以上是本人结合目前学习的模式知识以及Java基础知识所总结出来的，可能有些由错误，不过随着深入的学习，慢慢的思考，很多东西也就能慢慢地理解。总之，共勉吧！</p>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

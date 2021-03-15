@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>【Java设计模式】4.单件模式 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="【Java设计模式】4.单件模式"/>
+<meta name="twitter:description" content="【Java设计模式】4.单件模式
+关于单件模式
+本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。"/>
+
+    <meta property="og:title" content="【Java设计模式】4.单件模式" />
+<meta property="og:description" content="【Java设计模式】4.单件模式
+关于单件模式
+本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">【Java设计模式】4.单件模式</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="java设计模式4单件模式">【Java设计模式】4.单件模式</h1>
+<h1 id="关于单件模式">关于单件模式</h1>
+<p>本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。</p>
+<h2 id="问题的引出">问题的引出</h2>
+<p>我们都知道，在软件系统比如我们正在用的Windows系统，总有那么一些变量比如注册表，它们一直存在，并且唯一，对它们之中的数据一旦进行更改，那么这个数据变化后，会一直保存该数据，直到某种特殊的场景下才会丢失。可能你会第一时间想到静态变量，没错，的确是它。</p>
+<p>但是有一个问题，那就是静态变量经过我们编写代码后，一旦运行，静态变量会一直存在，假如这个系统过于庞大，而且你的这个设备储存又不是很大，那么后果…</p>
+<p>没错，储存可能会不够用，虽然Java有回收机制，但是静态变量不依附于对象存在，而是依附于类，也就是说他会一直存在，即使你没有用到它。</p>
+<p>那么有没有什么方法来让这个静态变量只在我想要它出现的时候它才出现并且起作用，而不是一开始就存在并占用内存，并且保证它只能被创建一次呢？没错，这就是单件模式所解决的问题。</p>
+<h1 id="单件模式">单件模式</h1>
+<p>下面是一个运用了单件模式的demo，我们来看看这个&quot;<strong>单件模式</strong>&ldquo;是如何解决的：</p>
+<pre><code>package singleton;
+
+public class Singleton {
+    private static Singleton uniqueInstance;
+    private Singleton(){
+
+    }
+    public static Singleton getInstance(){
+        if(uniqueInstance == null)
+            uniqueInstance = new Singleton();
+        return uniqueInstance;
+    }
+}
+</code></pre><p>首先，既然我们不让它被反复创建，那么最好的方法就是把他的构造函数给设置成&rdquo;<strong>private</strong>&ldquo;类型，这样别的类就无法调用该构造函数，所以我们写了这个语句</p>
+<pre><code>    private Singleton(){
+
+    }
+</code></pre><p>我们把构造方法给&quot;隐藏&quot;了，那怎样才能创建这个变量呢？我们可以使用方法来实现啊！</p>
+<p><strong>等等！？</strong></p>
+<p>既然我们都无法实例化这个类了，怎么调用方法?
+普通的类需要实例化，但是静态类里的方法是不需要实例化才能用的，可以直接依附于类使用，比如这个类写好之后，在其他的类中可以直接用</p>
+<pre><code>    Singleton.getInstance()
+</code></pre><p>当调用该方法时，会检测uniqueInstance变量是否为null，如果不是，就当即实例化一个对象并且赋给uniqueInstance变量，如果已经创建了，那么就跳过这一步，最后再return这个变量。</p>
+<h1 id="总结">总结</h1>
+<p>单件模式给予我们一种处理静态变量的方法，让我们有序地管理静态变量，在我们用到静态变量时再创建，而不是在程序的一开始就创建出来。</p>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>JVM 笔记 - 6 本地方法接口 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="JVM 笔记 - 6 本地方法接口"/>
+<meta name="twitter:description" content="什么是本地方法 简单地讲，一个Native Method就是一个Java调用非Java代码的接口。一个Native Method是这样一个Java方法：该方法的实现由非Java语言实现，比如C。这个特性并非Java所特有，很多其他的变成语言都有这一机制，比如在C&#43;&#43;中，你可以使用extern &ldquo;C&rdquo; 告知C&#43;&#43;编译器去调用一个C的函数
+为什么要用Native Method？ Java使用起来非常方便，然而有些层次的任务用Java实现起来不容易，或者我们对程序的效率很在意时，问题就来了
+  与Java环境外交互：
+有时Java应用需要与Java外面的环境交互，这是本地方法存在的主要原因。你可以想象Java需要和一些底层系统，如操作系统或某些硬件交流信息时的情况。本地方法正是这样一种交流机制：它为我们提供了非常简洁的接口，而且我们无需去了解Java应用之外的繁琐细节
+  与操作系统交互：
+JVM支持着Java语言本身和运行时库，它是Java程序赖以生存的空间，它由一个解释器和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整地系统，它经常依赖于一些底层系统的支持。这些底层系统常常是强大的操作系统。通过使用本地方法，我们得以用Java实现了jre的与底层系统的交互，甚至JVM的一些不分就是用C写的
+  Sun&rsquo;s Java
+Sun的解释器使用C实现的，这使得它能像一些普通的C一样与外部进行交互
+  "/>
+
+    <meta property="og:title" content="JVM 笔记 - 6 本地方法接口" />
+<meta property="og:description" content="什么是本地方法 简单地讲，一个Native Method就是一个Java调用非Java代码的接口。一个Native Method是这样一个Java方法：该方法的实现由非Java语言实现，比如C。这个特性并非Java所特有，很多其他的变成语言都有这一机制，比如在C&#43;&#43;中，你可以使用extern &ldquo;C&rdquo; 告知C&#43;&#43;编译器去调用一个C的函数
+为什么要用Native Method？ Java使用起来非常方便，然而有些层次的任务用Java实现起来不容易，或者我们对程序的效率很在意时，问题就来了
+  与Java环境外交互：
+有时Java应用需要与Java外面的环境交互，这是本地方法存在的主要原因。你可以想象Java需要和一些底层系统，如操作系统或某些硬件交流信息时的情况。本地方法正是这样一种交流机制：它为我们提供了非常简洁的接口，而且我们无需去了解Java应用之外的繁琐细节
+  与操作系统交互：
+JVM支持着Java语言本身和运行时库，它是Java程序赖以生存的空间，它由一个解释器和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整地系统，它经常依赖于一些底层系统的支持。这些底层系统常常是强大的操作系统。通过使用本地方法，我们得以用Java实现了jre的与底层系统的交互，甚至JVM的一些不分就是用C写的
+  Sun&rsquo;s Java
+Sun的解释器使用C实现的，这使得它能像一些普通的C一样与外部进行交互
+  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/jvm-6.%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/" /><meta property="article:section" content="post" />
+
+
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">JVM 笔记 - 6 本地方法接口</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jan 1, 0001
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/jvm/">JVM</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="什么是本地方法">什么是本地方法</h1>
+<p>简单地讲，<strong>一个Native Method就是一个Java调用非Java代码的接口</strong>。一个Native Method是这样一个Java方法：该方法的实现由非Java语言实现，比如C。这个特性并非Java所特有，很多其他的变成语言都有这一机制，比如在C++中，你可以使用extern &ldquo;C&rdquo; 告知C++编译器去调用一个C的函数</p>
+<h1 id="为什么要用native-method">为什么要用Native Method？</h1>
+<p>Java使用起来非常方便，然而有些层次的任务用Java实现起来不容易，或者我们对程序的效率很在意时，问题就来了</p>
+<ul>
+<li>
+<p>与Java环境外交互：</p>
+<p>有时Java应用需要与Java外面的环境交互，这是本地方法存在的主要原因。你可以想象Java需要和一些底层系统，如操作系统或某些硬件交流信息时的情况。本地方法正是这样一种交流机制：它为我们提供了非常简洁的接口，而且我们无需去了解Java应用之外的繁琐细节</p>
+</li>
+<li>
+<p>与操作系统交互：</p>
+<p>JVM支持着Java语言本身和运行时库，它是Java程序赖以生存的空间，它由一个解释器和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整地系统，它经常依赖于一些底层系统的支持。这些底层系统常常是强大的操作系统。<strong>通过使用本地方法，我们得以用Java实现了jre的与底层系统的交互，甚至JVM的一些不分就是用C写的</strong></p>
+</li>
+<li>
+<p>Sun&rsquo;s Java</p>
+<p>Sun的解释器使用C实现的，这使得它能像一些普通的C一样与外部进行交互</p>
+</li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

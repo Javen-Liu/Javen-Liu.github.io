@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>经典生产者与消费者问题 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="经典生产者与消费者问题"/>
+<meta name="twitter:description" content="经典生产者与消费者问题
+1. 问题的引入
+​	如同日常生活中一样，我们每天所消费的东西，都是生产部门进行生产，我们才有商品来进行消费。
+​	那么就有一个很现实的问题，生产部门如果没有生产，我们是没有任何商品来消费的。"/>
+
+    <meta property="og:title" content="经典生产者与消费者问题" />
+<meta property="og:description" content="经典生产者与消费者问题
+1. 问题的引入
+​	如同日常生活中一样，我们每天所消费的东西，都是生产部门进行生产，我们才有商品来进行消费。
+​	那么就有一个很现实的问题，生产部门如果没有生产，我们是没有任何商品来消费的。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E7%BB%8F%E5%85%B8%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85%E9%97%AE%E9%A2%98/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2019-12-20T19:34:06&#43;00:00" />
+<meta property="article:modified_time" content="2019-12-20T19:34:06&#43;00:00" />
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">经典生产者与消费者问题</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Dec 20, 2019
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          2 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85/">生产者与消费者</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/java/">Java</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="经典生产者与消费者问题">经典生产者与消费者问题</h1>
+<h2 id="1-问题的引入">1. 问题的引入</h2>
+<p>​	如同日常生活中一样，我们每天所消费的东西，都是生产部门进行生产，我们才有商品来进行消费。</p>
+<p>​	那么就有一个很现实的问题，生产部门如果没有生产，我们是没有任何商品来消费的。</p>
+<p>​	同时商品过多又会导致相对商品过剩，造成经济危机。</p>
+<p>​	所以生产合适数量的商品来供我们消费，才可以维持动态平衡。</p>
+<h2 id="2简单的例子实现">2.简单的例子实现</h2>
+<p>​	要模拟同时进行生产和消费，就必须至少有一个生产者与消费者来同时运作。</p>
+<p>​	我们知道程序一般是顺序执行的，所以必须用到Java技术中的多线程。</p>
+<p>​	也就是开两个线程分别来进行生产以及消费。</p>
+<pre><code>Stack&lt;Character&gt; stack = new Stack&lt;&gt;();
+
+Thread producerThread = new Thread(() -&gt; {
+    while(true){
+        producer.produce(stack);
+    }
+});
+producerThread.start();
+
+Thread consumerThread = new Thread(() -&gt; {
+    while(true){
+        consumer.consume(stack);
+    }
+});
+consumerThread.start();
+</code></pre><p>​	这里我们用stack作为容器的载体，通过stack的push( )与pop( )方法来实现随机字符（即Character）的产生以及消耗。</p>
+<p>​	我们来运行这个程序（当然producer以及consumer我只是用了简单的描述来代替，下面会有两个类的具体实现）。</p>
+<p>​	我们会发现一个非常严重的问题。</p>
+<p>​	众所周知，Java多线程中，每个线程运行时，都在争夺CPU的资源，而且一个线程不可能长时间占用。</p>
+<p>​	那么就会产生一种很糟糕的情况，即生产者一段时间内没有争夺到CPU的资源，而消费者一直消费，但是我们的容器	stack里面已经空了，stack无法pop，就会产生异常。</p>
+<h2 id="3简单修改生产者以及消费者">3.简单修改生产者以及消费者</h2>
+<p>​	那么设置边际条件，使当stack容器中的内容为0时，消费者停止消费，而等生产者生产后在开始消费。</p>
+<p>​	运用多线程中的wait( )与notify( )方法，当stack容器中的内容为0时，让消费者wait( )，等待生产者生产之后再消费。</p>
+<p>​	修改完的例子运行之后，发现一切正常，消费者消费，生产者生产，一切祥和稳定。</p>
+<p>​	但真的是这样吗？</p>
+<h2 id="4再次深入">4.再次深入</h2>
+<p>​	如果我们不只有一个生产者与消费者，那么我们刚刚的程序会发生什么？</p>
+<p>​	我们会发现，会产生多个消费者之间会发生一种复杂的现象，我用下面的图来解释这种现象：</p>
+<p><img src="" alt="1577242149195"></p>
+<p>​	可以看到，由于每个线程之间在争夺CPU的资源，所以会出现 <strong>consumer1</strong> 在对<strong>数据1</strong> 进行操作的时候，<strong>consumer2</strong> 也争夺到了CPU资源，而 <strong>consumer1</strong> 的操作还未完成，<strong>数据1</strong> 还未被改动，导致 <strong>consumer2</strong> 读取到的还时数据1，那么数据1 就会被操作两次，出现错误。</p>
+<p>​	怎么解决呢，Java技术中，为了解决这种问题，为大家提供了关键字 <strong>synchronized</strong> 来解决，该关键字保证了当进行被 <strong>synchronized</strong> 关键字修饰的操作时，保证只有当前对象可以访问数据，其他的线程只能等待。</p>
+<p>​	下面放上经过修改后的 <strong>Consumer</strong> 和 <strong>Producer</strong> 类：</p>
+<pre><code>public class Consumer {
+    private int count;
+
+    public Consumer(int count){
+        this.count = count;
+    }
+
+    public void consume(Stack&lt;Character&gt; stack) throws InterruptedException{
+        String consumeChar;
+        synchronized (stack){
+            if(stack.size() == 0){
+                stack.wait();
+            }else{
+                consumeChar = String.valueOf(stack.pop());
+                assert consumeChar != null;
+                System.out.println(&quot;[ consumer&quot;+count+&quot; ] : consume &quot;+consumeChar+&quot;\n stack : &quot;+stack.size()+&quot;\n right now content : &quot;+stack.toString());
+                stack.notify();
+            }
+        }
+    }
+}
+public class Producer {
+    private int count;
+
+    public Producer(int count){
+        this.count = count;
+    }
+
+    public void produceRandomChar(Stack&lt;Character&gt; stack) throws InterruptedException {
+        Random random = new Random();
+        char randomChar = (char)(random.nextInt(25)+65);
+        synchronized (stack){
+            int MAX_SIZE = 10;
+            if(stack.size() == MAX_SIZE){
+                stack.wait();
+            }else{
+                stack.push(randomChar);
+                System.out.println(&quot;[ producer&quot;+count+&quot; ] : produce &quot;+randomChar+&quot;\n  stack : &quot;+stack.size()+&quot;\n right now content : &quot;+stack.toString());
+                stack.notify();
+            }
+        }
+    }
+}
+
+</code></pre><h2 id="5生产者与消费者之间进行交互的interaction类">5.生产者与消费者之间进行交互的Interaction类</h2>
+<pre><code>public class Interaction {
+    public static void main(String[] args) throws InterruptedException {
+        int count;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(&quot;[ Please input the number of thread ]&quot;);
+        count = scanner.nextInt();
+        Stack&lt;Character&gt; stack = new Stack&lt;&gt;();
+        Consumer[] consumers = new Consumer[count];
+        Producer[] producers = new Producer[count];
+        for (int i = 0; i &lt; count; i++) {
+            consumers[i] = new Consumer(i+1);
+            producers[i] = new Producer(i+1);
+        }
+        Thread[] consumersThread = new Thread[count];
+        Thread[] producersThread = new Thread[count];
+        final boolean[] flag = {true,true};
+        for (int i = 0; i &lt; count; i++) {
+            int finalI = i;
+            Thread produce = new Thread(() -&gt; {
+                try {
+                    while(flag[0]){
+                        producers[finalI].produceRandomChar(stack);
+                        Thread.sleep(500);
+                        if(stack.size() == 10){
+                            flag[0] = false;
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            produce.start();
+            producersThread[i] = produce;
+
+            Thread consume = new Thread(() -&gt; {
+                try {
+                    while(flag[1]){
+                        consumers[finalI].consume(stack);
+                        Thread.sleep(500);
+                        if(stack.size() == 0 &amp;&amp; !flag[1]){
+                            flag[0] = false;
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+            consume.start();
+            consumersThread[i] = consume;
+        }
+
+        for(Thread thread : consumersThread){
+            thread.join();
+        }
+        for (Thread thread: producersThread) {
+            thread.join();
+        }
+    }
+}
+</code></pre>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

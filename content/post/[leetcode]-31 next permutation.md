@@ -1,0 +1,106 @@
+---
+title: leetcode-31 next permutation
+tags: 
+    - leetcode
+    - 算法
+categories:
+    - 算法
+keywords: "算法"
+date: 2020-5-12 15:00:00
+top_img:
+cover: https://gitee.com/Javen-Liu/blogimage/raw/master/img/leetcode.png
+---
+
+# 题目简介
+
+![image-20200602153521952](https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602153734.png)
+
+题目很简单，对于给定的一个数，例如125，程序需要的输出需要满足下面两点：
+
+- 仍然由1、2、5组成
+- 在由1、2、5组成的数中，恰好比125大一点的数，即152
+
+其潜在的意思是将1、2、5三个数字组成的三位数，进行从小到大排列，然后获得在125后面的一个数，即152
+
+# 解题思路
+
+## 思路一
+
+### 基本思路
+
+如果按照最直接的想法，那就是使用回溯法，将组成输入的每一位进行拆分，然后排列组合，把所有组合的可能全部列出来。
+
+然后对于所有的组合进行排序，放入数组或者list中，再找到原来的输入值，取其后面的数，即为输出。
+
+同时我们可以看到，题目给的example中，特别列出了 321 -> 123。意味着如果输入的数，是所有组合中最大的那个，那么输出就取所有组合中最小的值。
+
+![image-20200602155117882](https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602155132.png)
+
+### 复杂度分析
+
+时间复杂度：*O(n!)*，可能的排列一共有n!个
+
+空间复杂度：*O(n)*，需要用数组将数据储存
+
+## 思路二
+
+### 基本思路
+
+我们观察一下数据，如果一个数，从左到右每一位上的数字都是递减的，那么该数为其组合中最大的数。毕竟数的位越高，其对于整个数大小的影响更大，就比如42和24，我们只用从最高位，就可以判断出42更大。因此一个数从左到右每一位上的数字都是递减的，其必定是最大的。
+
+那么我们就可以得出一个结论，从最低位开始，一直向右寻找，直到找到保证从右往左一直递增的最后一位。
+
+例如下图中 7 所在的位，即第5位，此时，我们可以保证第5位到最后第9位的数是这5个数组成的排列中，最大的数，无法找到比其更大的数（仅针对这5位）
+
+![](https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602160402.png)
+
+此时7前面的4，破坏了从右往左的递增规律。而对于 476531 来说，其后5位已经是最大的了，要想比它大，只能在最高位，也就是4所在的位进行进位。
+
+于是我们从7开始向右开始寻找，找到了仅仅比4大一点的5，我们让5和4进行交换，然后在对后5位进行排序，使其按照从右往左递增的规则进行排列，此时产生的 **576431** 是 “5” 开头的数中最小的，而 **476531** 是以 “4” 开头的数里最大的，所以 **576431** 就是我们的答案，在补全前面三位，就是答案 **158576431**
+
+![](https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602160857.png)
+
+整个流程的动图如下，转自LeetCode
+
+![Next Permutation](https://gitee.com/Javen-Liu/blogimage/raw/master/img/1df4ae7eb275ba4ab944521f99c84d782d17df804d5c15e249881bafcf106173-file_1555696082944.gif)
+
+### 复杂度分析：
+
+时间复杂度：*O(n)*，在最坏的情况下，也只需要遍历数组2遍
+
+空间复杂度：*O(1)*，无需额外空间，全部都是原地替换
+
+### 代码：
+
+```java
+class Solution {
+    public void nextPermutation(int[] nums) {
+        int i = nums.length-2;
+        while(i >= 0 && nums[i] >= nums[i+1]){
+            i--;
+        }
+        if(i >= 0){
+            int j = nums.length - 1;
+            while (j >= 0 && nums[j] <= nums[i]) {
+                j--;
+            }
+            swap(nums,i,j);
+        }
+        reverse(nums,i+1);
+    }
+    
+    private void swap(int[] nums, int i, int j){
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    
+    private void reverse(int[] nums, int s){
+        int l = s, r = nums.length-1;
+        while(l <= r){
+            swap(nums,l++,r--);
+        }
+    }
+}
+```
+

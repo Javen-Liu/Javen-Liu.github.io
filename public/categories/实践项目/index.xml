@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>实践项目 on Into The Matrix</title>
+    <link>https://javen-liu.github.io/categories/%E5%AE%9E%E8%B7%B5%E9%A1%B9%E7%9B%AE/</link>
+    <description>Recent content in 实践项目 on Into The Matrix</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Dec 2019 19:34:06 +0000</lastBuildDate><atom:link href="https://javen-liu.github.io/categories/%E5%AE%9E%E8%B7%B5%E9%A1%B9%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java实现TCP / IP协议下的聊天室</title>
+      <link>https://javen-liu.github.io/post/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</guid>
+      <description>&lt;h1 id=&#34;java实现tcp--ip协议下的聊天室运用多线程&#34;&gt;Java实现TCP / IP协议下的聊天室（运用多线程）&lt;/h1&gt;
+&lt;p&gt;分为了6个文件，总共分为两个大块：其中一个为Client客户端，另一个是Server服务器端，每一个大块里分别有主运行块以及发送和接受模块，然后用多线程来实现实时的收和发&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

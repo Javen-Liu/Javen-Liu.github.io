@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>日常 on Into The Matrix</title>
+    <link>https://javen-liu.github.io/categories/%E6%97%A5%E5%B8%B8/</link>
+    <description>Recent content in 日常 on Into The Matrix</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Dec 2019 19:34:06 +0000</lastBuildDate><atom:link href="https://javen-liu.github.io/categories/%E6%97%A5%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDEA热部署</title>
+      <link>https://javen-liu.github.io/post/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</guid>
+      <description>1. 引入spring-devtools 在项目的pom.xml文件中，添加spring-devtools的依赖
+&amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-devtools&amp;lt;/artifactId&amp;gt; &amp;lt;/dependency&amp;gt; 同时在其中的标签的内添加
+&amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.springframework.boot&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-boot-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;fork&amp;gt;true&amp;lt;/fork&amp;gt; &amp;lt;/configuration&amp;gt; &amp;lt;/plugin&amp;gt; 2. 设置idea  在File =&amp;gt; Settings =&amp;gt; Build, Execution, Deployment =&amp;gt; Compiler 中勾选Build Project automatically   快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running  </description>
+    </item>
+    
+  </channel>
+</rss>

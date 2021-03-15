@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>折腾Linux - 2.Shell的进程 // Into The Matrix</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.81.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="John Doe" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://javen-liu.github.io/css/main.min.4a7ec8660f9a44b08c4da97c5f2e31b1192df1d4d0322e65c0dbbc6ecb1b863f.css" />
+
+    
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="折腾Linux - 2.Shell的进程"/>
+<meta name="twitter:description" content="承接上文 上一篇中，我们实现了内网穿透，这样我们就可以直接使用SSH连接到内网的服务器。
+一旦可以用SSH连接进入设备，我们就可以掌控设备了（当然还需要root的密码）。
+但是我们关闭了终端之后，连接似乎就断了。这是怎么回事呢？
+本篇博客将深入到Linux，分析问题，最终解决这个问题。
+为什么关闭终端，frp也会自动关闭？ 首先我们要先了解一下shell
+something easy about shell shell是什么？
+shell可以理解为是一个夹在用户与操作系统之间的程序，我们在shell中输入指定的指令，点击回车后，shell会对我们输入的指令进行解释（interpret）执行，并与操作系统进行交互。
+所以shell的行为可以拆解为三大部分：
+ 读取输入命令 解析命令 执行命令，并将结果输出  同时shell中的指令分为了两大类：
+ shell自身的 builtin 指令，即shell自身支持的指令，例如：cd、ls等 shell自身无法解析的指令，这一类多数都是用户自己编写的程序   我们知道，在操作系统中，运行一个程序，都是需要单独开启一个进程（Process），来供程序运行。
+在Unix上只有两种启动进程的方法。 第一个（几乎用不到）是被初始化。 当Linux计算机启动时，将加载其内核。 加载并初始化后，内核仅启动一个进程，称为Init。 此过程将在计算机打开的整个时间范围内运行，并负责加载计算机需要使用的其余过程。
+也就是说，shell再神奇，也是在process上运行的。
+由于大多数程序不是Init，因此仅留下一种实用的方法来启动进程：fork（）系统调用。 调用此函数时，操作系统将复制该过程并启动它们的运行。 原始进程称为“父进程”，新进程称为“子进程”。 fork（）向子进程返回0，并将其子进程的ID（PID）返回给父进程。 从本质上讲，这意味着新流程的唯一方法就是开始现有流程的复制。
+对于shell自身的 builtin 指令，shell 都会在其自身的主线程中，进行执行的操作。
+而对于非shell本身自带的指令，在linux中，其会使用系统提供的 fork 接口，来创建一个子进程，然后在子进程中运行该指令。
+并且在子进程中运行指令时，主线程，也就是shell所在的进程，会等待子进程的执行结果。
+解决方案 shell中的 &ldquo;&amp;&rdquo; 指令 先做一个实验，在shell中，我们进入到之前frp的文件夹，输入：
+./frps -c ./frps.ini 按回车之后，程序开始运行，但此时我们发现，shell 中会输出 frps 程序的日志。
+同时，此时我们的 shell 无法进行其他操作，无法输入下一条指令，只是等待这 frps 程序输出。
+如果此时我们想要执行别的命令，要么就终止 frps 程序，要么就重开一个 shell 程序。
+这就和我们上面说的，主线程会等待子线程执行完毕，但是 frps 程序简单来说，是一直在一个循环里等待连接，所以除非启动失败或者手动关闭，否则这个 shell 就只会一直输出 frps 程序执行的日志。"/>
+
+    <meta property="og:title" content="折腾Linux - 2.Shell的进程" />
+<meta property="og:description" content="承接上文 上一篇中，我们实现了内网穿透，这样我们就可以直接使用SSH连接到内网的服务器。
+一旦可以用SSH连接进入设备，我们就可以掌控设备了（当然还需要root的密码）。
+但是我们关闭了终端之后，连接似乎就断了。这是怎么回事呢？
+本篇博客将深入到Linux，分析问题，最终解决这个问题。
+为什么关闭终端，frp也会自动关闭？ 首先我们要先了解一下shell
+something easy about shell shell是什么？
+shell可以理解为是一个夹在用户与操作系统之间的程序，我们在shell中输入指定的指令，点击回车后，shell会对我们输入的指令进行解释（interpret）执行，并与操作系统进行交互。
+所以shell的行为可以拆解为三大部分：
+ 读取输入命令 解析命令 执行命令，并将结果输出  同时shell中的指令分为了两大类：
+ shell自身的 builtin 指令，即shell自身支持的指令，例如：cd、ls等 shell自身无法解析的指令，这一类多数都是用户自己编写的程序   我们知道，在操作系统中，运行一个程序，都是需要单独开启一个进程（Process），来供程序运行。
+在Unix上只有两种启动进程的方法。 第一个（几乎用不到）是被初始化。 当Linux计算机启动时，将加载其内核。 加载并初始化后，内核仅启动一个进程，称为Init。 此过程将在计算机打开的整个时间范围内运行，并负责加载计算机需要使用的其余过程。
+也就是说，shell再神奇，也是在process上运行的。
+由于大多数程序不是Init，因此仅留下一种实用的方法来启动进程：fork（）系统调用。 调用此函数时，操作系统将复制该过程并启动它们的运行。 原始进程称为“父进程”，新进程称为“子进程”。 fork（）向子进程返回0，并将其子进程的ID（PID）返回给父进程。 从本质上讲，这意味着新流程的唯一方法就是开始现有流程的复制。
+对于shell自身的 builtin 指令，shell 都会在其自身的主线程中，进行执行的操作。
+而对于非shell本身自带的指令，在linux中，其会使用系统提供的 fork 接口，来创建一个子进程，然后在子进程中运行该指令。
+并且在子进程中运行指令时，主线程，也就是shell所在的进程，会等待子进程的执行结果。
+解决方案 shell中的 &ldquo;&amp;&rdquo; 指令 先做一个实验，在shell中，我们进入到之前frp的文件夹，输入：
+./frps -c ./frps.ini 按回车之后，程序开始运行，但此时我们发现，shell 中会输出 frps 程序的日志。
+同时，此时我们的 shell 无法进行其他操作，无法输入下一条指令，只是等待这 frps 程序输出。
+如果此时我们想要执行别的命令，要么就终止 frps 程序，要么就重开一个 shell 程序。
+这就和我们上面说的，主线程会等待子线程执行完毕，但是 frps 程序简单来说，是一直在一个循环里等待连接，所以除非启动失败或者手动关闭，否则这个 shell 就只会一直输出 frps 程序执行的日志。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://javen-liu.github.io/post/%E6%8A%98%E8%85%BElinux-2.shell%E7%9A%84%E8%BF%9B%E7%A8%8B/" /><meta property="article:section" content="post" />
+
+
+
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://javen-liu.github.io/"><img class="app-header-avatar" src="/avatar.jpg" alt="John Doe" /></a>
+      <h1>Into The Matrix</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vehicula turpis sit amet elit pretium.</p>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">折腾Linux - 2.Shell的进程</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jan 1, 0001
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          1 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+</svg>
+              <a class="tag" href="https://javen-liu.github.io/tags/linux/">Linux</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/%E8%BF%90%E7%BB%B4/">运维</a>
+              <a class="tag" href="https://javen-liu.github.io/tags/ubuntu/">Ubuntu</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="承接上文">承接上文</h1>
+<p>上一篇中，我们实现了内网穿透，这样我们就可以直接使用SSH连接到内网的服务器。</p>
+<p>一旦可以用SSH连接进入设备，我们就可以掌控设备了（当然还需要root的密码）。</p>
+<p>但是我们关闭了终端之后，连接似乎就断了。这是怎么回事呢？</p>
+<p>本篇博客将深入到Linux，分析问题，最终解决这个问题。</p>
+<h1 id="为什么关闭终端frp也会自动关闭">为什么关闭终端，frp也会自动关闭？</h1>
+<p>首先我们要先了解一下shell</p>
+<h2 id="something-easy-about-shell">something easy about shell</h2>
+<p>shell是什么？</p>
+<p>shell可以理解为是一个夹在用户与操作系统之间的程序，我们在shell中输入指定的指令，点击回车后，shell会对我们输入的指令进行解释（interpret）执行，并与操作系统进行交互。</p>
+<p>所以shell的行为可以拆解为三大部分：</p>
+<ul>
+<li>读取输入命令</li>
+<li>解析命令</li>
+<li>执行命令，并将结果输出</li>
+</ul>
+<p>同时shell中的指令分为了两大类：</p>
+<ul>
+<li>shell自身的 builtin 指令，即shell自身支持的指令，例如：cd、ls等</li>
+<li>shell自身无法解析的指令，这一类多数都是用户自己编写的程序</li>
+</ul>
+<hr>
+<p>我们知道，在操作系统中，运行一个程序，都是需要单独开启一个进程（Process），来供程序运行。</p>
+<p>在Unix上只有两种启动进程的方法。 第一个（几乎用不到）是被初始化。 当Linux计算机启动时，将加载其内核。 加载并初始化后，内核仅启动一个进程，称为Init。 此过程将在计算机打开的整个时间范围内运行，并负责加载计算机需要使用的其余过程。</p>
+<p>也就是说，shell再神奇，也是在process上运行的。</p>
+<p>由于大多数程序不是Init，因此仅留下一种实用的方法来启动进程：fork（）系统调用。 调用此函数时，操作系统将复制该过程并启动它们的运行。 原始进程称为“父进程”，新进程称为“子进程”。 fork（）向子进程返回0，并将其子进程的ID（PID）返回给父进程。 从本质上讲，这意味着新流程的唯一方法就是开始现有流程的复制。</p>
+<p>对于shell自身的 builtin 指令，shell 都会在其自身的主线程中，进行执行的操作。</p>
+<p>而对于非shell本身自带的指令，在linux中，其会使用系统提供的 fork 接口，来创建一个子进程，然后在子进程中运行该指令。</p>
+<p>并且在子进程中运行指令时，主线程，也就是shell所在的进程，会等待子进程的执行结果。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201127213109.png" alt=""></p>
+<h1 id="解决方案">解决方案</h1>
+<h2 id="shell中的--指令">shell中的 &ldquo;&amp;&rdquo; 指令</h2>
+<p>先做一个实验，在shell中，我们进入到之前frp的文件夹，输入：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">./frps -c ./frps.ini
+</code></pre></div><p>按回车之后，程序开始运行，但此时我们发现，shell 中会输出 frps 程序的日志。</p>
+<p>同时，此时我们的 shell 无法进行其他操作，无法输入下一条指令，只是等待这 frps 程序输出。</p>
+<p>如果此时我们想要执行别的命令，要么就终止 frps 程序，要么就重开一个 shell 程序。</p>
+<p>这就和我们上面说的，主线程会等待子线程执行完毕，但是 frps 程序简单来说，是一直在一个循环里等待连接，所以除非启动失败或者手动关闭，否则这个 shell 就只会一直输出 frps 程序执行的日志。</p>
+<p>此时我们键盘输入 ctrl + c，将程序终止。</p>
+<p>然后输入：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">./frps -c ./frps.ini &amp;
+</code></pre></div><p>点击回车，运行。</p>
+<p>此时我们发现，我们的 shell 竟然还可以继续输入命令并且运行。</p>
+<p>这正好证实了我们的说法，程序运行在子进程中，同时 shell 的主进程并没有等待子进程程序运行完毕。</p>
+<p>这样不就实现了让 frps 程序在后台运行的效果了嘛。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128101914.png" alt=""></p>
+<p>上图的终端里，下面开启了我们的程序（作为示范），上面使用</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ps -ef | grep frps
+</code></pre></div><p>指令，可以看到后台（也就是子进程）是在运行着 frps 的，而且下面的终端主线程并没有等待该终端子线程程序运行结束。</p>
+<h2 id="但是">但是。。。</h2>
+<p>但是 &amp; 指令，只是将程序放在了shell的子进程中运行，那如果shell主进程关闭了，子进程会怎么样呢？</p>
+<p>此时我们将下方的终端关闭。并在上面的终端里继续输入 ps -ef | grep frps 指令，会发现：</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128102422.png" alt=""></p>
+<p>程序被关闭了，也就是说子进程也关闭了。</p>
+<p>难道想要内网穿透，还得必须打开一个终端？</p>
+<h2 id="nohup">nohup</h2>
+<p>nohup（全称应该是 &ldquo;no hangup&rdquo;）这个指令，可以让运行的程序忽略 HUP 信号。</p>
+<p>那么何为HUP信号呢？每当与当前程序运行所在的进程相关的shell关闭时，也就是shell的主进程关闭时，会向子进程发送该信号，使其正在运行的程序关闭。</p>
+<p>如果使用了nohup指令，则会使当前的程序忽略掉 HUP 信号，也就是你的shell关闭后，其仍然可以继续运行，同时将输出信息，输出到当前目录下的 nohup.out。我们可以在nohup.out里查看程序运行的日志。</p>
+<p>OK，那我们再来实验：</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128103518.png" alt=""></p>
+<p>这次我们使用了nohup指令。然后我们关闭掉下方的shell，也就是启动 frps 程序的主线程。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128103615.png" alt=""></p>
+<p>可以看到，我们将下方的shell关闭后，frps 程序仍然在运行中，我们可以通过 ps 指令与万能的 grep 指令找到他。</p>
+<p>这样我们也就不用把终端一直挂着，而是随用随关闭。内网穿透就像暗地里的守护者一样，不在我们的视野范围内活动，但是没有他，我们就无法从自己的内网访问我们的服务器了。</p>
+<h1 id="写在最后">写在最后</h1>
+<p>本文从进程的角度，以frps为例，说明了linux中关于shell进程的问题。</p>
+<p>当然作者也是linux入门没多久的新人，如果文章中有什么错误，请联系作者，一起讨论。</p>
+<p>另外作者还想多一句嘴，查询这些资料时，国内的论坛指令参差不齐，只有一篇linux中国的文字像个样子，而且还是完全翻译linux.com上的文章，有能力的同学，还是用谷歌，并且用英文搜索，尤其是可以避开某个C字开头的论坛，文章质量太差了。</p>
+<p>linux本身就是因为开源免费而吸引了那么多技术人员、hacker们来维护、开发的，而某些博主<strong>偷窃、转载</strong>别人的linux技术文章，还设置需要钱才可以看。其中对比不免让人感到可笑而无奈。</p>
+<h1 id="参考">参考：</h1>
+<ul>
+<li><a href="https://linuxhint.com/how_to_use_nohup_linux/">https://linuxhint.com/how_to_use_nohup_linux/</a></li>
+<li><a href="https://superuser.com/questions/152688/why-run-a-linux-shell-command-with">https://superuser.com/questions/152688/why-run-a-linux-shell-command-with</a></li>
+<li><a href="https://brennan.io/2015/01/16/write-a-shell-in-c/">https://brennan.io/2015/01/16/write-a-shell-in-c/</a>（强烈推荐读者们看看，造造轮子，自然就会对轮子的内部结构有一定的认知）</li>
+<li><a href="https://www.jb51.net/article/186059.htm">https://www.jb51.net/article/186059.htm</a></li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

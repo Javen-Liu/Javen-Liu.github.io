@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Demo on Into The Matrix</title>
+    <link>https://javen-liu.github.io/tags/demo/</link>
+    <description>Recent content in Demo on Into The Matrix</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Dec 2019 19:34:06 +0000</lastBuildDate><atom:link href="https://javen-liu.github.io/tags/demo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java实现TCP / IP协议下的聊天室</title>
+      <link>https://javen-liu.github.io/post/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/tcp-ip%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</guid>
+      <description>&lt;h1 id=&#34;java实现tcp--ip协议下的聊天室运用多线程&#34;&gt;Java实现TCP / IP协议下的聊天室（运用多线程）&lt;/h1&gt;
+&lt;p&gt;分为了6个文件，总共分为两个大块：其中一个为Client客户端，另一个是Server服务器端，每一个大块里分别有主运行块以及发送和接受模块，然后用多线程来实现实时的收和发&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>运用线程池来查找含有指定字符的文件</title>
+      <link>https://javen-liu.github.io/post/%E8%BF%90%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E6%9F%A5%E6%89%BE%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%9A%84%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Fri, 20 Dec 2019 19:34:06 +0000</pubDate>
+      
+      <guid>https://javen-liu.github.io/post/%E8%BF%90%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E6%9F%A5%E6%89%BE%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%9A%84%E6%96%87%E4%BB%B6/</guid>
+      <description>&lt;h1 id=&#34;运用线程池来查找含有指定字符的文件&#34;&gt;运用线程池来查找含有指定字符的文件&lt;/h1&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
