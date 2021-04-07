@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="【Java设计模式】3.观察者模式问题的引入前几天我们刚完成了制造”鸭子”以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="Java,设计模式">
+  
+  <title>【Java设计模式】3.观察者模式 - Into The Matrix</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="【Java设计模式】3.观察者模式">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-12-20 19:34" pubdate>
+        2019年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">【Java设计模式】3.观察者模式</h1>
+            
+            <div class="markdown-body">
+              <h1 id="【Java设计模式】3-观察者模式"><a href="#【Java设计模式】3-观察者模式" class="headerlink" title="【Java设计模式】3.观察者模式"></a>【Java设计模式】3.观察者模式</h1><h1 id="问题的引入"><a href="#问题的引入" class="headerlink" title="问题的引入"></a>问题的引入</h1><p>前几天我们刚完成了制造”鸭子”以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。</p>
+<span id="more"></span>
+
+<p>电话的那头传来了焦急地声音：“嗨，我们听说你是这座城市里最厉害的程序员，请你帮帮我们解决一个技术上的难题！！”电话那头的人太过于紧张以至于连自己来自哪里，叫什么都还没有交代，就想请我们出山去为他们解除<strong>警报</strong>，“嗨老兄，我至少得知道你们是哪个公司，有什么方面的难题啊！我也不是神通广大，什么都会啊！”。</p>
+<p>经过一番交谈后，原来这是气象站来找我们，他们现在的天气实时检测系统与第三方的公司之间出现了交换数据的问题。还好这在我们java可以解决的业务范围内，看来我们的度假是要泡汤了，不过没事，我们可以当作把休息时间用来加班赚外快，有了钱犒劳犒劳自己。</p>
+<h2 id="还是老样子，先来思考框架"><a href="#还是老样子，先来思考框架" class="headerlink" title="还是老样子，先来思考框架"></a>还是老样子，先来思考框架</h2><p><img src="https://img-blog.csdnimg.cn/20190222131348848.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="基础框架"></p>
+<p> 气象站目前可以为我们提供一些基础的信息，而我们则需要根据这些信息设计一个布告板，为大家显示这些信息。（当然也可以用现在更为现代的说法叫手机app天气实时推送）</p>
+<p>也就是说，图中左半边的部分无需我们来设计，气象站有他们自己的一套设备，我们只需要把WeatherData类以及布告板设计好就行。</p>
+<p>那么让我们来设计一下这个WeatherData类以及布告板吧！</p>
+<h2 id="初版WeatherData类"><a href="#初版WeatherData类" class="headerlink" title="初版WeatherData类"></a>初版WeatherData类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WeatherData</span> </span>&#123;<br>    <span class="hljs-comment">//实例变量声明</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">measurementsChanged</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">float</span> temp = getTemperature();<br>        <span class="hljs-keyword">float</span> humidity = getHumidity();<br>        <span class="hljs-keyword">float</span> pressure = getPressure();<br>        <span class="hljs-comment">//三个假设已经实现的获取信息的方法</span><br><br>        statisticsDisplay.update(temp,humidity,pressure);<br>        normalConditionsDisplay.update(temp,humidity,pressure);<br>        <span class="hljs-comment">//布告板更新显示信息</span><br>    &#125;<br>    <span class="hljs-comment">//WeatherData的其他方法</span><br>    <span class="hljs-comment">//目前这只是一个简化的类，很多都是简要的标出，具体实现在下面部分</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这就是初版的实现方法，确实可以实现将信息从气象站中取出并更新布告板中的信息。但是不要高兴的太早，这时候需要读者你来思考一下，这个实现中，存在以下哪些问题？</p>
+<ul>
+<li><input disabled="" type="checkbox"> 我们现在是针对具体实现编程，而非针对接口。</li>
+<li><input disabled="" type="checkbox"> 对于每个新的布告板，我们都要改变代码。</li>
+<li><input disabled="" type="checkbox"> 我们无法在运行时动态的增加或减少布告板。</li>
+<li><input disabled="" type="checkbox"> 我们未封装改变的部分。</li>
+<li><input disabled="" type="checkbox"> 每当气象站信息出现改变时，我们手动得去获取信息不能保证我们实时的更新我们的布告板。</li>
+</ul>
+<p>很遗憾的是，对于上面所说的几种问题，我们的第一个实现都存在。<br> 是的，我们的程序确实存在这么多的问题。那么有没有一种方法可以解决呢？</p>
+<h1 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h1><p><img src="https://img-blog.csdnimg.cn/20190223225347925.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="观察者模式"></p>
+<p>其实，这样一种情况很多程序员前辈都注意到了这个问题，在Java中内置了这种模式，我们只需要了解如何使用即可。（具体的使用方法可以自行查看java.util包，里面包含了java.util.Observer以及java.util.Observable）下面用一个关系图来解释这种模式。</p>
+<h1 id="最终版实现"><a href="#最终版实现" class="headerlink" title="最终版实现"></a>最终版实现</h1><p>那么我们就只弄一个最简单的，布告板只设置一个最简单的NormalConditionDisplay()类，由于Observable是Java中内置的类，所以我们直接拿来用就好。下面是具体代码</p>
+<h2 id="DisplayElement（即上图中的Observer类）"><a href="#DisplayElement（即上图中的Observer类）" class="headerlink" title="DisplayElement（即上图中的Observer类）"></a>DisplayElement（即上图中的Observer类）</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">DisplayElement</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="WeatherData类"><a href="#WeatherData类" class="headerlink" title="WeatherData类"></a>WeatherData类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> weather;<br><span class="hljs-keyword">import</span> java.util.Observer;<br><span class="hljs-keyword">import</span> java.util.Observable;<br><br><span class="hljs-meta">@SuppressWarnings(&quot;unused&quot;)</span><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WeatherData</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Observable</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">float</span> temperature;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">float</span> humidity;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">float</span> pressure;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">WeatherData</span><span class="hljs-params">()</span></span>&#123;<br>    &#125;;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">measurementsChanged</span><span class="hljs-params">()</span></span>&#123;<br>        setChanged();<br>        notifyObservers();<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setMeasurements</span><span class="hljs-params">(<span class="hljs-keyword">float</span> temperature,<span class="hljs-keyword">float</span> humidity,<span class="hljs-keyword">float</span> pressure)</span></span>&#123;<br>        <span class="hljs-keyword">this</span>.temperature = temperature;<br>        <span class="hljs-keyword">this</span>.humidity = humidity;<br>        <span class="hljs-keyword">this</span>.pressure = pressure;<br>        measurementsChanged();<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">float</span> <span class="hljs-title">getTemperature</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> temperature;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">float</span> <span class="hljs-title">getHumidity</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> humidity;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">float</span> <span class="hljs-title">getPressure</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">return</span> pressure;<br>    &#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="NormalConditionDisplay-类"><a href="#NormalConditionDisplay-类" class="headerlink" title="NormalConditionDisplay()类"></a>NormalConditionDisplay()类</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.Observer;<br><span class="hljs-keyword">import</span> java.util.Observable;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NormalConditionDisplay</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Observer</span>,<span class="hljs-title">DisplayElement</span> </span>&#123;<br>    Observable observable;<br>    <span class="hljs-keyword">float</span> temperature;<br>    <span class="hljs-keyword">float</span> humidity;<br>    <span class="hljs-keyword">float</span> pressure;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">NormalConditionDisplay</span><span class="hljs-params">(Observable a)</span> </span>&#123;<br>        <span class="hljs-comment">// TODO Auto-generated constructor stub</span><br>        <span class="hljs-keyword">this</span>.observable = a;<br>        a.addObserver(<span class="hljs-keyword">this</span>);<br>    &#125;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">update</span><span class="hljs-params">(Observable o, Object arg)</span> </span>&#123;<br>        <span class="hljs-keyword">if</span>(o <span class="hljs-keyword">instanceof</span> WeatherData)&#123;<br>            <span class="hljs-keyword">this</span>.temperature = ((WeatherData) o).getTemperature();<br>            <span class="hljs-keyword">this</span>.humidity = ((WeatherData) o).getHumidity();<br>            <span class="hljs-keyword">this</span>.pressure = ((WeatherData) o).getPressure();<br>            display();<br>        &#125;<br>    &#125;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">display</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-comment">// TODO Auto-generated method stub</span><br>        System.out.println(<span class="hljs-string">&quot;Current conditions:\ntemperature:&quot;</span>+temperature+<span class="hljs-string">&quot;\nhumidity:&quot;</span>+humidity<br>                +<span class="hljs-string">&quot;\npressure&quot;</span>+pressure);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="WeatherSystem类（即测试类）"><a href="#WeatherSystem类（即测试类）" class="headerlink" title="WeatherSystem类（即测试类）"></a>WeatherSystem类（即测试类）</h2><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs haxe"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">WeatherSystem</span> </span>&#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> void main(<span class="hljs-keyword">String</span>[] args)&#123;<br>        WeatherData w = <span class="hljs-keyword">new</span> <span class="hljs-type">WeatherData</span>();<br>        NormalConditionDisplay n = <span class="hljs-keyword">new</span> <span class="hljs-type">NormalConditionDisplay</span>(w);<br>        w.setMeasurements(<span class="hljs-number">27</span>, <span class="hljs-number">11</span>, <span class="hljs-number">30</span>);<br>    &#125;<br>&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="最终运行结果"><a href="#最终运行结果" class="headerlink" title="最终运行结果"></a>最终运行结果</h2><p><img src="https://img-blog.csdnimg.cn/20190223233437864.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM3MzQ0MDI1,size_16,color_FFFFFF,t_70" srcset="/img/loading.gif" lazyload alt="运行结果"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>观察者模式可以让我们实现这样一种关系：即主题与观察者一对多，观察者依赖于此主题，只要主题状态一有变化，观察者就会被通知，而无须观察者手动地去接收信息。</p>
+<p>并且我们可以随时增加我们想要添加的Observer类，在例子中也就是”布告板”，并且对于不对已经编好的代码进行修改。</p>
+<p> 但是，需要注意的是，Java内置的Observable类是一个”类”，而非接口，它是一个类导致它的实现只能对其进行  <strong>继承</strong>  ,目前为止，我们已经有三篇文章讲解了关于设计模式，大家应该都明白，在一个设计的系统中，最好少用继承，继承制约了代码的使用和复用。</p>
+<p> 并且在设计模式中有一个很重要的概念，那就是不要对 <strong>具体的类</strong> 进行编程，要对 <strong>接口</strong> 进行编程，在学习过程中，慢慢的有些理解这句话的含义，虽然理解得不够透彻。</p>
+<p>之前听Java课的时候，老师曾给我们输入了一个概念，那就是一个Java项目由很多人来进行负责、编代码，每个人都完成自己的任务，如果对于具体的类进行编程，那么就意味着别人写的代码里的一个类你借用了，那么别人一旦修改了代码，你也要进行修改，而一个大的项目必然是很多类之间进行数据交换，那么如果都针对具体的类编程，那么一旦修改一个地方，必然会牵一发而动全身地修改。所以针对 <strong>接口</strong> 编程，可以让每个程序员之间拥有一定的独立性，而中间的联系就让专门的人写好接口，我们用即可，我们在自己类中进行编程只需要使用接口中定义了的属性以及方法即可，至于最终使用的是那个类的方法，则是在程序运行时，由编译器自己进行决定，这也就是Java基础中所讲到的 <strong>多态</strong>。</p>
+<p> 以上是本人结合目前学习的模式知识以及Java基础知识所总结出来的，可能有些由错误，不过随着深入的学习，慢慢的思考，很多东西也就能慢慢地理解。总之，共勉吧！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java/">Java</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/20/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【Java设计模式】2.装饰者模式</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/12/20/%E8%BF%90%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%9D%A5%E6%9F%A5%E6%89%BE%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6%E7%9A%84%E6%96%87%E4%BB%B6/">
+                        <span class="hidden-mobile">运用线程池来查找含有指定字符的文件</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

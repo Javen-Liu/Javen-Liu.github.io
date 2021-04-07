@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="Java,web技术">
+  
+  <title>会话技术 - Into The Matrix</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.9a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}}};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" href="javascript:">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="会话技术">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-12-20 19:34" pubdate>
+        2019年12月20日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      911 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      10
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">会话技术</h1>
+            
+            <div class="markdown-body">
+              <h1 id="会话技术"><a href="#会话技术" class="headerlink" title="会话技术"></a>会话技术</h1><ol>
+<li>会话：一次会话中包含多次请求和响应<ul>
+<li>一次会话：浏览器第一次给服务器资源发送请求，会话建立。直到有一方断开为止</li>
+</ul>
+</li>
+<li>功能：在一次会话的范围内，共享数据</li>
+<li>方式：<ol>
+<li>客户端会话技术：Cookie</li>
+<li>服务器会话技术：Session</li>
+</ol>
+</li>
+</ol>
+<h2 id="1-Cookie"><a href="#1-Cookie" class="headerlink" title="1. Cookie"></a>1. Cookie</h2><h3 id="1-概念：客户端会话技术，将数据保存在客户端的技术"><a href="#1-概念：客户端会话技术，将数据保存在客户端的技术" class="headerlink" title="1.概念：客户端会话技术，将数据保存在客户端的技术"></a>1.概念：客户端会话技术，将数据保存在客户端的技术</h3><h3 id="2-快速入门"><a href="#2-快速入门" class="headerlink" title="2.快速入门"></a>2.快速入门</h3><ul>
+<li>使用步骤：<ol>
+<li>创建Cookie对象，绑定数据<ul>
+<li>new Cookie(String name,String value)</li>
+</ul>
+</li>
+<li>发送Cookie对象<ul>
+<li>response.addCookie(Cookie cookie)</li>
+</ul>
+</li>
+<li>获取Cookie对象，拿到数据<ul>
+<li>Cookie[ ]  request.getCookie( )</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-实现原理"><a href="#3-实现原理" class="headerlink" title="3.实现原理"></a>3.实现原理</h3><ul>
+<li>基于响应头的set-cookie和请求头cookie实现</li>
+</ul>
+<h3 id="4-cookie的细节"><a href="#4-cookie的细节" class="headerlink" title="4.cookie的细节"></a>4.cookie的细节</h3><ol>
+<li><p>一次可不可以发送多个cookie？</p>
+<ul>
+<li><strong>可以</strong> </li>
+<li>可以创建多个Cookie对象，使用response调用多次addcookie方法发送cookie即可</li>
+</ul>
+</li>
+<li><p>cookie在浏览器中保存多长时间？</p>
+<ol>
+<li><p>默认情况下，当浏览器关闭时，Cookie数据被销毁</p>
+</li>
+<li><p>持久化储存</p>
+<ul>
+<li>setMaxAge(int seconds)：<ol>
+<li>正数：将Cookie数据写到硬盘的文件中。持久化存储，cookie存活时间可设置</li>
+<li>负数：默认值，存储在内存中，浏览器关闭cookie就销毁</li>
+<li>零：删除cookie信息</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>cookie能不能存中文？</p>
+<ul>
+<li>在tomcat 8 之前不能（需要将中文数据转码）</li>
+<li>在tomcat 8 之后可以</li>
+</ul>
+</li>
+<li><p>cookie获取范围多大？</p>
+<ol>
+<li>假设在一个tomcat服务器中，部署了多个web项目，那么在这些web项目中cookie能不能共享？<ul>
+<li>默认情况下cookie不能共享</li>
+<li>setPath(String path)：设置cookie的获取范围。一般设置当前的虚拟目录</li>
+</ul>
+</li>
+<li>不用的tomcat服务器间cookie共享问题？<ul>
+<li>setDomain(String path) ：如果设置一级域名相同，那么多个服务器之间的cookie可以共享</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="5-cookie的特点"><a href="#5-cookie的特点" class="headerlink" title="5.cookie的特点"></a>5.cookie的特点</h3><ol>
+<li>cookie存储数据在客户端浏览器</li>
+<li>浏览器对于单个cookie的大小又限制，以及对同一个域名下的总cookie数量也有限制</li>
+<li><strong>作用</strong>：<ul>
+<li>cookie一般用于存储少量的不太敏感的数据</li>
+<li>在不登陆的情况下保存一定的用户设置偏好</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="2-Session"><a href="#2-Session" class="headerlink" title="2. Session"></a>2. Session</h2><h3 id="1-概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession"><a href="#1-概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession" class="headerlink" title="1.概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession"></a>1.概念：服务器端会话技术，在一次会话的多次请求间共享数据，将数据保存在服务器端的对象中。HttpSession</h3><h3 id="2-快速入门-1"><a href="#2-快速入门-1" class="headerlink" title="2.快速入门"></a>2.快速入门</h3><ul>
+<li>获取HttpSession对象<ul>
+<li>HttpSession session = request.getSession( )</li>
+</ul>
+</li>
+<li>使用HttpSession对象<pre><code>* void setAttribute(String name,String value)
+</code></pre>
+<ul>
+<li>String getAttribute(String name)</li>
+<li>void removeAttribute(String name)</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-原理"><a href="#3-原理" class="headerlink" title="3.原理"></a>3.原理</h3><ul>
+<li>Session的实现是依赖于cookie的</li>
+</ul>
+<h3 id="4-细节"><a href="#4-细节" class="headerlink" title="4.细节"></a>4.细节</h3><pre><code> 1. 当客户端关闭后，服务器不关闭，两次获取的Session是否为同一个？
+ * 默认情况下不是
+ * 如果需要相同，那么可以设置响应头中的cookie地址未固定值
+2. 客户端不关闭，服务器关闭后，两次获取的session是同一个吗？
+</code></pre>
+<ul>
+<li>不是同一个，但要确保数据不丢失<ul>
+<li>session的钝化：<ul>
+<li>在服务器正常关闭之前，将session对象序列化到硬盘中</li>
+</ul>
+</li>
+<li>session的活化：<ul>
+<li>在服务器启动后，将session文件转化为内存中的session对象即可</li>
+</ul>
+</li>
+<li><strong>tomcat将session的钝化和活化都自动做了，虽然对象不同，但是数据还是相同的</strong></li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>session什么时候被销毁<ol>
+<li>服务器关闭</li>
+<li>session对象调用invalidate( )</li>
+<li>session默认失效时间为30分钟</li>
+</ol>
+</li>
+<li>session特点<ol>
+<li>session用于存储一次会话的多次请求数据，存在服务器端</li>
+<li>session可以存储任意类型，任意大小的数据</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="3-Sessions和Cookie的区别"><a href="#3-Sessions和Cookie的区别" class="headerlink" title="3.Sessions和Cookie的区别"></a>3.Sessions和Cookie的区别</h2><pre><code> 1. session存储数据在服务器端，cookie在客户端
+ 2. session没有数据大小限制，cookie有
+ 3. session数据安全，cookie相对于不安全
+</code></pre>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/web%E6%8A%80%E6%9C%AF/">web技术</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Java/">Java</a>
+                    
+                      <a class="hover-with-bg" href="/tags/cookie%E4%B8%8Esession/">cookie与session</a>
+                    
+                      <a class="hover-with-bg" href="/tags/web%E6%8A%80%E6%9C%AF/">web技术</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2019/12/20/TCP%20%20IP%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java实现TCP / IP协议下的聊天室</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">IDEA热部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/debouncer.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+  <script>
+    (function () {
+      var path = "/local-search.xml";
+      $('#local-search-input').on('click', function() {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      });
+      $('#modalSearch').on('shown.bs.modal', function() {
+        $('#local-search-input').focus();
+      });
+    })()
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
