@@ -273,7 +273,7 @@
 <p>JDK的动态代理有一个问题，就是他代理的类，必须是接口的实现类，否则无法生成代理类。</p>
 <p>那么既然我们知道了JDK动态代理是基于生成动态代理类，我们能不能自己尝试写一个呢？</p>
 <h1 id="手动实现动态代理"><a href="#手动实现动态代理" class="headerlink" title="手动实现动态代理"></a>手动实现动态代理</h1><h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>在开始写动态代理前，我们先看看静态代理。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418133747115.png" srcset="/img/loading.gif" lazyload alt="image-20210418133747115"></p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418133747115.png" srcset="/img/loading.gif" lazyload alt="静态代理"></p>
 <p>实际上如果是静态代理，其实就是代理对象（Proxy对象）将实际的实现类对象（Impl对象）包装在自己内部，当主程序通过多态调用接口类（Interface对象）方法时，代理类可以在实际的实现类方法调用的前、后进行自己的操作。</p>
 <p>不过既然它是静态代理，因此调用的方式、先后顺序以及其代理的接口类都是写死的，极其不通用，所以我们才需要实现“动态”，来满足各种需求。</p>
 <h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>我实现的动态代理，其实和静态代理很相似，只不过对于代理的对象，可以进行自定义，同时代理对象的操作也可以定制。</p>
@@ -296,16 +296,16 @@
 <li>对文件进行编译，生成 $Proxy0.class 字节码文件</li>
 <li>通过 java 的反射机制，动态加载  $Proxy0.class 字节码文件，并在jvm中生成对应的Class类对象，并实例化生成对象，返回方法调用</li>
 </ol>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141300704.png" srcset="/img/loading.gif" lazyload alt="image-20210418141300704"></p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141300704.png" srcset="/img/loading.gif" lazyload alt="Test.java 用于测试"></p>
 <p>完成后创建一个Test类，进行测试。</p>
 <p>首先创建一个实现了invoke方法的 InvocationHandler 对象实例，然后通过 UserPersistenceProxy 类的 newInstance 静态方法，生成代理后的对象。</p>
 <p>调用接口类中的方法，根据多态，其会自动判别调用的方法。</p>
 <p>其中 UserInterface 如下图。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141625056.png" srcset="/img/loading.gif" lazyload alt="image-20210418141625056"></p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141625056.png" srcset="/img/loading.gif" lazyload alt="接口类"></p>
 <p>而接口的实现类如下图。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141645757.png" srcset="/img/loading.gif" lazyload alt="image-20210418141645757"></p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141645757.png" srcset="/img/loading.gif" lazyload alt="实现类"></p>
 <p>此时我们运行该测试，最终 terminal 输出如下：</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141723345.png" srcset="/img/loading.gif" lazyload alt="image-20210418141723345"></p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141723345.png" srcset="/img/loading.gif" lazyload alt="最终运行结果"></p>
 <p>确实实现了动态生成字节码，并代理的效果。并且代理类确实是在运行时生成并加载的，相比于静态代理，更加的灵活。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在自己实现了简单的动态代理后，对于动态代理的实现方式，就有了一些自己的理解。</p>
 <p>对于我自己个人来讲，我不太喜欢死记硬背。相反，我更喜欢自己尝试去理解，通过探索、理解的过程，来让大脑自己记住，而不是强迫大脑去记忆。</p>
