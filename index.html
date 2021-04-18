@@ -194,6 +194,59 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/04/17/%E7%94%B1%E9%A1%B9%E7%9B%AE%E8%B8%A9%E5%9D%91%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83%20-%20%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0/">由项目踩坑引发的思考 - 动态代理的原理与手动实现</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/04/17/%E7%94%B1%E9%A1%B9%E7%9B%AE%E8%B8%A9%E5%9D%91%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83%20-%20%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0/">
+          
+          
+            
+          
+          前言 最近项目中，由于明文传输user_id有一定的风险，所以采用上一片文章中的方法，将user_id以及一些数据加密为token并保存在客户端。
+每次客户端请求时，携带上token，服务器解析该token获取相关数据。
+不过由于该项目由我们从0开始搭建的，之前没有其他项目踩坑的经历，所以在很多框架结构的设计上，埋下了不少的坑。
+其中之一，就是为了测试方便，一开始写controller时，传use
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-04-17 16:04" pubdate>
+              2021-04-17
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Java/">Java</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">Java</a>
+            
+              <a href="/tags/%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/">动态代理</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/04/11/JWT%20%E2%80%94%E2%80%94%20JSON%20WEB%20TOKEN/">JWT —— Json Web Token</a>
       </h1>
 
@@ -704,67 +757,6 @@ JVM实现者可以通过 System.gc() 调用来决定JVM的GC行为。而一般�
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7/">脚本工具</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/08/15/JVM%20-%2013.StringTable/" target="_self">
-          <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 13 StringTable">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/08/15/JVM%20-%2013.StringTable/">JVM 笔记 - 13 StringTable</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/08/15/JVM%20-%2013.StringTable/">
-          
-          
-            
-          
-          String的基本特性
-String：字符串，使用一对””引起来表示
-String声明为final的，不可被继承
-String实现了Serializable接口：表示字符串是支持序列化的；也实现了Comparable接口：表示String可以比较大小
-String在 jdk8 及以前内部定义了 final char[ ] value 用于存储字符串数据，jdk9 时改为了 byte[ ]
-Stri
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-08-15 17:30" pubdate>
-              2020-08-15
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JVM/">JVM</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JVM/">JVM</a>
-            
-              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
             
           </div>
         

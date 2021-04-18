@@ -192,6 +192,67 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/08/15/JVM%20-%2013.StringTable/" target="_self">
+          <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 13 StringTable">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/08/15/JVM%20-%2013.StringTable/">JVM 笔记 - 13 StringTable</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/15/JVM%20-%2013.StringTable/">
+          
+          
+            
+          
+          String的基本特性
+String：字符串，使用一对””引起来表示
+String声明为final的，不可被继承
+String实现了Serializable接口：表示字符串是支持序列化的；也实现了Comparable接口：表示String可以比较大小
+String在 jdk8 及以前内部定义了 final char[ ] value 用于存储字符串数据，jdk9 时改为了 byte[ ]
+Stri
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-15 17:30" pubdate>
+              2020-08-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/JVM/">JVM</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JVM/">JVM</a>
+            
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/08/12/JVM%20-%2012.%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E/" target="_self">
           <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 12 执行引擎">
         </a>
@@ -732,64 +793,6 @@ Java虚拟机栈
               <a href="/tags/2020/">2020</a>
             
               <a href="/tags/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/">个人总结</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/07/16/JVM%20-%204.%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/" target="_self">
-          <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 4 程序计数器">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/07/16/JVM%20-%204.%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/">JVM 笔记 - 4 程序计数器</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/07/16/JVM%20-%204.%E7%A8%8B%E5%BA%8F%E8%AE%A1%E6%95%B0%E5%99%A8/">
-          
-          
-            
-          
-          PC RegisterJVM中的程序记数寄存器（Program Counter Register）中，Register 的命名源于CPU的寄存器，寄存器存储指令相关的现场信息。
-在这里，并非是广义上所指的物理寄存器，或许将其翻译为PC技术器（或指令计数器）更加贴切。JVM中的PC寄存器是对物理PC寄存器的一种抽象模拟。
-作用：PC寄存器用来存储指向下一条指令的地址，也即将要执行的指令代码。有执行引
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-07-16 16:33" pubdate>
-              2020-07-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JVM/">JVM</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JVM/">JVM</a>
-            
-              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
             
           </div>
         
