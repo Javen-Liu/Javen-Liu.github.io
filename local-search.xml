@@ -58,13 +58,27 @@
   
   
   <entry>
-    <title></title>
+    <title>线程是怎样切换的？</title>
     <link href="/2021/02/03/%E7%BA%BF%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E5%88%87%E6%8D%A2%E7%9A%84%EF%BC%9F/"/>
     <url>/2021/02/03/%E7%BA%BF%E7%A8%8B%E6%98%AF%E6%80%8E%E6%A0%B7%E5%88%87%E6%8D%A2%E7%9A%84%EF%BC%9F/</url>
     
     <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><h2 id="寒假期间的安排"><a href="#寒假期间的安排" class="headerlink" title="寒假期间的安排"></a>寒假期间的安排</h2><p>很久没有更新文章了，其实寒假的时候写了2020年下半年的总结，但是因为换了个电脑，以前hexo的配置也没同步过来，所以也就没有把文章上传上去。</p><p>寒假一直在看《操作系统真象还原》，看书名应该就能知道，是关于操作系统的书。</p><p>在看这本书之前，我也看了一本入门的书，书名大概叫《30天自制操作系统》，给我当时入了个门。</p><p>但是看完之后，仍然对于整个操作系统，还是没有一个较为系统的概念。</p><p>比如进程的切换啊，内存管理啊，写的都不是很详细。</p><p>寒假我看网上推荐的《操作系统真象还原》，就在放假前，去图书馆借了一本，带回家看。</p><p>虽然对于基础比较好的人来说，这本书写的有点啰嗦，也就是有些概念作者使用较为白话的方式，来解释。</p><p>但是对于我这样一个小白来说，还是有助于理解的。</p><p>与此同时还配合了哈工大李志军老师的《操作系统》公开课，非常受益！非常建议看过入门书籍后的同学，去听听课，做一做配套的实验课，对于理解整个系统是有帮助的。</p><h2 id="关于《crafting-interpreters》"><a href="#关于《crafting-interpreters》" class="headerlink" title="关于《crafting interpreters》"></a>关于《crafting interpreters》</h2><p>寒假同时还一直在看一个外国老哥写的《crafting interpreters》，一本带着你写解释器的书。</p><p>从去年就一直在看，从最开始用Java写，到第二步，使用c语言实现一个解释器，这本书真的就像作者自己说的那样，带你实现一个简单的解释器，破除对于编程语言的蜜汁害怕，让你发现，语言原来没那么高深。（至少语言的本质是能有所了解的）</p><p>去年的博客里，就有我自己翻译这本书的文章，不过一共就只有3篇，后面也没翻译了，因为涉及到的名词还是很多的，同时本人有比较懒。</p><p>当然最最重要的一点，也是为什么我专门写了一个小标题，就是这本书的质量真的非常好，写的也是很通俗易懂，直接看英文，比看我这种二流程序员翻译了一遍，要好很多。</p><p>我的翻译水平也不是很行，真的直接看原文，反而能够理解作者的意思，同时还能get到很多有梗，开玩笑的地方。而且这本书中的所有插图，全是作者自己画的！非常厉害，画的很精美，且很好地帮助读者理解一些概念。</p><p>所以我还是推荐大家直接去这本书的网站去看。目前这本书是作者公开在网络上的，完全免费的，想要了解一些关于编程语言的同学，试着去读一下这本书，还可以锻炼自己的英文阅读能力，以后毕业写论文也绝对是用得上的。</p><h1 id="引出问题"><a href="#引出问题" class="headerlink" title="引出问题"></a>引出问题</h1><p>最开始学习软件方面的时候，是在大三的时候学习了Java课程，OOP给当时的我，带来了很大的影响。</p><p>因为大一的时候，学习了c语言，但也只是学了最简单的数据类型，控制流，再深入的老师也没教，所以我一直又个疑问，那就是学了编程语言，到底怎么做出那些看着很厉害的软件的，就靠这些if else吗？</p><p>后来学了OOP，动手写了一个自动售货机的实验，当时还分成了展示层、服务层和数据层，慢慢地让我了解了怎么写出一个看上去还行的“东西”，起码它可以交互了。</p><p>后来慢慢开始深入地学习Java，学习了框架，开始了解多线程，了解到了JVM。</p><p>但是，仍然有一个问题让我感到很疑惑：多线程里，线程是怎么切换的？</p><p><strong>ps：本文有点硬核，并且作者水平有限，但也尽量做到能够用白话讲这个过程讲清楚。</strong></p><h1 id="C语言文件到底是怎么运行的？"><a href="#C语言文件到底是怎么运行的？" class="headerlink" title="C语言文件到底是怎么运行的？"></a>C语言文件到底是怎么运行的？</h1><p>在讲解线程切换的原理之前，我们先弄清楚C语言文件到底是如何跑起来的。在理解这个问题之后，线程切换就好理解多了</p><p>CPU其实就很像一个流水线上的工人，只不过这个工人的效率实在是太高了。</p><p>CPU只识别的了机械码，也就是那一堆一堆的“0010100101010101……”。</p><p>对于CPU来说，执行这些机械码，效率是很高的。但是缺点嘛，显而易见，那就是人太难看懂了。</p><p>难道我们只能背下来所有的机械码，然后一个一个地输入0和1吗？</p><p>前人们显然也觉得这样写程序效率非常低，而且专业性太高了。</p><p>所以他们在想，我们能不能发明一种东西，我们人类按照规定好的方式写，用这个“东西”帮我们翻译成机械码？对，这就是后来的汇编语言以及对应的编译器。</p><p>后来人们发现汇编语言还是有点晦涩难懂，而且不断地操作那些寄存器，太麻烦了，就不能更方便一些吗？对，这就是后来的C语言。</p><p>总结，也就是说，我们写出来的C语言文件，都是通过gcc（GNU C Complier）来进行编译，转成CPU能直接理解的机械码，让CPU来运行。</p><p>实际上CPU是不认识C语言是什么的，它只会不厌其烦，或者说应该叫，锲而不舍地运行CS：IP指向的下一条机械码（CS：IP本文就不展开介绍了，这又涉及到计算机的基础知识，不清楚的读者建议去搜索，或者看看计算机相关的基础书籍），我们先用我们好理解的C语言写出程序，然后通过gcc这样一个工具，把它变成机械码，让CPU执行。</p><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210314202800431.png" alt="C语言运行起来的过程"></p><p>总结：我们平常用的高级语言，例如C语言，实质上是使用编译器将其转化为了机械指令，然后CPU运行的就是编译后的机械指令。</p><h1 id="那么Java中的线程，和上面说的C语言有什么联系呢？"><a href="#那么Java中的线程，和上面说的C语言有什么联系呢？" class="headerlink" title="那么Java中的线程，和上面说的C语言有什么联系呢？"></a>那么Java中的线程，和上面说的C语言有什么联系呢？</h1><p>是这样的，用《操作系统真象还原》书中所说的，我们平时使用高级语言（C、Java、python等等）写出来的程序，都是“半成品”。</p><p>为什么说是半成品呢，因为我们的程序在运行时，是属于“用户态”的，是无法使用包括但不限于：读写硬盘（也就是IO操作）、读写内存等操作的。这些操作是由“内核态”的程序来提供的，这些操作是实打实会影响计算机的行为，所以“内核态”的程序（也就是操作系统）不放心用户，害怕用户乱操作会把电脑弄坏，因此操作系统会把这些操作封装起来，只提供一定的接口，让我们“用户态”的程序来调用。</p><p>所以我们写出来的程序只能完成一部分的逻辑操作，涉及到上面说的那些重要操作，就不得不与操作系统进行交互。我们准备好数据，交给操作系统，操作系统做完后，把结果返回给我们，我们的用户程序实际上不知道操作系统怎么完成这些操作的。并且如果用户程序想要搞破坏，操作系统也是有权利拒绝这些违规操作。（甚至可以说一些能很容易破坏计算机正常运行的操作，操作系统都是有责任向用户屏蔽，不提供给用户的）</p><p>而作为高级语言之一的Java，其中的线程，恰好就是操作系统封装好，防止我们乱用，给我们提供的功能。</p><p>所以实质上，Java的线程，底层上来说就是操作系统帮我们做好的线程操作，Java对其进行了一定的封装，只提供一些较为安全且易用的操作。比如HotSpot VM，其每个线程都对应了一个内核级线程。（虚拟机的线程模型有1:1（内核线程）、N:1（用户态线程）、M:N（混合）三种，虚拟机规范中没有规定一定要用哪种，所以三种模型都有被使用，HotSpot VM就是1:1模型，即Java语言中的一个线程与内核级线程是1:1）</p><p>而很多操作系统，都是使用C语言开发后，编译成了机械指令，运行起来的，所以想要知道线程是怎么切换的，还是要看操作系统对于线程切换的实现。</p><h1 id="操作系统的线程"><a href="#操作系统的线程" class="headerlink" title="操作系统的线程"></a>操作系统的线程</h1><p>本文所写的线程实现，出自《操作系统真象还原》这本书中，虽然和linux的实现方式可能有些小的出入，但思路是参考了linux，因此大同小异。</p><h2 id="并行与并发"><a href="#并行与并发" class="headerlink" title="并行与并发"></a>并行与并发</h2><p>首先我们要明白，线程切换本质是并发。</p><p>以下举例是在单核CPU运行的情况下，多核我们暂时不讨论，毕竟饭一口一口吃，先弄懂基础的。</p><p>什么是并发？就是在一段时间内，例如1000ms内，我以极快的速度在程序A与程序B之间切换，保证了每运行程序A 2ms之后，就换到程序B运行2ms，再切换回程序A，反反复复。</p><p>那么相比于2ms，1000ms看起来就很长，也就是说，1000ms内，程序A与B每个都平均地运行了500ms。而且由于切换的非常快，在我们人类的宏观来看，就像这1000ms内，程序A与B都在同时运行一样。</p><p>所以<strong>并发</strong>在微观上，<strong>同一时刻</strong> 只有一个程序在运行，只不过由于不停地在切换，所以从宏观上来看，像是两个或多个程序在同时运行。</p><p>而<strong>并行</strong>就是实打实的多个程序在同一时刻同时运行，一个核心的CPU理论上是无法做到这个操作的，只有多个核心可以。</p><h2 id="线程是由谁切换的？"><a href="#线程是由谁切换的？" class="headerlink" title="线程是由谁切换的？"></a>线程是由谁切换的？</h2><p>既然是并发，要涉及到切换来切换去。</p><p>那么是谁来进行的切换呢？总不能用户程序自己切换吧，那不就乱了套嘛！我作为一个开发者，我肯定希望我的程序能一直运行下去啊。</p><p>这也是人之常情，毕竟大家都想争夺资源嘛。但如果满足每个人，或者说程序的要求，让他们自己切换程序，给予它们绝对的自由，那必定乱套。所以这个工作，必须由一个有权威、德高望重的“人”来做，才能保证每个用户程序相对来说的公平。毕竟绝对自由意味着混乱，有一定约束的自由才是合理且可能的自由。</p><p>好吧，我摊牌了，上面说的德高望重的“人”，其实就是操作系统。</p><p>这也是为什么，线程是操作系统管理的一项功能，只给用户程序提供一定的接口，剩下的很多操作用户程序是接触不到的。</p><p>那么读者此时暂停一下阅读，简单思考一下，以什么样的规律来切换呢？</p><p>其实我上面暗示的已经很明显了，对，就是每个程序都固定运行相同的时间。</p><p>实际上操作系统用的也是这种思路，不过操作系统还加了一个优先级，来控制这个运行时间的长短。这段运行的时间叫<strong>时间片</strong>。</p><p>操作系统的优先级决定了时间片的大小，优先级高，自然时间片长，在该程序上运行的时间就越高，从宏观上来说，运行的就越快。</p><h2 id="那么怎么实现每隔一段时间进行切换呢？"><a href="#那么怎么实现每隔一段时间进行切换呢？" class="headerlink" title="那么怎么实现每隔一段时间进行切换呢？"></a>那么怎么实现每隔一段时间进行切换呢？</h2><p>上面说到，切换必须由操作系统来做，保证用户程序不会乱来。</p><p>那么，这个间隔的产生，也一定要经过操作系统之手，由操作系统来协调。</p><p>在计算机系统中，有定时器这样一种芯片，专门用来处理定时操作，为CPU减负。</p><p>计算机系统中有两种定时，一种是CPU硬件内部的定时，这个定时是给CPU提供时序，为CPU提供一个处理指令的节奏。因此这个定时非常重要，不允许软件进行修改（ps：虽然操作系统已经很底层，但其实质还是个软件），硬件厂商也没有提供能够修改该定时的操作。</p><p>而另外一种就是外置定时，提供给”用户”（此处指写操作系统的人）使用，来作为一种节奏，控制程序运行。</p><p>操作系统正是使用该定时器，来定时的。本文不涉及定时器芯片的知识，如果有兴趣，读者可以自己去网上搜索定时器的手册。</p><p>设定一个频率，比如每2ms，定时器就向终端芯片发送中断，告诉CPU，定的时间已经到了。</p><p>此时CPU进入到了中断处理程序，检查当前线程的时间片是否还有，如果还有，就推出中断处理，线程继续运行。如果没有时间片了，则重置其时间片，并把该线程放入到”准备队列”中，以便以后还可以再次调度过来。</p><p>放入队列后，下一步就要切换到别的线程去了。</p><h2 id="终于到线程切换了"><a href="#终于到线程切换了" class="headerlink" title="终于到线程切换了"></a>终于到线程切换了</h2><p>上面所有的内容，都可以总结为一句话：</p><p>CPU通过定时器计时，一旦定时器到了定的时间，就通知CPU，CPU就运行中断处理程序，去检查是否要进行切换。</p><p>那么，到重点了，到底是怎么切换的呢？</p><p>其实很简单，既然CPU只会执行CS：IP指向的指令。那我们直接把CS：IP改成另一个线程的程序中，不就可以了嘛。</p><p>是的，线程切换实质就是修改CS：IP，但是我们切换线程切出去了，总要还得切换回来吧！</p><h2 id="上下文保存"><a href="#上下文保存" class="headerlink" title="上下文保存"></a>上下文保存</h2><p>CPU在运行时，会把数据存到寄存器或者内存中。</p><p>寄存器由于其结构设计，其速度与CPU是同一个数量级的，而内存就慢了很多，因此CPU更倾向于使用寄存器。</p><p>所以CPU经常将内存中的数据加载到寄存器中，然后通过寄存器操作来实现各种功能。</p><p>线程在运行时，部分数据会保存在寄存器中，也就是说，每个线程运行程序时，其寄存器里的值都是不同的，跟当前运行的程序有关。</p><p>那么如果我们直接修改了CS：IP，跳到别的线程了，本来寄存器就少，当前线程全部使用了，切换后的线程要运行，就得把原来寄存器中的值被覆盖了。</p><p>当我们试图切换回来时，原来线程运行时，寄存器的值找不到了，那程序再往下运行就可能出事了。</p><p>所以我们在修改CS：IP前，还要把各种寄存器保存起来，放到一个规定好的数据结构中保存。</p><h2 id="具体的切换代码"><a href="#具体的切换代码" class="headerlink" title="具体的切换代码"></a>具体的切换代码</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210321192317260.png" alt="switch.S"></p><p>可以看到，在7到12行，是将切换前的线程的上下文进行保存。</p><p>接着从16行开始，加载下一个线程的环境。</p><p>在切换线程时，此时esp指向的栈中，数据的分布入上图所示。</p><h2 id="整个线程切换的流程图"><a href="#整个线程切换的流程图" class="headerlink" title="整个线程切换的流程图"></a>整个线程切换的流程图</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210321193225049.png" alt="线程切换的流程图"></p><ol><li>可以看到，每当定时器计时结束，会像①一样，进入中断处理程序</li><li>此时，在中断处理程序中，会判断当前线程（也就是线程A）的时间片是否用完，如果用完，意味着就要切换了</li><li>在图中，第一次进入中断处理程序时，假设线程A时间片未用完，所以CPU会按照②，继续执行线程A</li><li>第二次进入中断处理程序时，假设此时线程A的时间片用完了，就会按照③，切换到线程B，也就是上面所说的，保护上下文、加载下个线程的上下文的操作</li><li>后面的操作都是一样的，当线程B时间片用完了，会切换到别的线程</li><li>如果当前不只两个线程，就要涉及到线程切换的调度，后面文章会写到</li></ol><p><strong>从图中可以看出，虽然我们用线程切换，但实际上，每个时刻，只有一个程序在运行，所有的都是在一条时间线上，只不过我们通过多次且频繁地切换，让用户看起来，线程A与线程B都在运行。</strong></p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文由于跳过了中断的讲解，直接描述了线程切换，所以讲的可能不太好，有兴趣的读者，还是去找一本比较好的书去看看。</p><p>我也尽自己最大的努力去解释这个过程，毕竟学习掌握的最高境界就是能够给别人讲懂。</p><p>同时本文对于线程调度这一块没有具体展开。调度算法非常多，后面可能会更新关于调度算法的文章。</p>]]></content>
     
     
+    <categories>
+      
+      <category>操作系统</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>操作系统</tag>
+      
+      <tag>线程</tag>
+      
+    </tags>
     
   </entry>
   
@@ -754,6 +768,33 @@
   
   
   <entry>
+    <title>IDEA热部署</title>
+    <link href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/"/>
+    <url>/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-引入spring-devtools"><a href="#1-引入spring-devtools" class="headerlink" title="1. 引入spring-devtools"></a>1. 引入spring-devtools</h1><p>在项目的pom.xml文件中，添加spring-devtools的依赖</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure><p>同时在其中的<build>标签的<plugins>内添加</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fork</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">fork</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure><h1 id="2-设置idea"><a href="#2-设置idea" class="headerlink" title="2. 设置idea"></a>2. 设置idea</h1><ul><li>在File =&gt; Settings =&gt; Build, Execution, Deployment =&gt; Compiler 中勾选Build Project automatically</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111804.png" alt="x"></p><ul><li>快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111848.png"></p><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111912.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>日常</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>IDEA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Java实现TCP / IP协议下的聊天室</title>
     <link href="/2019/12/20/TCP%20%20IP%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/"/>
     <url>/2019/12/20/TCP%20%20IP%E5%8D%8F%E8%AE%AE%E4%B8%8B%E7%9A%84%E8%81%8A%E5%A4%A9%E5%AE%A4/</url>
@@ -783,16 +824,16 @@
   
   
   <entry>
-    <title>IDEA热部署</title>
-    <link href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/"/>
-    <url>/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</url>
+    <title>【Java设计模式】4.单件模式</title>
+    <link href="/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/"/>
+    <url>/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</url>
     
-    <content type="html"><![CDATA[<h1 id="1-引入spring-devtools"><a href="#1-引入spring-devtools" class="headerlink" title="1. 引入spring-devtools"></a>1. 引入spring-devtools</h1><p>在项目的pom.xml文件中，添加spring-devtools的依赖</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure><p>同时在其中的<build>标签的<plugins>内添加</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fork</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">fork</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure><h1 id="2-设置idea"><a href="#2-设置idea" class="headerlink" title="2. 设置idea"></a>2. 设置idea</h1><ul><li>在File =&gt; Settings =&gt; Build, Execution, Deployment =&gt; Compiler 中勾选Build Project automatically</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111804.png" alt="x"></p><ul><li>快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111848.png"></p><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111912.png"></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="【Java设计模式】4-单件模式"><a href="#【Java设计模式】4-单件模式" class="headerlink" title="【Java设计模式】4.单件模式"></a>【Java设计模式】4.单件模式</h1><h1 id="关于单件模式"><a href="#关于单件模式" class="headerlink" title="关于单件模式"></a>关于单件模式</h1><p>本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。</p><span id="more"></span><h2 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h2><p>我们都知道，在软件系统比如我们正在用的Windows系统，总有那么一些变量比如注册表，它们一直存在，并且唯一，对它们之中的数据一旦进行更改，那么这个数据变化后，会一直保存该数据，直到某种特殊的场景下才会丢失。可能你会第一时间想到静态变量，没错，的确是它。</p><p>但是有一个问题，那就是静态变量经过我们编写代码后，一旦运行，静态变量会一直存在，假如这个系统过于庞大，而且你的这个设备储存又不是很大，那么后果…</p><p>没错，储存可能会不够用，虽然Java有回收机制，但是静态变量不依附于对象存在，而是依附于类，也就是说他会一直存在，即使你没有用到它。</p><p>那么有没有什么方法来让这个静态变量只在我想要它出现的时候它才出现并且起作用，而不是一开始就存在并占用内存，并且保证它只能被创建一次呢？没错，这就是单件模式所解决的问题。</p><h1 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h1><p>下面是一个运用了单件模式的demo，我们来看看这个”<strong>单件模式</strong>“是如何解决的：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> singleton;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span></span>&#123;<br><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(uniqueInstance == <span class="hljs-keyword">null</span>)<br>            uniqueInstance = <span class="hljs-keyword">new</span> Singleton();<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>首先，既然我们不让它被反复创建，那么最好的方法就是把他的构造函数给设置成”<strong>private</strong>“类型，这样别的类就无法调用该构造函数，所以我们写了这个语句</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-title">Singleton</span>(<span class="hljs-params"></span>)</span>&#123;<br><br>&#125;<br></code></pre></td></tr></table></figure><p>我们把构造方法给”隐藏”了，那怎样才能创建这个变量呢？我们可以使用方法来实现啊！</p><p><strong>等等！？</strong></p><p>既然我们都无法实例化这个类了，怎么调用方法?<br> 普通的类需要实例化，但是静态类里的方法是不需要实例化才能用的，可以直接依附于类使用，比如这个类写好之后，在其他的类中可以直接用</p><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Singleton</span>.</span></span>get<span class="hljs-constructor">Instance()</span><br></code></pre></td></tr></table></figure><p>当调用该方法时，会检测uniqueInstance变量是否为null，如果不是，就当即实例化一个对象并且赋给uniqueInstance变量，如果已经创建了，那么就跳过这一步，最后再return这个变量。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>单件模式给予我们一种处理静态变量的方法，让我们有序地管理静态变量，在我们用到静态变量时再创建，而不是在程序的一开始就创建出来。</p>]]></content>
     
     
     <categories>
       
-      <category>日常</category>
+      <category>设计模式</category>
       
     </categories>
     
@@ -801,7 +842,7 @@
       
       <tag>Java</tag>
       
-      <tag>IDEA</tag>
+      <tag>设计模式</tag>
       
     </tags>
     
@@ -831,33 +872,6 @@
       <tag>cookie与session</tag>
       
       <tag>web技术</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>【Java设计模式】4.单件模式</title>
-    <link href="/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/"/>
-    <url>/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</url>
-    
-    <content type="html"><![CDATA[<h1 id="【Java设计模式】4-单件模式"><a href="#【Java设计模式】4-单件模式" class="headerlink" title="【Java设计模式】4.单件模式"></a>【Java设计模式】4.单件模式</h1><h1 id="关于单件模式"><a href="#关于单件模式" class="headerlink" title="关于单件模式"></a>关于单件模式</h1><p>本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。</p><span id="more"></span><h2 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h2><p>我们都知道，在软件系统比如我们正在用的Windows系统，总有那么一些变量比如注册表，它们一直存在，并且唯一，对它们之中的数据一旦进行更改，那么这个数据变化后，会一直保存该数据，直到某种特殊的场景下才会丢失。可能你会第一时间想到静态变量，没错，的确是它。</p><p>但是有一个问题，那就是静态变量经过我们编写代码后，一旦运行，静态变量会一直存在，假如这个系统过于庞大，而且你的这个设备储存又不是很大，那么后果…</p><p>没错，储存可能会不够用，虽然Java有回收机制，但是静态变量不依附于对象存在，而是依附于类，也就是说他会一直存在，即使你没有用到它。</p><p>那么有没有什么方法来让这个静态变量只在我想要它出现的时候它才出现并且起作用，而不是一开始就存在并占用内存，并且保证它只能被创建一次呢？没错，这就是单件模式所解决的问题。</p><h1 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h1><p>下面是一个运用了单件模式的demo，我们来看看这个”<strong>单件模式</strong>“是如何解决的：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> singleton;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span></span>&#123;<br><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(uniqueInstance == <span class="hljs-keyword">null</span>)<br>            uniqueInstance = <span class="hljs-keyword">new</span> Singleton();<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>首先，既然我们不让它被反复创建，那么最好的方法就是把他的构造函数给设置成”<strong>private</strong>“类型，这样别的类就无法调用该构造函数，所以我们写了这个语句</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-title">Singleton</span>(<span class="hljs-params"></span>)</span>&#123;<br><br>&#125;<br></code></pre></td></tr></table></figure><p>我们把构造方法给”隐藏”了，那怎样才能创建这个变量呢？我们可以使用方法来实现啊！</p><p><strong>等等！？</strong></p><p>既然我们都无法实例化这个类了，怎么调用方法?<br> 普通的类需要实例化，但是静态类里的方法是不需要实例化才能用的，可以直接依附于类使用，比如这个类写好之后，在其他的类中可以直接用</p><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Singleton</span>.</span></span>get<span class="hljs-constructor">Instance()</span><br></code></pre></td></tr></table></figure><p>当调用该方法时，会检测uniqueInstance变量是否为null，如果不是，就当即实例化一个对象并且赋给uniqueInstance变量，如果已经创建了，那么就跳过这一步，最后再return这个变量。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>单件模式给予我们一种处理静态变量的方法，让我们有序地管理静态变量，在我们用到静态变量时再创建，而不是在程序的一开始就创建出来。</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>设计模式</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Java</tag>
-      
-      <tag>设计模式</tag>
       
     </tags>
     
