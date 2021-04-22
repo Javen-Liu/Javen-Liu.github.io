@@ -191,26 +191,34 @@
   <div class="row mx-auto index-card">
     
     
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/" target="_self">
-          <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200606164412.png" srcset="/img/loading.gif" lazyload alt="IDEA热部署">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
+    <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/">IDEA热部署</a>
+        <a href="/2019/12/20/%E4%BC%9A%E8%AF%9D%E6%8A%80%E6%9C%AF/">会话技术</a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/">
+        <a href="/2019/12/20/%E4%BC%9A%E8%AF%9D%E6%8A%80%E6%9C%AF/">
           
           
             
           
-          1. 引入spring-devtools在项目的pom.xml文件中，添加spring-devtools的依赖
-1234&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;&l
+          会话技术
+会话：一次会话中包含多次请求和响应
+一次会话：浏览器第一次给服务器资源发送请求，会话建立。直到有一方断开为止
+
+
+功能：在一次会话的范围内，共享数据
+方式：
+客户端会话技术：Cookie
+服务器会话技术：Session
+
+
+
+1. Cookie1.概念：客户端会话技术，将数据保存在客户端的技术2.快速入门
+使用步骤：
+创建Cookie对象，绑定数据
+new Cookie(String n
         </a>
       </p>
 
@@ -227,7 +235,7 @@
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/%E6%97%A5%E5%B8%B8/">日常</a>
+              <a href="/categories/web%E6%8A%80%E6%9C%AF/">web技术</a>
             
           </div>
         
@@ -237,7 +245,9 @@
             
               <a href="/tags/Java/">Java</a>
             
-              <a href="/tags/IDEA/">IDEA</a>
+              <a href="/tags/cookie%E4%B8%8Esession/">cookie与session</a>
+            
+              <a href="/tags/web%E6%8A%80%E6%9C%AF/">web技术</a>
             
           </div>
         
@@ -401,62 +411,6 @@
   <div class="row mx-auto index-card">
     
     
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2019/12/20/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" target="_self">
-          <img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" srcset="/img/loading.gif" lazyload alt="【Java设计模式】3.观察者模式">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2019/12/20/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">【Java设计模式】3.观察者模式</a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2019/12/20/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">
-          
-          
-            
-          
-          【Java设计模式】3.观察者模式问题的引入前几天我们刚完成了制造”鸭子”以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2019-12-20 19:34" pubdate>
-              2019-12-20
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Java/">Java</a>
-            
-              <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
@@ -549,6 +503,62 @@
               <a href="/tags/Demo/">Demo</a>
             
               <a href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/12/20/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/" target="_self">
+          <img src="https://cdn.jsdelivr.net/gh/jerryc127/CDN@latest/cover/default_bg.png" srcset="/img/loading.gif" lazyload alt="【Java设计模式】3.观察者模式">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2019/12/20/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">【Java设计模式】3.观察者模式</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2019/12/20/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/">
+          
+          
+            
+          
+          【Java设计模式】3.观察者模式问题的引入前几天我们刚完成了制造”鸭子”以及帮助星巴菲咖啡店解决了结账问题，我想是时候去度个小长假休息休息了。在我们正准备收拾衣服去度假的时候，电话突然响了。我们接通了电话。
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-12-20 19:34" pubdate>
+              2019-12-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Java/">Java</a>
+            
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>
             
           </div>
         
