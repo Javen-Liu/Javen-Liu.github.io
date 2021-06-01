@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/image/thunder.png">
+  <link rel="icon" href="/image/thunder.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="Linux">
+  
+  <title>折腾Linux - 2.Shell的进程 - Javen 的个人空间</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"da9e9551b8bd3e9ae9c4cbb811816c40","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Javen's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/wallhaven.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="折腾Linux - 2.Shell的进程">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-27 17:01" pubdate>
+        2020年11月27日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">折腾Linux - 2.Shell的进程</h1>
+            
+            <div class="markdown-body">
+              <h1 id="承接上文"><a href="#承接上文" class="headerlink" title="承接上文"></a>承接上文</h1><p>上一篇中，我们实现了内网穿透，这样我们就可以直接使用SSH连接到内网的服务器。</p>
+<p>一旦可以用SSH连接进入设备，我们就可以掌控设备了（当然还需要root的密码）。</p>
+<p>但是我们关闭了终端之后，连接似乎就断了。这是怎么回事呢？</p>
+<p>本篇博客将深入到Linux，分析问题，最终解决这个问题。</p>
+<h1 id="为什么关闭终端，frp也会自动关闭？"><a href="#为什么关闭终端，frp也会自动关闭？" class="headerlink" title="为什么关闭终端，frp也会自动关闭？"></a>为什么关闭终端，frp也会自动关闭？</h1><p>首先我们要先了解一下shell</p>
+<h2 id="something-easy-about-shell"><a href="#something-easy-about-shell" class="headerlink" title="something easy about shell"></a>something easy about shell</h2><p>shell是什么？</p>
+<p>shell可以理解为是一个夹在用户与操作系统之间的程序，我们在shell中输入指定的指令，点击回车后，shell会对我们输入的指令进行解释（interpret）执行，并与操作系统进行交互。</p>
+<p>所以shell的行为可以拆解为三大部分：</p>
+<ul>
+<li>读取输入命令</li>
+<li>解析命令</li>
+<li>执行命令，并将结果输出</li>
+</ul>
+<p>同时shell中的指令分为了两大类：</p>
+<ul>
+<li>shell自身的 builtin 指令，即shell自身支持的指令，例如：cd、ls等</li>
+<li>shell自身无法解析的指令，这一类多数都是用户自己编写的程序</li>
+</ul>
+<hr>
+<p>我们知道，在操作系统中，运行一个程序，都是需要单独开启一个进程（Process），来供程序运行。</p>
+<p>在Unix上只有两种启动进程的方法。 第一个（几乎用不到）是被初始化。 当Linux计算机启动时，将加载其内核。 加载并初始化后，内核仅启动一个进程，称为Init。 此过程将在计算机打开的整个时间范围内运行，并负责加载计算机需要使用的其余过程。</p>
+<p>也就是说，shell再神奇，也是在process上运行的。</p>
+<p>由于大多数程序不是Init，因此仅留下一种实用的方法来启动进程：fork（）系统调用。 调用此函数时，操作系统将复制该过程并启动它们的运行。 原始进程称为“父进程”，新进程称为“子进程”。 fork（）向子进程返回0，并将其子进程的ID（PID）返回给父进程。 从本质上讲，这意味着新流程的唯一方法就是开始现有流程的复制。</p>
+<p>对于shell自身的 builtin 指令，shell 都会在其自身的主线程中，进行执行的操作。</p>
+<p>而对于非shell本身自带的指令，在linux中，其会使用系统提供的 fork 接口，来创建一个子进程，然后在子进程中运行该指令。</p>
+<p>并且在子进程中运行指令时，主线程，也就是shell所在的进程，会等待子进程的执行结果。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201127213109.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="shell中的-“-amp-”-指令"><a href="#shell中的-“-amp-”-指令" class="headerlink" title="shell中的 “&amp;” 指令"></a>shell中的 “&amp;” 指令</h2><p>先做一个实验，在shell中，我们进入到之前frp的文件夹，输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./frps -c ./frps.ini<br></code></pre></td></tr></table></figure>
+
+<p>按回车之后，程序开始运行，但此时我们发现，shell 中会输出 frps 程序的日志。</p>
+<p>同时，此时我们的 shell 无法进行其他操作，无法输入下一条指令，只是等待这 frps 程序输出。</p>
+<p>如果此时我们想要执行别的命令，要么就终止 frps 程序，要么就重开一个 shell 程序。</p>
+<p>这就和我们上面说的，主线程会等待子线程执行完毕，但是 frps 程序简单来说，是一直在一个循环里等待连接，所以除非启动失败或者手动关闭，否则这个 shell 就只会一直输出 frps 程序执行的日志。</p>
+<p>此时我们键盘输入 ctrl + c，将程序终止。</p>
+<p>然后输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./frps -c ./frps.ini &amp;<br></code></pre></td></tr></table></figure>
+
+<p>点击回车，运行。</p>
+<p>此时我们发现，我们的 shell 竟然还可以继续输入命令并且运行。</p>
+<p>这正好证实了我们的说法，程序运行在子进程中，同时 shell 的主进程并没有等待子进程程序运行完毕。</p>
+<p>这样不就实现了让 frps 程序在后台运行的效果了嘛。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128101914.png" srcset="/img/loading.gif" lazyload></p>
+<p>上图的终端里，下面开启了我们的程序（作为示范），上面使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ps -ef | grep frps<br></code></pre></td></tr></table></figure>
+
+<p>指令，可以看到后台（也就是子进程）是在运行着 frps 的，而且下面的终端主线程并没有等待该终端子线程程序运行结束。</p>
+<h2 id="但是。。。"><a href="#但是。。。" class="headerlink" title="但是。。。"></a>但是。。。</h2><p>但是 &amp; 指令，只是将程序放在了shell的子进程中运行，那如果shell主进程关闭了，子进程会怎么样呢？</p>
+<p>此时我们将下方的终端关闭。并在上面的终端里继续输入 ps -ef | grep frps 指令，会发现：</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128102422.png" srcset="/img/loading.gif" lazyload></p>
+<p>程序被关闭了，也就是说子进程也关闭了。</p>
+<p>难道想要内网穿透，还得必须打开一个终端？</p>
+<h2 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h2><p>nohup（全称应该是 “no hangup”）这个指令，可以让运行的程序忽略 HUP 信号。</p>
+<p>那么何为HUP信号呢？每当与当前程序运行所在的进程相关的shell关闭时，也就是shell的主进程关闭时，会向子进程发送该信号，使其正在运行的程序关闭。</p>
+<p>如果使用了nohup指令，则会使当前的程序忽略掉 HUP 信号，也就是你的shell关闭后，其仍然可以继续运行，同时将输出信息，输出到当前目录下的 nohup.out。我们可以在nohup.out里查看程序运行的日志。</p>
+<p>OK，那我们再来实验：</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128103518.png" srcset="/img/loading.gif" lazyload></p>
+<p>这次我们使用了nohup指令。然后我们关闭掉下方的shell，也就是启动 frps 程序的主线程。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20201128103615.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到，我们将下方的shell关闭后，frps 程序仍然在运行中，我们可以通过 ps 指令与万能的 grep 指令找到他。</p>
+<p>这样我们也就不用把终端一直挂着，而是随用随关闭。内网穿透就像暗地里的守护者一样，不在我们的视野范围内活动，但是没有他，我们就无法从自己的内网访问我们的服务器了。</p>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>本文从进程的角度，以frps为例，说明了linux中关于shell进程的问题。</p>
+<p>当然作者也是linux入门没多久的新人，如果文章中有什么错误，请联系作者，一起讨论。</p>
+<p>另外作者还想多一句嘴，查询这些资料时，国内的论坛指令参差不齐，只有一篇linux中国的文字像个样子，而且还是完全翻译linux.com上的文章，有能力的同学，还是用谷歌，并且用英文搜索，尤其是可以避开某个C字开头的论坛，文章质量太差了。</p>
+<p>linux本身就是因为开源免费而吸引了那么多技术人员、hacker们来维护、开发的，而某些博主<strong>偷窃、转载</strong>别人的linux技术文章，还设置需要钱才可以看。其中对比不免让人感到可笑而无奈。</p>
+<h1 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://linuxhint.com/how_to_use_nohup_linux/">https://linuxhint.com/how_to_use_nohup_linux/</a></li>
+<li><a target="_blank" rel="noopener" href="https://superuser.com/questions/152688/why-run-a-linux-shell-command-with">https://superuser.com/questions/152688/why-run-a-linux-shell-command-with</a></li>
+<li><a target="_blank" rel="noopener" href="https://brennan.io/2015/01/16/write-a-shell-in-c/%EF%BC%88%E5%BC%BA%E7%83%88%E6%8E%A8%E8%8D%90%E8%AF%BB%E8%80%85%E4%BB%AC%E7%9C%8B%E7%9C%8B%EF%BC%8C%E9%80%A0%E9%80%A0%E8%BD%AE%E5%AD%90%EF%BC%8C%E8%87%AA%E7%84%B6%E5%B0%B1%E4%BC%9A%E5%AF%B9%E8%BD%AE%E5%AD%90%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84%E6%9C%89%E4%B8%80%E5%AE%9A%E7%9A%84%E8%AE%A4%E7%9F%A5%EF%BC%89">https://brennan.io/2015/01/16/write-a-shell-in-c/（强烈推荐读者们看看，造造轮子，自然就会对轮子的内部结构有一定的认知）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jb51.net/article/186059.htm">https://www.jb51.net/article/186059.htm</a></li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux/">Linux</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Linux/">Linux</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%BF%90%E7%BB%B4/">运维</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Ubuntu/">Ubuntu</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/01/11/%E6%88%91%E7%9A%842020%E4%B8%8B%E5%8D%8A%E5%B9%B4%20-%20%E4%B8%AA%E4%BA%BA%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%83%B3%E4%B8%8E%E6%80%BB%E7%BB%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">我的 2020 下半年 - 个人的一些感想与总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/11/16/%E6%8A%98%E8%85%BELinux%20-%201.%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+                        <span class="hidden-mobile">折腾Linux - 1.内网穿透</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appKey":"zUznNRS8dG9TQFJI3lQ181VE","placeholder":"留下点足迹吧👣","path":"window.location.pathname","avatar":"robohash","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":null,"emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[],"appid":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appkey":"zUznNRS8dG9TQFJI3lQ181VE"},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?da9e9551b8bd3e9ae9c4cbb811816c40";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

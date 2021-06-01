@@ -1,0 +1,640 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/image/thunder.png">
+  <link rel="icon" href="/image/thunder.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="JVM">
+  
+  <title>JVM 笔记 - 9 方法区 - Javen 的个人空间</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"da9e9551b8bd3e9ae9c4cbb811816c40","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Javen's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/wallhaven.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="JVM 笔记 - 9 方法区">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-08-03 16:47" pubdate>
+        2020年8月3日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM 笔记 - 9 方法区</h1>
+            
+            <div class="markdown-body">
+              <h1 id="栈、堆、方法区的交互关系"><a href="#栈、堆、方法区的交互关系" class="headerlink" title="栈、堆、方法区的交互关系"></a>栈、堆、方法区的交互关系</h1><h2 id="1-运行时数据区结构图"><a href="#1-运行时数据区结构图" class="headerlink" title="1. 运行时数据区结构图"></a>1. 运行时数据区结构图</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200803170016.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-栈、堆、方法区的关系"><a href="#2-栈、堆、方法区的关系" class="headerlink" title="2. 栈、堆、方法区的关系"></a>2. 栈、堆、方法区的关系</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200803170335.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="方法区的理解"><a href="#方法区的理解" class="headerlink" title="方法区的理解"></a>方法区的理解</h1><h2 id="1-方法区在哪里？"><a href="#1-方法区在哪里？" class="headerlink" title="1. 方法区在哪里？"></a>1. 方法区在哪里？</h2><p>《Java虚拟机规范》中明确说明：“尽管所以的方法区在逻辑上是属于堆的一部分，但一些简单的实现可能不会选择去进行垃圾收集或者进行压缩”，但对于HotSpot JVM而言，方法区还有一个别名叫做Non-Heap，目的就是为了和堆分开。</p>
+<p>所以方法区看做是一块独立于Java堆的内存空间。</p>
+<h2 id="2-基本理解"><a href="#2-基本理解" class="headerlink" title="2. 基本理解"></a>2. 基本理解</h2><ul>
+<li>方法区（Method Area）和Java堆一样，是各个线程共享的内存区域</li>
+<li>方法区在JVM启动的时候被创建，并且它的实际武理内存空间中和Java堆区一样都可以是不连续的</li>
+<li>方法区的大小，跟堆空间一样，可以选择固定大小或者可扩展</li>
+<li>方法区的大小决定了系统可以保存多少个类，如果系统定义了太多类，导致方法区溢出，虚拟机同样会抛出：java.lang.OutOfMemoryError: Metaspace</li>
+<li>关闭JVM就会释放这个区域的内存</li>
+</ul>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200803174517.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="设置方法区大小与OOM"><a href="#设置方法区大小与OOM" class="headerlink" title="设置方法区大小与OOM"></a>设置方法区大小与OOM</h1><h2 id="1-设置方法区内存的大小"><a href="#1-设置方法区内存的大小" class="headerlink" title="1. 设置方法区内存的大小"></a>1. 设置方法区内存的大小</h2><ul>
+<li>方法区的大小不必是固定的，jvm可以根据应用的需要动态调整</li>
+<li>jdk7及以前：<ul>
+<li>通过-XX:PermSize来设置永久代初始分配空间。默认值是20.75M</li>
+<li>通过-XX:MaxPermSize来设置永久代最大可分配空间。32位机器默认是64M，64位机器默认是82M</li>
+<li>当JVM加载的类信息容量超过了这个值，会报异常OutOfMemoryError:PermGenspace</li>
+</ul>
+</li>
+<li>jdk8及以后：<ul>
+<li>元数据区大小可以使用参数-XX:MetaspaceSize和-XX:MaxMetaspaceSize指定，替换上述原有的两个参数</li>
+<li>默认值依赖于平台。windows下，-XX:MetaspaceSize是21M，-XX:MaxMetaspaceSize的值是-1，即没有限制</li>
+<li>与永久代不同，如果不指定大小，默认情况下，虚拟机会好近所有的可用系统内存。如果元数据区发生溢出，虚拟机一样会抛出异常OutOfMemoryError:Metaspace</li>
+<li>对于一个64位的服务器端JVM来说，其默认的-XX:MetaspaceSize值为21MB，这就是初始的高水位线，一旦触及这个水位线，Full GC将会被触发并卸载没用的类（即这些类对应的类加载器不再存活），然后这个高水位线将会重置</li>
+<li>新的高水位线的值取决于GC后释放了多少元空间。如果释放的内存不足，那么在不超过MaxMetaspaceSize的情况下，适当提高该值。如果释放空间过多，则适当降低该值</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-如何结局OOM"><a href="#2-如何结局OOM" class="headerlink" title="2. 如何结局OOM"></a>2. 如何结局OOM</h2><ol>
+<li>要解决OOM异常或heap space的异常，一般的手段是首先通过内存映像分析工具（如Eclipse Memory Analyzer）对dump出来的堆转储快照进行分析，重点是确认内存中的对象是否是必要的，也就是先分清楚到底是出现了内存泄露（Memory Leak）还是内存溢出（Memory Overflow）</li>
+<li>如果是内存泄露，可进一步通过工具查看泄露对象到GC Roots的引用链。于是就能找到泄露对象是通过怎样的路径与GC Roots相关联并导致垃圾回收器无法自动回收他们的。掌握了泄露对象的类型信息，以及GC Roots引用链的信息，就可以比较准确地定位出泄露代码的位置</li>
+<li>如果不存在内存泄露，换句话说就是内存中的对象却是都还必须存活着，那就应当检查虚拟机的堆参数，与机器武理内存对比看是否可以调大，从代码检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期间的内存消耗</li>
+</ol>
+<h1 id="方法区的内部结构"><a href="#方法区的内部结构" class="headerlink" title="方法区的内部结构"></a>方法区的内部结构</h1><h2 id="1-方法区存储什么？"><a href="#1-方法区存储什么？" class="headerlink" title="1. 方法区存储什么？"></a>1. 方法区存储什么？</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200804174820.png" srcset="/img/loading.gif" lazyload></p>
+<p>方法区用于存储已被虚拟机加载的<strong>类型信息、常量、静态变量、即时编译器编译后的代码缓存</strong>等</p>
+<h2 id="2-方法区内部结构"><a href="#2-方法区内部结构" class="headerlink" title="2. 方法区内部结构"></a>2. 方法区内部结构</h2><h3 id="类型信息"><a href="#类型信息" class="headerlink" title="类型信息"></a>类型信息</h3><p>对每个加载的类型（类class、接口interface、枚举enum、注解annotation），JVM必须在方法区中存储一下类型信息：</p>
+<ul>
+<li>这个类型的完整有效名称（全名=包名.类名）</li>
+<li>这个类型直接父类的完整有效类名（对于interface或是java.lang.object，都没有父类）</li>
+<li>这个类型的修饰符（public，abstract，final的某个子集）</li>
+<li>这个类型直接接口的一个有序列表</li>
+</ul>
+<h3 id="域（Field）信息"><a href="#域（Field）信息" class="headerlink" title="域（Field）信息"></a>域（Field）信息</h3><ul>
+<li>JVM必须在方法区中保存类型的所有域的相关信息以及域的声明顺序</li>
+<li>域的相关信息包括：域名称、域类型、域修饰符</li>
+</ul>
+<h3 id="方法（Method）信息"><a href="#方法（Method）信息" class="headerlink" title="方法（Method）信息"></a>方法（Method）信息</h3><p>JVM必须保存所有方法的以下信息，同域信息一样包括生命顺序：</p>
+<ul>
+<li>方法名称</li>
+<li>方法的返回类型（或void）</li>
+<li>方法参数的数量和类型（按顺序）</li>
+<li>方法的修饰符</li>
+<li>方法的字节码、操作数栈、局部变量表及大小（abstract和native方法除外）</li>
+<li>异常表（abstract和native方法除外）：包括了每个异常处理的开始位置、结束位置、代码处理在程序计数器中的偏移地址、被捕获的异常类的常量池索引</li>
+</ul>
+<h3 id="non-final的类变量"><a href="#non-final的类变量" class="headerlink" title="non-final的类变量"></a>non-final的类变量</h3><ul>
+<li>静态变量和类关联在一起，随着类的加载而加载，它们成为类数据在逻辑上的一部分</li>
+<li>类变量被类的所有实例共享，即时没有类实例时也可以访问</li>
+</ul>
+<h2 id="3-运行时常量池-VS-常量池"><a href="#3-运行时常量池-VS-常量池" class="headerlink" title="3. 运行时常量池 VS 常量池"></a>3. 运行时常量池 VS 常量池</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200805173907.png" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>方法区，内部包含了运行时常量池</li>
+<li>字节码文件，内部包含了常量池</li>
+<li>要弄清楚方法区，需要理解清楚ClassFile，因为家在类的信息都在方法区</li>
+<li>要弄清楚方法区的运行时常量池，需要理解清楚ClassFile中的常量池</li>
+</ul>
+<h2 id="4-为什么需要常量池？"><a href="#4-为什么需要常量池？" class="headerlink" title="4. 为什么需要常量池？"></a>4. 为什么需要常量池？</h2><p>一个java源文件中的类、接口，编译后产生一个字节码文件。而java中的字节码需要数据支持，通常这种数据会很大以至于不能直接存到字节码里，换另一种方式，可以存在常量池，这个字节码包含了指向常量池的引用。在动态链接的时候会用到运行时常量池</p>
+<h2 id="5-常量池中有什么？"><a href="#5-常量池中有什么？" class="headerlink" title="5. 常量池中有什么？"></a>5. 常量池中有什么？</h2><ul>
+<li>数量值</li>
+<li>字符串值</li>
+<li>类引用</li>
+<li>字段引用</li>
+<li>方法引用</li>
+</ul>
+<h2 id="6-运行时常量池"><a href="#6-运行时常量池" class="headerlink" title="6. 运行时常量池"></a>6. 运行时常量池</h2><ul>
+<li>运行时常量池（Runtime Constant Pool）是方法区的一部分</li>
+<li>常量池表（Constant Pool Table）是Class文件的一部分，用于存放编译期生成的各种字面量与符号应用，这部分内容将在类加载后存放到方法区的运行时常量池中</li>
+<li>运行时常量池，在加载类和接口到虚拟机后，就会创建对应的运行时常量池</li>
+<li>JVM为每个已加载的类型（类或接口）都维护一个常量池。池中的数据项像是数组项一样，是通过索引访问的</li>
+<li>运行时常量池中包含多种不同的常量，包括编译器就已经明确的数值字面量，也包括到运行期解析后才能够获得的方法或者字段引用。此时不再是常量池中的符号地址了，这里换为真实地址</li>
+<li>运行时常量池类似于传统编程语言中的符号表（symbol table），但是它包含的数据却比符号表要更丰富一些</li>
+<li>当创建类或接口的运行时常量时，如果构造运行时常量池所需的内存空间超过了方法区所能提供的最大值，则JVM会抛出OutOfMemoryError异常</li>
+</ul>
+<h2 id="7-小结"><a href="#7-小结" class="headerlink" title="7. 小结"></a>7. 小结</h2><p>常量池，可以看做是一张表，虚拟机指令根据这张常量表找到要执行的类名、方法名、参数类型、字面量等类型</p>
+<h1 id="方法区的演进细节"><a href="#方法区的演进细节" class="headerlink" title="方法区的演进细节"></a>方法区的演进细节</h1><ol>
+<li><p>首先明确：只有HotSpot有永久代</p>
+</li>
+<li><p>HotSpot中方法区的变化：</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200806162557.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+</ol>
+<h1 id="方法区的垃圾回收"><a href="#方法区的垃圾回收" class="headerlink" title="方法区的垃圾回收"></a>方法区的垃圾回收</h1><p>有些人认为方法区是没有垃圾收集行为的，其实不然。《Java虚拟机规范》对方法区的约束是非常宽松的，提到过可以不要求虚拟机在方法区中实现垃圾收集。事实上也确实有未实现或未能完整实现方法区类型卸载的收集器存在（例如JDK11中的ZGC就不支持类卸载）</p>
+<p>一般来说<strong>这个区域的回收效果比较难令人满意，尤其是类型的卸载，条件相当苛刻</strong>。但是这部分区域回收<strong>有时又确实是必要的</strong>。以前sun公司的Bug列表中，曾出现过的若干个严重的Bug就是由于低版本的HotSpot虚拟机对此区域未完全回收而导致内存泄露</p>
+<p>方法区的垃圾收集主要回收两部分内容：常量池中废弃的常量和不再使用的类型</p>
+<h2 id="1-常量池中的两大类常量"><a href="#1-常量池中的两大类常量" class="headerlink" title="1. 常量池中的两大类常量"></a>1. 常量池中的两大类常量</h2><ul>
+<li>常量池中的两大类常量：字面量和符号应用</li>
+<li>字面量比较接近Java语言层次的常量概念，如文本字符串、被蛇您为final的常量值</li>
+<li>符号应用则属于编译原理方面的概念</li>
+<li>HotSpot虚拟机对常量池的回收策略是很明确地，只要常量池中的常量没有被任何地方引用，就可以被回收了</li>
+<li>回收废弃常量与回收Java堆中的对象非常类似</li>
+</ul>
+<h2 id="2-垃圾收集"><a href="#2-垃圾收集" class="headerlink" title="2. 垃圾收集"></a>2. 垃圾收集</h2><ul>
+<li>判断一个常量是否“废弃”还是相对简单的，而要判断一个类型是否属于“不在被使用的类”的条件就比较苛刻了。同时需要满足下面三个条件：<ol>
+<li>该类所有的实例都已经被回收，也就是Java堆中不存在该类及其任何派生子类的实例</li>
+<li>加载该类的类加载器已经被回收，这个条件除非是经过精心设计的可替换类加载器的场景，如OSGi的重加载等，否则通常是很难达成的</li>
+<li>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问到该类的方法</li>
+</ol>
+</li>
+<li>Java虚拟机被允许对满足上述三个条件的无用类进行回收，这里说的仅仅是“被允许”，而并非和对象一样，没有引用了，就必然会被回收。</li>
+<li>在大量使用反射、动态代理、CGLib等字节码框架，动态生成JSP以及OSGi这类频繁自定义类加载器的场景中，通常都需要Java虚拟机具备类型卸载的能力，以保证不会对方法区造成过大的内存压力</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/JVM/">JVM</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JVM/">JVM</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/08/10/JVM%20-%2010.%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E4%B8%8E%E8%AE%BF%E9%97%AE%E5%AE%9A%E4%BD%8D/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JVM 笔记 - 10 对象的实例化内存布局与访问定位</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/07/28/JVM%20-%208.%E5%A0%86/">
+                        <span class="hidden-mobile">JVM 笔记 - 8 堆</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appKey":"zUznNRS8dG9TQFJI3lQ181VE","placeholder":"留下点足迹吧👣","path":"window.location.pathname","avatar":"robohash","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":null,"emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[],"appid":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appkey":"zUznNRS8dG9TQFJI3lQ181VE"},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?da9e9551b8bd3e9ae9c4cbb811816c40";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

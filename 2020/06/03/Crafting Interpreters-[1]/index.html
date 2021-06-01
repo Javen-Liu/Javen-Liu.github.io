@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/image/thunder.png">
+  <link rel="icon" href="/image/thunder.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="Crafting Interpreters">
+  
+  <title>Crafting Interpreters -  Introduction - Javen 的个人空间</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"da9e9551b8bd3e9ae9c4cbb811816c40","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Javen's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/wallhaven.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Crafting Interpreters -  Introduction">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-06-03 23:19" pubdate>
+        2020年6月3日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      51
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Crafting Interpreters -  Introduction</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Crafting-Interpreters-1-1-Introduction"><a href="#Crafting-Interpreters-1-1-Introduction" class="headerlink" title="Crafting Interpreters - [1-1] Introduction"></a>Crafting Interpreters - [1-1] Introduction</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><blockquote>
+<p>童话故事比事实更有用，不是因为故事告诉我们龙存在，而是因为这些故事让我们明白，龙是可以被打败的</p>
+<p>​                                                                                                                                    - Neil Gaiman, Coraline</p>
+</blockquote>
+<p>我非常高兴我们可以一起走进这一段旅程。这是一本关于实现编程语言解释器的数；同时是一本关于设计一门值得实现的语言的书；也是一本我希望我在第一次接触到编程语言时就有的书；更是一本在将近十年里写在我脑子中的一本书。</p>
+<p>在这本书中，我们将要一步步地走进两个功能齐全的语言解释器。我假设这是你第一次涉足语言，所以我会介绍构建完整、可用、快速语言实现所需的每个概念和代码行。</p>
+<p>为了将两个语言解释器放入到一本书中，并不使其成为《XXX从入门到放弃》（笑），这些语言词汇在概念上会比其他的书要更加浅显一些。在我们构建这个系统的每一块时，我都会介绍其背后的历史和概念。我会尝试带你熟悉这些词汇术语，这样，当你参加全是编程语言研究人员的party时，你会很自然地混入其中，当（至少装作）大佬。</p>
+<p>但我们很大概率会绞尽脑汁地理解这些，以让我们的语言活起来，跑起来。这并不是说理论不重要，当学习一门语言时，能够准确且正式地推理语法和语义是一项很重要的技能。但是我个人还是在实践中学的最快（me too），对我来说理解充满了抽象概念的书本并吸收它实在太hard了。但是当我码了些东西，让它运行起来，并debug它，慢慢地我就开始理解并get到点了。</p>
+<p>对于读者们，这就是我的目标。我希望你在阶数这段旅程时，可以带着明白一个真正的语言如何生存和呼吸（就是如何构成，运作）离开。我的愿望也是当你去阅读其他更加理论、专业的书籍时，那里的概念将牢牢地粘在你的脑海里，粘在这个有形的基础上。</p>
+<h2 id="1-1-为什么学习这些东西？"><a href="#1-1-为什么学习这些东西？" class="headerlink" title="1.1 为什么学习这些东西？"></a>1.1 为什么学习这些东西？</h2><p>似乎每一本关于编程语言书的简介都有这部分，我不知道是什么编程语言导致了这种存在性的怀疑。同样我也不认为关于鸟类学的书担心证明其存在的合理性。他们假设读者喜欢鸟儿并且开始行动。</p>
+<p>但是编程语言则有点不一样。我想，我们创造出一种广泛成功的通用编程语言的可能性是很小的。世界上广泛使用的语言的设计者们可以在一辆大众汽车上安装这些语言，甚至不需要把蓬顶帐篷竖起来。如果加入精英团体是学习一门编程语言的唯一理由，那就很难说了。但幸运的是，并不是这样的。</p>
+<h3 id="1-1-1-“Little-Language”到处都是"><a href="#1-1-1-“Little-Language”到处都是" class="headerlink" title="1.1.1 “Little Language”到处都是"></a>1.1.1 “Little Language”到处都是</h3><p>每一种成功的通用语言背后，都有上千种成功的小众语言。我们习惯称他们是“Little Language”（小众语言？），但是，术语经济中的通货膨胀导致了今天的名称领域特定的语言。这些是为特定任务定制的pidgins。比如应用程序脚本语言、模板引擎、标记格式和配置文件。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200603214600.png" srcset="/img/loading.gif" lazyload></p>
+<p>几乎每个大型软件工程都需要很多这些小语言。当你有选择时，使用已经存在的语言比你自己造一个语言要更容易些。一旦你将文档、调试器、编辑器支持、语法高亮和所以的其他问题考虑进来时，自己造一个语言轮子简直是难得有些离谱。</p>
+<p>但是自己造轮子还是有些好处的，尤其是当你发现你需要一个解析器或者满足你需求的东西不存在时，甚至就算有可以重用的，你也不可避免的要去调试和维护，并对其进行深入的研究。</p>
+<h3 id="1-1-2-语言是很好的实践"><a href="#1-1-2-语言是很好的实践" class="headerlink" title="1.1.2 语言是很好的实践"></a>1.1.2 语言是很好的实践</h3><p>长跑选手们有时在膝盖上添加负重来进行负重训练或者到海拔高度很高、大气层稀薄的地方进行训练。当他们不再有这些限制他们的条条框框时，在轻装上阵并且氧气充足的地方时，他们能跑的比以前更快。</p>
+<p>实现一个语言是对编程能力的一大考验，代码很复杂，表现性能也很关键。你必须掌握递归、动态数组、树、图、哈希表这些知识。你可能每天都至少会用到一次哈希表，但你真的理解哈希表以及其内部的原理吗？不过，当我们从头开始制作这些之后，我保证你能懂的。</p>
+<p>虽然我试图想表达编程语言并不像你想象的那样困难，但它对于每个人来说仍然是个挑战。面对它，你会成为一个更加强大的程序员，并能更加聪明地在日常生活中使用数据结构和算法。</p>
+<h3 id="1-1-3-最后一个理由"><a href="#1-1-3-最后一个理由" class="headerlink" title="1.1.3 最后一个理由"></a>1.1.3 最后一个理由</h3><p>最后一个理由虽然我不想承认，但是它确实是我所想的。当我还是一个孩子的时候，我认为编程语言非常的神奇。当我第一次按一个键打开BASIC程序时，我无法想象BASIC本身是如何形成的。</p>
+<p>后来，我的大学朋友们在提到他们的编译器课程时，既敬畏又恐惧，这足以让我相信语言黑客（或者说研究这些计算机编程语言的人）是另一种人类（不做人）。某些巫师被授予接触神秘艺术的特权！</p>
+<p>这是一个迷人的形象，但也有黑暗的一面。我觉得自己不像个巫师，所以我觉得自己缺乏加入阴谋集团所必需的与生俱来的品质。虽然从我在笔记本上乱涂乱画关键词开始，我就对语言着迷了，但我还是花了几十年的时间才鼓起勇气去真正地学习它们。那种不可思议的特质，那种排他感，把我拒之门外。</p>
+<p>当我最终开始拼凑我自己的小解释器时，我很快就明白了，根本没有什么魔法。它只是代码，而破解语言的人只是人。</p>
+<p>有一些技术是你在语言之外不常遇到的，而且有些部分有些困难。但并不比你所克服的其他障碍更难。我希望，如果你对语言感到恐惧，这本书可以帮助你克服这种恐惧，也许我会让你比以前更勇敢一点。</p>
+<p>谁知道呢，或许你就可以创造出下一个伟大的语言！一定会有人做到的</p>
+<h2 id="1-2-这本书的构成"><a href="#1-2-这本书的构成" class="headerlink" title="1.2 这本书的构成"></a>1.2 这本书的构成</h2><p>这本书分为了三个部分，而你正在读的就是第一部分。我用了几章来引导你，教你一些黑客（神仙）使用的行话，并向您介绍Lox，我们将实现的语言。</p>
+<p>其他两个部分分别构建了一个完整的LOX解释器。在这些部分中，每个章节的结构都是一样的。每一个都完成了一个单一的功能，告诉你其中的概念，并带你走过其实现的每一步。在我这方面，我花了不少时间反复试验，但我还是成功地将两个解释器分割成章节大小的块，这样每个解释器都可以在前面的解释器的基础上进行构建。从第一章开始，你就会有一个可以运行和玩的程序。随着每一个章节的结束，它的功能会越来越丰富，直到你最终完成了一门完整的语言。</p>
+<p>除了丰富的，闪烁的英语散文，章节有其他一些愉快的方面：</p>
+<h3 id="1-2-1-The-code（代码）"><a href="#1-2-1-The-code（代码）" class="headerlink" title="1.2.1 The code（代码）"></a>1.2.1 The code（代码）</h3><p>我们是关于制作解释器的，所以这本书包含了真正的代码。需要的每一行代码都包括在内，并且每个代码片段都告诉你在不断增长的实现中插入代码的位置。</p>
+<p>许多其他的语言书籍和语言实现都使用Lex和Yacc这样的工具，编译器-编译器自动地从一些更高级的描述生成一些实现的源文件。这类工具有利有弊，有些人可能会说双方都有强烈的宗教信仰。</p>
+<p>我们将拒绝使用这些工具。我希望的是确保没有魔法和困惑所藏匿的黑暗角落存在，所以我们将完全靠自己手把手地写出所有东西。如你所见，似乎并听起来没有那么糟糕，并且意味着你将明白代码中每一行的意思，理解每个解释器如何工作的。</p>
+<p>一本书有不同于现实世界的约束，因此这里的编码风格可能并不总是反映编写可维护的生产软件的最佳方式。如果我对省略private或声明全局变量显得有些漫不经心，请理解我这样做是为了让你更容易地理解代码。这里的页面没有IDE那么宽，每个字符都很重要。</p>
+<p>另外，该代码没有太多注释。 那是因为每一行都由几段诚实到上帝的散文来解释。 当你编写一本书以伴随您的程序时，也欢迎你省略评论。 否则，你应该比我多使用//（注释）。</p>
+<p>本书没有包含编译和运行代码所需的机制。我假设你可以在您选择的IDE中拼凑一个makefile或一个项目，以便让代码运行。</p>
+<h3 id="1-2-2-小片段"><a href="#1-2-2-小片段" class="headerlink" title="1.2.2 小片段"></a>1.2.2 小片段</h3><p>由于该书包含了实现所需的每一行代码，所以代码片段非常精确。此外，即使解释器已经实现了一半，但我为了试图保持程序处于可运行状态，所以添加临时代码，这些代码将在以后的代码片段中替换。</p>
+<p>包含所有附加功能的代码片段是这样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">default</span>:<br>	<span class="hljs-keyword">if</span> (isDigit(c)) &#123;<br>        number();<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        Lox.error(line, <span class="hljs-string">&quot;Unexpected character.&quot;</span>);<br>    &#125;<br>	<span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p>在中间，你可以在这个代码片段中添加新代码。它可能会在上面或下面有一些淡出的行，向你显示在现有代码中插入它的位置。还有一个小的简介告诉你文件的位置。如果它说的是替换行，那么在褪色的行之间有一些先前的代码，你需要用这个代码片段来删除和替换。</p>
+<h3 id="1-2-3-此外"><a href="#1-2-3-此外" class="headerlink" title="1.2.3 此外"></a>1.2.3 此外</h3><p>除此之外，还包括生平简介，历史背景，相关主题的参考文献，以及其他领域的探索建议。书中没有什么内容是你需要知道这些生平简介之类的才能理解的，所以你可以跳过它们。我不会多说别的，但是跳过这些我可能会有点难过和失望的。</p>
+<h3 id="1-2-4-挑战"><a href="#1-2-4-挑战" class="headerlink" title="1.2.4 挑战"></a>1.2.4 挑战</h3><p>每一章节结尾都会有少许练习。不像教科书上的习题集，它倾向于重述你已经学过的内容那样，这些练习是为了帮助你学到比这一章更多的东西。它们迫使你离开规划好的线路，让你自己去探索，会让你研究其他语言，弄清楚如何实现特性，或者让你自己去创造。</p>
+<p>战胜他们，你会对他们有更广泛的了解，可能还会遇到一些磕磕碰碰。如果你想待在旅游巴士舒适的范围内，也可以跳过它们。这是你的书，所以你来决定。</p>
+<h3 id="1-2-5-设计笔记"><a href="#1-2-5-设计笔记" class="headerlink" title="1.2.5 设计笔记"></a>1.2.5 设计笔记</h3><p>大多数编程语言书籍都是严格意义上的编程语言实现书籍。他们很少讨论如何设计正在实现的语言。实现非常有趣，因为它的定义非常精确。我们程序员似乎对黑与白、1与0有一种亲和感（同感）。</p>
+<p>就我个人而言，我认为世界只需要这么多fortran77的实现。有时候，你会发现自己在设计一种新的语言。一旦你开始玩这个有趣的游戏，那么等式中更温和、更人性化的一面就变得至关重要。比如什么功能容易学习，如何平衡创新和熟悉度，什么语法更容易读，对谁更容易。</p>
+<p>所有这些都深刻地影响着你的新语言的成功。我希望你们的语言能够成功，所以在一些章节中，我以一个设计笔记，一篇关于编程语言的人性方面的小短文作为结尾。我不是这方面的专家，我不知道是否有人真的是这样的，所以要对这些持保留态度。这应该会让它们成为更美味的精神食粮，这是我的主要目标。</p>
+<h2 id="1-3-第一个解释器"><a href="#1-3-第一个解释器" class="headerlink" title="1.3 第一个解释器"></a>1.3 第一个解释器</h2><p>我们将用Java编写第一个解释器jlox。 重点是概念。 我们将编写最简单，最简洁的代码，以正确实现该语言的语义。 这将使我们熟悉基本技术，并磨练对语言的确切理解。</p>
+<p>Java是一种很棒的语言。 因为其是高级语言，为我们屏蔽了底层原理，所以我们不会被繁琐的实施细节所淹没。 与脚本语言不同的是，它的底层没有那么神奇，你可以使用静态类型来查看正在处理的数据结构</p>
+<p>我还特意选择了它，因为它是一种面向对象的语言。这种模式在90年代席卷了编程界，现在是数百万程序员的主要思维方式。很有可能你已经习惯了把东西组织成类和方法，所以我们会让你保持舒适区。</p>
+<p>尽管学术语言人员有时会鄙视面向对象的语言，但事实是，它们甚至被广泛用于语言工作。 与大多数JavaScript虚拟机一样，GCC和LLVM用C ++编写。 面向对象的语言无处不在，并且针对该语言的工具和编译器通常使用相同的语言编写。</p>
+<p>最后，Java非常流行。这意味着很有可能你已经知道了，所以在书中你需要学习的东西就少了。如果你对Java不是很熟悉，不要惊慌。我尽量保持它的最小子集。我使用Java 7中的diamond操作符使事情更简洁一些，但这就是高级特性的全部内容。如果你了解另一种面向对象的语言，如c#或c++，你可能会应付得很好。</p>
+<p>在第2部分结束时，我们将有一个简单的、可读的实现。我们还没有实现的只是其运行更快的版本。它也依赖于Java虚拟机的运行时功能，但是我们想了解Java本身是如何实现这些功能的。</p>
+<h2 id="1-4-第二个解释器"><a href="#1-4-第二个解释器" class="headerlink" title="1.4 第二个解释器"></a>1.4 第二个解释器</h2><p>所以在下一部分中，我们将重新开始，但这次是用C语言，C语言是理解实现如何真正工作的最佳语言，一直到内存中的字节和流经CPU的代码。</p>
+<p>我们使用C的一个重要原因是这样我可以向你展示C特别擅长的东西，但这确实意味着你需要非常熟练地使用它。你不必成为丹尼斯·里奇的转世，但你也不应该被指针吓到。</p>
+<blockquote>
+<p>ps：丹尼斯·里奇，Dennis Ritchie，c语言之父，UNIX之父，其与布莱恩·科尔尼干（Brian W. Kernighan）一起出版了名著《C程序设计语言（The C Programming Language）》，被誉为C语言的圣经。</p>
+</blockquote>
+<p>如果你还没到那一步，拿起一本关于C语言的入门书，细细咀嚼，读完后再回到这里。作为回报，你会通过这本书中变成一个更强的C程序员。考虑到Lua、CPython和Ruby s MRI等很多语言实现是用C语言编写的，所以学习这是很有用。</p>
+<p>在我们的C解释器clox中，我们被迫自己实现Java免费提供给我们的所有东西。我们将编写自己的动态数组和哈希表。我们将决定对象在内存中是如何表示的，并构建一个垃圾收集器来回收它。</p>
+<p>我们的Java实现关注的是正确，即跑起来即可。现在我们已经完成了那一步，我们将转向实现更快速的版本。我们的C解释器将包含一个编译器，编译器将代码转换为高效的字节码表示(不用担心，我们很快就会进入了解是什么意思)，然后执行。Lua、Python、Ruby、PHP和许多其他成功语言的实现都使用了相同的技术。</p>
+<p>我们甚至会尝试基准测试和优化。到最后，我们将拥有一个健壮、准确、快速的语言解释器，能够跟上其他专业水准的实现。对于一本书和几千行代码来说，这已经很不错了。</p>
+<h2 id="DESIGN-NOTE"><a href="#DESIGN-NOTE" class="headerlink" title="DESIGN NOTE"></a>DESIGN NOTE</h2><p>语言命名中有什么注意的地方？</p>
+<p>编写本书时，最困难的挑战之一是为它所实现的语言起一个名字。我看了好几页的候选人名单才找到一个合适的。在开始构建自己的语言的第一天，你就会发现，命名非常困难。好名字满足下面几个条件：</p>
+<ol>
+<li>它没有被使用过。如果你不小心踩到别人的名字，你可能会遇到各种各样的麻烦，包括法律上的和社会上的。</li>
+<li>它很容易发音。如果一切顺利，很多开发者都会使用并谈论你的语言名字。任何超过几个音节或几个字母的单词都会让他们烦恼不已。</li>
+<li>它很特别，以至于可以很有区分度地让人们搜索到。人们会通过你的语言名称来找到相应的文档，所以你需要一个足够罕见的词，让搜索中大多数结果都会指向你的文档。不过，鉴于如今大多数搜索引擎都充斥着大量人工智能，这倒不是什么大问题。尽管如此，如果你给自己的语言命名为 for，那恐怕用户找一年都找不到你的文档。</li>
+<li>它在很多文化中并没有负面的含义。这很难避免啊，但值得考虑。“Nimrod”的设计者最终将他的语言重新命名为“Nim”，因为太多的人只记得“兔八哥”用“Nimrod”作为一种侮辱。</li>
+</ol>
+<p>如果你的名字符合上面的条件，那就选用吧。不过不要纠结于寻找一个能够抓住你语言精髓的称谓。如果说世界上其他成功的语言教会了我们什么的话，那就是它们的名字并不重要。你所需要的只是一个合理的惟一标记。</p>
+<blockquote>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://www.craftinginterpreters.com/introduction.html">Introduction</a></p>
+<p>阅读并翻译者：Javen Liu</p>
+</blockquote>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Crafting-Interpreters/">Crafting Interpreters</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%A7%A3%E9%87%8A%E5%99%A8/">解释器</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E5%A4%96%E6%96%87%E4%B9%A6%E7%B1%8D/">外文书籍</a>
+                    
+                      <a class="hover-with-bg" href="/tags/Crafting-Interpreters/">Crafting Interpreters</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/06/04/Crafting%20Interpreters-%5B2%5D/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Crafting Interpreters -  A Map of the Territory</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/05/12/%5Bleetcode%5D-31%20next%20permutation/">
+                        <span class="hidden-mobile">leetcode-31 next permutation</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appKey":"zUznNRS8dG9TQFJI3lQ181VE","placeholder":"留下点足迹吧👣","path":"window.location.pathname","avatar":"robohash","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":null,"emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[],"appid":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appkey":"zUznNRS8dG9TQFJI3lQ181VE"},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?da9e9551b8bd3e9ae9c4cbb811816c40";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
