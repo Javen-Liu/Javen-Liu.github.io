@@ -784,38 +784,11 @@
     
     <tags>
       
-      <tag>Java</tag>
-      
       <tag>TCP/IP</tag>
       
-      <tag>Demo</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>【Java设计模式】4.单件模式</title>
-    <link href="/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/"/>
-    <url>/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</url>
-    
-    <content type="html"><![CDATA[<h1 id="【Java设计模式】4-单件模式"><a href="#【Java设计模式】4-单件模式" class="headerlink" title="【Java设计模式】4.单件模式"></a>【Java设计模式】4.单件模式</h1><h1 id="关于单件模式"><a href="#关于单件模式" class="headerlink" title="关于单件模式"></a>关于单件模式</h1><p>本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。</p><span id="more"></span><h2 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h2><p>我们都知道，在软件系统比如我们正在用的Windows系统，总有那么一些变量比如注册表，它们一直存在，并且唯一，对它们之中的数据一旦进行更改，那么这个数据变化后，会一直保存该数据，直到某种特殊的场景下才会丢失。可能你会第一时间想到静态变量，没错，的确是它。</p><p>但是有一个问题，那就是静态变量经过我们编写代码后，一旦运行，静态变量会一直存在，假如这个系统过于庞大，而且你的这个设备储存又不是很大，那么后果…</p><p>没错，储存可能会不够用，虽然Java有回收机制，但是静态变量不依附于对象存在，而是依附于类，也就是说他会一直存在，即使你没有用到它。</p><p>那么有没有什么方法来让这个静态变量只在我想要它出现的时候它才出现并且起作用，而不是一开始就存在并占用内存，并且保证它只能被创建一次呢？没错，这就是单件模式所解决的问题。</p><h1 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h1><p>下面是一个运用了单件模式的demo，我们来看看这个”<strong>单件模式</strong>“是如何解决的：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> singleton;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span></span>&#123;<br><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(uniqueInstance == <span class="hljs-keyword">null</span>)<br>            uniqueInstance = <span class="hljs-keyword">new</span> Singleton();<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>首先，既然我们不让它被反复创建，那么最好的方法就是把他的构造函数给设置成”<strong>private</strong>“类型，这样别的类就无法调用该构造函数，所以我们写了这个语句</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-title">Singleton</span>(<span class="hljs-params"></span>)</span>&#123;<br><br>&#125;<br></code></pre></td></tr></table></figure><p>我们把构造方法给”隐藏”了，那怎样才能创建这个变量呢？我们可以使用方法来实现啊！</p><p><strong>等等！？</strong></p><p>既然我们都无法实例化这个类了，怎么调用方法?<br> 普通的类需要实例化，但是静态类里的方法是不需要实例化才能用的，可以直接依附于类使用，比如这个类写好之后，在其他的类中可以直接用</p><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Singleton</span>.</span></span>get<span class="hljs-constructor">Instance()</span><br></code></pre></td></tr></table></figure><p>当调用该方法时，会检测uniqueInstance变量是否为null，如果不是，就当即实例化一个对象并且赋给uniqueInstance变量，如果已经创建了，那么就跳过这一步，最后再return这个变量。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>单件模式给予我们一种处理静态变量的方法，让我们有序地管理静态变量，在我们用到静态变量时再创建，而不是在程序的一开始就创建出来。</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>设计模式</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
       <tag>Java</tag>
       
-      <tag>设计模式</tag>
+      <tag>Demo</tag>
       
     </tags>
     
@@ -843,6 +816,33 @@
       <tag>Java</tag>
       
       <tag>IDEA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>【Java设计模式】4.单件模式</title>
+    <link href="/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/"/>
+    <url>/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="【Java设计模式】4-单件模式"><a href="#【Java设计模式】4-单件模式" class="headerlink" title="【Java设计模式】4.单件模式"></a>【Java设计模式】4.单件模式</h1><h1 id="关于单件模式"><a href="#关于单件模式" class="headerlink" title="关于单件模式"></a>关于单件模式</h1><p>本片文章是关于单件模式的具体实现以及用法。由于该模式较为简单，在特定的场合下能起到一定的作用。并且它不像前面的几个模式，是需要在设计前思考好的一个框架，但是单件模式我个人更觉得像是一种解决方法，来解决一个潜在的问题。</p><span id="more"></span><h2 id="问题的引出"><a href="#问题的引出" class="headerlink" title="问题的引出"></a>问题的引出</h2><p>我们都知道，在软件系统比如我们正在用的Windows系统，总有那么一些变量比如注册表，它们一直存在，并且唯一，对它们之中的数据一旦进行更改，那么这个数据变化后，会一直保存该数据，直到某种特殊的场景下才会丢失。可能你会第一时间想到静态变量，没错，的确是它。</p><p>但是有一个问题，那就是静态变量经过我们编写代码后，一旦运行，静态变量会一直存在，假如这个系统过于庞大，而且你的这个设备储存又不是很大，那么后果…</p><p>没错，储存可能会不够用，虽然Java有回收机制，但是静态变量不依附于对象存在，而是依附于类，也就是说他会一直存在，即使你没有用到它。</p><p>那么有没有什么方法来让这个静态变量只在我想要它出现的时候它才出现并且起作用，而不是一开始就存在并占用内存，并且保证它只能被创建一次呢？没错，这就是单件模式所解决的问题。</p><h1 id="单件模式"><a href="#单件模式" class="headerlink" title="单件模式"></a>单件模式</h1><p>下面是一个运用了单件模式的demo，我们来看看这个”<strong>单件模式</strong>“是如何解决的：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> singleton;<br><br><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Singleton</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Singleton uniqueInstance;<br>    <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-title">Singleton</span><span class="hljs-params">()</span></span>&#123;<br><br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title">getInstance</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-keyword">if</span>(uniqueInstance == <span class="hljs-keyword">null</span>)<br>            uniqueInstance = <span class="hljs-keyword">new</span> Singleton();<br>        <span class="hljs-keyword">return</span> uniqueInstance;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>首先，既然我们不让它被反复创建，那么最好的方法就是把他的构造函数给设置成”<strong>private</strong>“类型，这样别的类就无法调用该构造函数，所以我们写了这个语句</p><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-title">Singleton</span>(<span class="hljs-params"></span>)</span>&#123;<br><br>&#125;<br></code></pre></td></tr></table></figure><p>我们把构造方法给”隐藏”了，那怎样才能创建这个变量呢？我们可以使用方法来实现啊！</p><p><strong>等等！？</strong></p><p>既然我们都无法实例化这个类了，怎么调用方法?<br> 普通的类需要实例化，但是静态类里的方法是不需要实例化才能用的，可以直接依附于类使用，比如这个类写好之后，在其他的类中可以直接用</p><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Singleton</span>.</span></span>get<span class="hljs-constructor">Instance()</span><br></code></pre></td></tr></table></figure><p>当调用该方法时，会检测uniqueInstance变量是否为null，如果不是，就当即实例化一个对象并且赋给uniqueInstance变量，如果已经创建了，那么就跳过这一步，最后再return这个变量。</p><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>单件模式给予我们一种处理静态变量的方法，让我们有序地管理静态变量，在我们用到静态变量时再创建，而不是在程序的一开始就创建出来。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>设计模式</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>设计模式</tag>
       
     </tags>
     
