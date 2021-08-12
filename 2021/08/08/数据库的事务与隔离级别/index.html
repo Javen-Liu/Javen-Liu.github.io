@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/image/thunder.png">
+  <link rel="icon" href="/image/thunder.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="个人总结">
+  
+  <title>数据库的事务与隔离级别 - Javen 的个人空间</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"blog.matrix-world.top","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"da9e9551b8bd3e9ae9c4cbb811816c40","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Javen's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/wallhaven.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数据库的事务与隔离级别">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-08 20:46" pubdate>
+        2021年8月8日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      29
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据库的事务与隔离级别</h1>
+            
+            <div class="markdown-body">
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>说到事务与事务的隔离级别，读者们应该都不陌生。</p>
+<p>最开始学习Java，然后学习Spring框架，写出web页面的过程中，读者们应该都多多少少看过比如IT黑马、尚硅谷之类培训班的视频作为入门。</p>
+<p>其中我就记得，在讲JDBC连接数据库这一课时，有关于事务的讲解。</p>
+<p>什么是事务？当年视频里讲的一个例子，可以说是非常简洁明了：A给B转钱，两个人的钱数额都存在数据库中。</p>
+<p>那么过程就是：</p>
+<ol>
+<li>获取A和B的钱数额</li>
+<li>A扣除转账金额</li>
+<li>B增加转账金额</li>
+</ol>
+<p>那如果A扣钱之后，在服务器程序处理的过程中，出现了异常，第三步没有执行。</p>
+<p>结果就是A扣了钱，但是B没收到钱。这就是非常大的问题了。</p>
+<p>而事务的存在，就可以保证这三个步骤，要么同时生效，要么都不生效。如果A扣了钱，程序出现了问题，那么事务会帮我们回滚到步骤1之前，也就是说转账就没有发生，避免A扣了钱，但是B没收到的情况发生。</p>
+<hr>
+<p>提到隔离级别，大家应该都在面试经验或者各种其他资料里见过。虽然这是一个面试的重点，但是在有写这篇博客的灵感与思路之前，说实话，对于隔离级别，我也只是见过，印象里学过，但是对其没有自己的理解，该忘还是忘。</p>
+<p>我这个人本来就懒，很多东西我都不愿意背，能理解的最好，理解不了的我是真的记不住。</p>
+<p>其中我只对“脏读”、“不可重复读”之类的词汇有些许的了解，也只肤浅的理解了一些，不过都没怎么记住，实际的项目里，也没有遇到相关的。</p>
+<h1 id="线上项目的一次BUG"><a href="#线上项目的一次BUG" class="headerlink" title="线上项目的一次BUG"></a>线上项目的一次BUG</h1><p>某天，实验室同一级的一位老哥找到我，问了我一个问题：“为什么我用分布式的锁，在锁不住，同一个流程执行了两次，导致数据出现了问题”。</p>
+<p>我一脸懵逼，锁怎么会失效，锁一般来说，作为基础组件库里的东西，都是经过时间检验的，一般不会出现特别的问题啊。</p>
+<p>然后我跟着他去看了下代码。</p>
+<p>具体代码就不列出来了，我只用稍微简单一点的代码，来展示其逻辑。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Transactional(rollbackFor = Exception.class)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transactionLogic</span><span class="hljs-params">()</span> </span>&#123;<br>        lock.lock();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">if</span>(service.getProperty() == <span class="hljs-keyword">null</span>) &#123;<br>                service.doSomeThing();<br>            &#125;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>这一段代码是用来作为微信支付的回调，当支付成功后，微信后台会调用暴露的API，API所在的controller会调用该方法，进行处理，写入库中。</p>
+<p>微信官方的文档里提到过，在微信支付成功后，对于暴露的API接口，可能会调用多次。因此我们的后台必须对多次的调用进行合适的处理，避免多写入库中，造成数据的错误。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210810204400837.png" srcset="/img/loading.gif" lazyload alt="微信支付回调流程"></p>
+<p>可以看到上面代码里的逻辑非常简单，就是用一个锁（lock），先锁住，这样如果微信后台同时发送了多个请求，因为🔒会将后来的请求阻塞住。</p>
+<p>然后🔒释放后，另外的请求获取🔒，此时查询刚刚更新的数据，如果更新的数据仍然为null，说明写入库失败，再次执行。</p>
+<p>如果数据不为null，说明第一个获取到🔒的线程完成了任务，将数据写入了库中。</p>
+<p>整个流程似乎没有任何问题啊。但是日志中错误就是定位到了这里。</p>
+<p>在日志中，可以看到最先抢到🔒的线程确实也完成了任务，那么数据库中的数据应该是更新了的，等第二个线程获取到🔒的时候，mapper.get()得到的应该不是null，所以该线程不进行下面的操作，从而避免了重复写入。</p>
+<p>那么到底是什么魔法造成了这个问题呢？老哥的说法是🔒失效了，但我并不这么认为，锁的使用都是规范的，其必定是按照分析的流程来进行阻塞的。</p>
+<h1 id="无意中的收获"><a href="#无意中的收获" class="headerlink" title="无意中的收获"></a>无意中的收获</h1><p>在无法复现，并且苦苦想不出来具体原因时，我抱着试试的心态在DuckDuckGo中搜索（夹带个私货，DuckDuckGo是一个搜索引擎，而且是不跟踪的，不会给网站留下跟踪数据，同时其搜索的质量还是不错的，不会像 *度 一样，排名靠前的都是 **DN，唯一的门槛可能就是需要科学上网）</p>
+<p>在广撒网式的搜索中，一条搜索结果中的<strong>6</strong>个字突然吸引了我的注意力：<strong>事务隔离级别</strong></p>
+<p>我突然想到以前学过的数据库事务隔离级别中，提到过几种造成数据不一致的问题。</p>
+<p>我抱着试试的心态点了进去，通读全文后，终于明白了这次BUG的问题了，且容我娓娓道来</p>
+<h1 id="数据库的事务隔离级别"><a href="#数据库的事务隔离级别" class="headerlink" title="数据库的事务隔离级别"></a>数据库的事务隔离级别</h1><p>以下内容中部分来源于网络上的博客，博客里讲的都非常好[^1] 。</p>
+<h2 id="三种数据库并发读写造成的问题"><a href="#三种数据库并发读写造成的问题" class="headerlink" title="三种数据库并发读写造成的问题"></a>三种数据库并发读写造成的问题</h2><h3 id="1-脏读"><a href="#1-脏读" class="headerlink" title="1.脏读"></a>1.脏读</h3><p>当事务B修改数据，但还未提交，而此时事务A读取数据，读到了B修改，但是还未提交的数据。如果B回滚，那么B的修改也就没了，事务A读到的数据就是无效的。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/867078-20200606205647093-2074318292.png" srcset="/img/loading.gif" lazyload alt="脏读"></p>
+<h2 id="2-不可重复读"><a href="#2-不可重复读" class="headerlink" title="2.不可重复读"></a>2.不可重复读</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/867078-20200606205714295-1082205544.png" srcset="/img/loading.gif" lazyload alt="不可重复读"></p>
+<p>在此问题中，事务A在事务B提交前，读取了id为1的数据，其读到的仍然还是未修改前的数据，在事务B提交后，事务A再次读取id为1的数据，其前后两次读到的数据是不同的，这种情况叫做不可重复读。</p>
+<h2 id="3-幻读"><a href="#3-幻读" class="headerlink" title="3.幻读"></a>3.幻读</h2><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/867078-20200606205727193-197776108.png" srcset="/img/loading.gif" lazyload alt="幻读"></p>
+<p>id主键唯一，事务A搜索id=10的数据，事务A搜索不到id=10的数据，然后事务B新增id=10的数据并提交，事务A更新id=10的数据却成功，插入id=10却失败，现在搜索id=10也有记录</p>
+<h1 id="回到这个BUG上"><a href="#回到这个BUG上" class="headerlink" title="回到这个BUG上"></a>回到这个BUG上</h1><p>目前成熟的数据库都对上面的问题进行了解决，同时设定了多个事务隔离级别。</p>
+<ul>
+<li><p>**READ-UNCOMMITTED(读取未提交)**： 最低的隔离级别，允许读取尚未提交的数据变更，可能会导致脏读、幻读或不可重复读。</p>
+</li>
+<li><p>**READ-COMMITTED(读取已提交)**： 允许读取并发事务已经提交的数据，可以阻止脏读，但是幻读或不可重复读仍有可能发生。</p>
+</li>
+<li><p>**REPEATABLE-READ(可重复读)**： 对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，可以阻止脏读和不可重复读，但幻读仍有可能发生。</p>
+</li>
+<li><p>**SERIALIZABLE(可串行化)**： 最高的隔离级别，完全服从ACID的隔离级别。所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。</p>
+</li>
+</ul>
+<p>Mysql的默认等级为 <strong>REPEATABLE-READ</strong>，并且Mysql在该等级还解决了幻读。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Transactional(rollbackFor = Exception.class)</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">transactionLogic</span><span class="hljs-params">()</span> </span>&#123;<br>        lock.lock();<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">if</span>(service.getProperty() == <span class="hljs-keyword">null</span>) &#123;<br>                service.doSomeThing();<br>            &#125;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            lock.unlock();<br>        &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>对于以上代码，使用了 @Transactional 注解来开启事务。该注解的原理其实很好理解，其原理是使用了AOP，在执行该方法前，调用了代码开启了事务，在方法执行结束后，再提交事务，一旦出现异常，就会将修改回滚。</p>
+<p>在阅读了关于数据库隔离级别的文章之后，我对其进行了一定的推断，那就是可能在第一个请求来时，启动了事务，并对数据库里的数据进行了修改。</p>
+<p><strong>但是，但是，</strong>在事务还未提交时，就已经将🔒释放了，此时第二个请求来了，也开启了事务。</p>
+<h1 id="问题的分析与解决"><a href="#问题的分析与解决" class="headerlink" title="问题的分析与解决"></a>问题的分析与解决</h1><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>两个事务的流程就如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>操作顺序</th>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>开启事务</td>
+<td>开启事务</td>
+</tr>
+<tr>
+<td>2</td>
+<td>获取🔒（成功）</td>
+<td>获取🔒（阻塞）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>判断 service.getProperty()  =&gt;  为空</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>service.doSomeThing()</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>释放🔒</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+<td>获取到🔒（阻塞结束）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>提交事务</td>
+<td>判断  service.getProperty()  =&gt;  仍然为空</td>
+</tr>
+<tr>
+<td>8</td>
+<td></td>
+<td>service.doSomeThing()</td>
+</tr>
+<tr>
+<td>9</td>
+<td></td>
+<td>释放🔒</td>
+</tr>
+<tr>
+<td>10</td>
+<td></td>
+<td>提交事务</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>ps：service代表的是另外一个service层类实例，由于项目里配置了全局事务，所以service下的所有方法也都有事务，这里为了简化模型，所以就不计service里的事务。</p>
+</blockquote>
+<p>可以看到，在进入上面 transactionLogic() 方法时，都已经开启了事务，由于Mysql默认是 <strong>可重复读</strong> 级别。也就是说，在事务A开启时，读到数据的 value，无论其他事务做了什么修改并提交，在事务A的流程中，读取到的 value 值都不会变。</p>
+<p>那么问题就迎刃而解了，由于两个相同的请求到来是，都走了 transactionLogic() 方法。</p>
+<p>但是由于进入该方法时，就已经开启了事务，所以无论第一个请求（也就是事务A）对数据库做了怎样的修改并提交，第二个请求（事务B）都无法读取到更新过的数据。</p>
+<p>所以在 service.getProperty() 时，得到的值一直都是 null，里面的逻辑也都又走了一遍。</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>那么就是让请求进入方法后，在获得🔒之后，再开启事务，避免了两个事务开启时间相近，就可以解决问题。</p>
+<p>所以解决方法其实很简单，将 transactionLogic() 方法上面，开启事务的注解去掉即可。</p>
+<p>去掉之后，流程就变成下面所示：</p>
+<table>
+<thead>
+<tr>
+<th>操作顺序</th>
+<th>事务A</th>
+<th>事务B</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>获取🔒（成功）</td>
+<td>获取🔒（阻塞）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>开启事务</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>判断 service.getProperty()  =&gt;  为空</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>service.doSomeThing()</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>释放🔒</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>提交事务</td>
+<td>获取到🔒（阻塞结束）</td>
+</tr>
+<tr>
+<td>7</td>
+<td></td>
+<td>开启事务</td>
+</tr>
+<tr>
+<td>8</td>
+<td></td>
+<td>判断  service.getProperty()  =&gt;  仍然为空</td>
+</tr>
+<tr>
+<td>9</td>
+<td></td>
+<td>service.doSomeThing()</td>
+</tr>
+<tr>
+<td>10</td>
+<td></td>
+<td>释放🔒</td>
+</tr>
+<tr>
+<td>11</td>
+<td></td>
+<td>提交事务</td>
+</tr>
+</tbody></table>
+<p>可以看到，在获取到🔒之前，是不会开启事务的，这样就避免出现因为可重复读，导致无法及时获取到更新的信息。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这次解决这个BUG，让我对于数据库中隔离级别又有了深入的理解。</p>
+<p>同时，很多框架都不是黑盒子，都是可以去分析解决的，就比如这次开启事务与获得🔒的顺序，导致了BUG，如果只是认为这是框架的锅，我弄不懂，不想去分析，那这个BUG就永远无法解决。</p>
+<p>同时，Never stop learning！</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/">个人总结</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/">个人总结</a>
+                    
+                      <a class="hover-with-bg" href="/tags/2021/">2021</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/07/13/%E6%88%91%E7%9A%842021%E4%B8%8A%E5%8D%8A%E5%B9%B4%20-%20%E4%B8%AA%E4%BA%BA%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%83%B3%E4%B8%8E%E6%80%BB%E7%BB%93/">
+                        <span class="hidden-mobile">我的 2021 上半年 - 个人的一些感想与总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appKey":"zUznNRS8dG9TQFJI3lQ181VE","placeholder":"留下点足迹吧👣","path":"window.location.pathname","avatar":"robohash","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":null,"emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[],"appid":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appkey":"zUznNRS8dG9TQFJI3lQ181VE"},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?da9e9551b8bd3e9ae9c4cbb811816c40";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
