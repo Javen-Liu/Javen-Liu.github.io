@@ -16,9 +16,9 @@
   <meta name="theme-color" content="#2f4154">
   <meta name="description" content="">
   <meta name="author" content="Javen">
-  <meta name="keywords" content="日常">
+  <meta name="keywords" content="KMP">
   
-  <title>IDEA热部署 - Javen 的个人空间</title>
+  <title>KMP算法，及其思想的应用 - Javen 的个人空间</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="IDEA热部署">
+            <span class="h2" id="subtitle" title="KMP算法，及其思想的应用">
               
             </span>
 
@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2019-12-20 19:34" pubdate>
-        2019年12月20日 晚上
+      <time datetime="2021-09-04 15:55" pubdate>
+        2021年9月4日 下午
       </time>
     </span>
   
@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      133 字
+      2.3k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      24
        分钟
     </span>
   
@@ -237,24 +237,95 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">IDEA热部署</h1>
+            <h1 style="display: none">KMP算法，及其思想的应用</h1>
             
             <div class="markdown-body">
-              <h1 id="1-引入spring-devtools"><a href="#1-引入spring-devtools" class="headerlink" title="1. 引入spring-devtools"></a>1. 引入spring-devtools</h1><p>在项目的pom.xml文件中，添加spring-devtools的依赖</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
+              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近在刷leetcode，在写关于字符串方面的题目。</p>
+<p>在一个字符串匹配的题目中，我使用了暴力匹配的算法，可想而知，复杂度起步就是 O(mn) （m和n分别是要被匹配的字符串和匹配样式字符串的长度）。</p>
+<p>在看大佬们的题解时，发现有人使用了一个叫 KMP 算法的东西。</p>
+<p>好家伙，我还真不知道这是个啥。当时看解析，KMP属实太抽象了，搞不明白啥意思。</p>
+<p>看了半天，把思想搞明白了，看了一眼代码，我还是好家伙，这又是啥玩意。</p>
+<p>然后就果断躺平，想着哪天再把 KMP 复习一下。</p>
+<p>弄着弄着就忘记再去复习复习了。直到今天做另外一道题，<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/shortest-palindrome/">214. 最短回文串</a>，看到题解里，有人用了 KMP 思想，巧妙地解决了这道题让我想起来，KMP 还得好好在学习一下。</p>
+<h1 id="KMP是什么"><a href="#KMP是什么" class="headerlink" title="KMP是什么"></a>KMP是什么</h1><p><strong>K</strong>nuth-<strong>M</strong>orris-<strong>P</strong>ratt 字符串查找算法，简称为 <strong>KMP算法</strong>，常用于在一个文本串 S 内查找一个模式串 P 的出现位置。</p>
+<h2 id="KMP算法是用来做什么的？"><a href="#KMP算法是用来做什么的？" class="headerlink" title="KMP算法是用来做什么的？"></a>KMP算法是用来做什么的？</h2><p>要了解KMP算法，首先需要了解，这个算法是用来做什么的，应用场景是什么。</p>
+<p>那我们从最简单的字符串匹配开始。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/KMP1.gif" srcset="/img/loading.gif" lazyload alt="暴力遍历"></p>
+<p>从上面的GIF图中可以看到，在每一次匹配时，逐个匹配字符。</p>
+<p>当出现字符不匹配时，将 <strong>s</strong> 与 <strong>t</strong> 的指针都清零了，并且 <strong>t</strong> 只往后前进一个字符。</p>
+<p>假如 <strong>s</strong> 的长度为m，<strong>t</strong> 的长度为n，那么这种暴力匹配的时间复杂度为 **O((m-n)*n)**。</p>
+<p>目前 <strong>s</strong> 和 <strong>t</strong> 的长度还比较短，如果长度再增长，消耗的时间马上就上去了。</p>
+<p><strong>那么，有没有算法能够帮助我们减少这种字符串匹配的时间嗯？</strong></p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>我们来分析一下，有没有什么方法，能够减少比较的次数。</p>
+<p>在索引为1的地方，我们来分析一下。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/IMG_0235.png" srcset="/img/loading.gif" lazyload alt="索引为1的情况"></p>
+<p>此时我们前面4个字符都已经匹配了，但是在最后一个字符进行比较时，匹配失败。</p>
+<p>按照暴力法，下一步就是将 <strong>t</strong> 字符串向后移动，并且指针清零。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/IMG_0233.png" srcset="/img/loading.gif" lazyload alt="下一步"></p>
+<p>但是这一步几乎就是浪费时间，因为 <strong>t</strong> 字符串本身是 ABABC，如果前4个字符匹配了，那么向后移动一位完全不可能匹配上。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/IMG_0236.png" srcset="/img/loading.gif" lazyload alt="比较"></p>
+<p>我们实际上可以直接跳到第二个 A 处。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/IMG_8F5D32CAEA01-1.jpeg" srcset="/img/loading.gif" lazyload alt="直接跳到第二个A处"></p>
+<p>有没有什么方法，可以让我们从 <strong>t</strong> 匹配串中提取出信息呢？让我们在匹配失败的时候，可以不用从头开始回溯。</p>
+<h1 id="KMP算法"><a href="#KMP算法" class="headerlink" title="KMP算法"></a>KMP算法</h1><p>KMP算法的核心就在于，对于 <strong>t</strong> 匹配串进行了处理，从其中获取了信息，并将其保存，一般称这个数组叫做 next 数组。</p>
+<h2 id="next数组"><a href="#next数组" class="headerlink" title="next数组"></a>next数组</h2><p><strong>next数组的值是代表着字符串的前缀与后缀相同的最大长度,(不能包括自身)。</strong></p>
+<p>“前缀”指除了最后一个字符以外，一个字符串的全部头部组合；</p>
+<p>“后缀”指除了第一个字符以外，一个字符串的全部尾部组合。</p>
+<p>举个例子：</p>
+<p>模式串t：    A    B    A    B    A    A</p>
+<p>下标:            0    1    2     3    4    5</p>
+<p>next:            0     0    1    2    3    1</p>
+<ol>
+<li>next[0] 代表 t[0] ~ t[0]，即 “A”，”A”的前缀和后缀都是空集，共有元素的长度为0。</li>
+<li>next[1] 代表 t[0] ~ t[1]，即 “AB”，前缀为”<font color=Red>A</font>“，后缀为”<font color=Red>B</font>“，共有元素的长度为0。</li>
+<li>next[2] 代表 t[0] ~ t[2]，即 “ABA”，前缀为”<font color=Red>A</font>B”，后缀为”B<font color=Red>A</font>“，共有元素的长度为1。</li>
+<li>next[3] 代表 t[0] ~ t[3]，即 “ABAB”，前缀为”<font color=Red>AB</font>A”，后缀为”B<font color=Red>AB</font>“，共有元素的长度为2。</li>
+<li>next[4] 代表 t[0] ~ t[4]，即 “ABABA”，前缀为”<font color=Red>ABA</font>B”，后缀为”B<font color=Red>BABA</font>“，共有元素的长度为3。</li>
+<li>next[5] 代表 t[0] ~ t[5]，即 “ABABAA”，前缀为”<font color=Red>A</font>BABAA”，后缀为”BABA<font color=Red>A</font>“，共有元素的长度为1。</li>
+</ol>
+<p>由此，我们计算出了next</p>
+<h2 id="用next数组来解决上面的例子"><a href="#用next数组来解决上面的例子" class="headerlink" title="用next数组来解决上面的例子"></a>用next数组来解决上面的例子</h2><p>我们已经计算出了上面例子中的next数组。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/KMP2.gif" srcset="/img/loading.gif" lazyload alt="使用next数组"></p>
+<p>从GIF图可以看到，我们通过next数组，使用 j = next[j-1]，来快速计算恢复的下表，直接将下表从4恢复为2，不用从0开始恢复，从而达到跳跃式匹配。</p>
+<h2 id="个人的理解"><a href="#个人的理解" class="headerlink" title="个人的理解"></a>个人的理解</h2><p>上面的解释相对来说，比较枯燥且难以理解，下面是我自己思考和理解这个算法的过程，也希望我思考的方式可以给读者一定的启发。</p>
+<p>在最开始学习这一块的时候，我特别不能理解，next数组到底是个什么玩意，为什么用上面那种方法计算了next数组，在出现匹配失败时，为什么按照next数组来计算，就能快速回退呢？</p>
+<hr>
+<p>虽然上面对于计算next数组的方法，已经写的比较详细了。</p>
+<p>但是一开始学习时，我仍然不明白这么做是为了干什么。尤其是计算前缀与后缀相同的长度，让我一直有点懵。</p>
+<p>但是我们仔细对照着next数组与原字符串对比。</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/IMG_0240.PNG" srcset="/img/loading.gif" lazyload alt="next数组与原字符串对照"></p>
+<p>对于索引为0和1的字符，即 A 和 B，其next数组的值为0。</p>
+<p>而对于索引为2的字符，即第二个A，我们可以看到，其next数组的值为1。当索引为3的字符，即第二个B匹配失败时，说明前面 “ABA” 前缀字符串匹配是对的，但是加上当前的 “B”，字符串 “ABAB” 匹配失败。</p>
+<p>但是next数组保存了之前 t 字符串的信息，所以我们把前缀变成 “A” ，然后继续匹配，看能不能匹配的上。</p>
+<hr>
+<p>好，那我们在看索引为3的字符，即第二个B。</p>
+<p>其next数组对应的值为2。当我们匹配索引为4的字符，即“C”时，如果匹配失败，表明前缀 “ABAB” 匹配是没问题的，但是加上了 “C”，“ABABC” 匹配不上。</p>
+<p>前面说了，索引为3的 “B” 对应next数组的值为2，那么我们的前缀可以变成 “AB” ，也就是从1开始，到2的字字符串，这样我们再去看能不能匹配的上。</p>
+<h1 id="KMP思想应用"><a href="#KMP思想应用" class="headerlink" title="KMP思想应用"></a>KMP思想应用</h1><p>其实这道leetcode的题并不完全是KMP的题，其只不过借助了KMP算法中next数组的思想。</p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/shortest-palindrome/">214. 最短回文串</a> 这道题是hard，题目是这样的</p>
+<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210913210841207.png" srcset="/img/loading.gif" lazyload alt="214. 最短回文串"></p>
+<p>题目的主要意思是，从字符串的开头开始找，找到最长的回文串，然后在字符串的开头加上回文串后面的字母，让整个字符串变成回文串。</p>
+<p>比如示例1: “aacecaaa”，其中字符串的前七位组成的 “aacecaa” 是回文串，然后就在字符串的开头加上后面剩下的 “a”， 就组成了 “aaacecaaa”</p>
+<p>比如示例2: “abcd”，从开头找，只有 “a” 算是回文串，所以将 “bcd” 反转后，加在最前面，变成了 “dcbabcd”，成为了回文串。</p>
+<p>所以本题目最大的难点就是从字符串的开头开始，最长的回文串。</p>
+<p>说到回文串，最先想到的就是中心拓展法，也就是本题的暴力解法。</p>
+<p>由于时间复杂度比较高，并且做法和正常的回文串方法一样，所以就不在本文赘述。</p>
+<h2 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h2><p>既然是找到最长的，从字符串开头开始找的回文串，那么根据回文串的性质，我们知道该字符串反转之后，从字符串开头开始的回文串，就会变成从字符串末尾开始的回文串。</p>
+<p>比如 “abacd”，反转后变为 “dcaba”，前缀回文是”aba”，所以反转后的后缀回文也是”aba”。</p>
+<p>前缀。。。后缀。。。这不就是KMP计算next的方法吗？</p>
+<p>是的，这道题最巧妙的方法就是用KMP计算next数组的方法。</p>
+<p>我们将字符串和其自身反转后的字符串合并在一起，然后计算next数组。</p>
+<p>比如 “abacd”，我们将其和反转后的 “dcaba” 合并，变为 “abacddcaba”。</p>
+<p>然后通过计算next数组后，直接看next数组最后一个元素，其就代表了前缀回文串的长度。</p>
+<h2 id="但是"><a href="#但是" class="headerlink" title="但是"></a>但是</h2><p>但是，我们用这种合并方式，会出现一种问题。</p>
+<p>比如 “aaa”，如果我们直接合并，最后的到的字符串就是 “aaaaaa”，这显然又问题啊。</p>
+<p>那么我们可以通过在中间添加一个无关的字符，来作为间隔。</p>
+<p>这里我用了 # 作为间隔。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><script src="https://gist.github.com/Javen-Liu/07b612ce014b39b48195f7db86f254cf.js"></script>
 
-<p>同时在其中的<build>标签的<plugins>内添加</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fork</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">fork</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure>
-
-<h1 id="2-设置idea"><a href="#2-设置idea" class="headerlink" title="2. 设置idea"></a>2. 设置idea</h1><ul>
-<li>在File =&gt; Settings =&gt; Build, Execution, Deployment =&gt; Compiler 中勾选Build Project automatically</li>
-</ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111804.png" srcset="/img/loading.gif" lazyload alt="x"></p>
-<ul>
-<li>快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running</li>
-</ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111848.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111912.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>说起来，KMP算法是《算法第四版》里，关于字符串匹配的算法。</p>
+<p>当时看到最后一章看不下去了，错过了这个算法，现在算是补上了。</p>
+<p>唉，偷的懒迟早要补回来。</p>
 
             </div>
             <hr>
@@ -264,7 +335,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a>
+                      <a class="hover-with-bg" href="/categories/leetcode/">leetcode</a>
                     
                   </div>
                 
@@ -272,9 +343,11 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Java/">Java</a>
+                      <a class="hover-with-bg" href="/tags/KMP/">KMP</a>
                     
-                      <a class="hover-with-bg" href="/tags/IDEA/">IDEA</a>
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/tags/leetcode/">leetcode</a>
                     
                   </div>
                 
@@ -291,18 +364,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2019/12/20/%E4%BC%9A%E8%AF%9D%E6%8A%80%E6%9C%AF/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">会话技术</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/">
-                        <span class="hidden-mobile">【Java设计模式】4.单件模式</span>
+                      <a href="/2021/08/08/%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BA%8B%E5%8A%A1%E4%B8%8E%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB/">
+                        <span class="hidden-mobile">数据库的事务与隔离级别</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

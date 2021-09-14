@@ -192,6 +192,66 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/08/24/JVM%20-%2015.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95/" target="_self">
+          <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/1174180_screenshots_20200820234204_1.jpg" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 15 垃圾回收相关算法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/08/24/JVM%20-%2015.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95/" target="_self">
+          JVM 笔记 - 15 垃圾回收相关算法
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/24/JVM%20-%2015.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%9B%B8%E5%85%B3%E7%AE%97%E6%B3%95/" target="_self">
+          
+          
+            
+          
+          标记阶段：引用计数算法垃圾标记阶段：对象存活判断
+在堆里存放着几乎所有的Java对象实例，在GC执行垃圾回收之前，首先需要区分出内存中哪些是存活对象，哪些是已经死亡的对象。只有被标记为已经死亡的对象，GC才会在执行垃圾回收时，释放掉其所占用的内存空间，因此这个过程我们可以称为垃圾标记阶段
+那么在JVM中究竟是如何标记一个死亡对象呢？简单来说，当一个对象已经不再被任何的存活对象继续引用时，就可以宣判
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-24 16:01" pubdate>
+              2020-08-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/JVM/">JVM</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JVM/">JVM</a>
+            
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/08/22/JVM%20-%2014.%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%A6%82%E8%BF%B0/" target="_self">
           <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 14 垃圾回收概述">
         </a>
@@ -740,65 +800,6 @@ Java虚拟机栈用于管理Java方法的调用，而本地方法栈用于管理
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
             <time datetime="2020-07-25 11:00" pubdate>
-              2020-07-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JVM/">JVM</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JVM/">JVM</a>
-            
-              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/07/25/JVM%20-%206.%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/" target="_self">
-          <img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 6 本地方法接口">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/07/25/JVM%20-%206.%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/" target="_self">
-          JVM 笔记 - 6 本地方法接口
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/07/25/JVM%20-%206.%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%8E%A5%E5%8F%A3/" target="_self">
-          
-          
-            
-          
-          什么是本地方法简单地讲，一个Native Method就是一个Java调用非Java代码的接口。一个Native Method是这样一个Java方法：该方法的实现由非Java语言实现，比如C。这个特性并非Java所特有，很多其他的变成语言都有这一机制，比如在C++中，你可以使用extern “C” 告知C++编译器去调用一个C的函数
-为什么要用Native Method？Java使用起来非常方便，
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-07-25 10:21" pubdate>
               2020-07-25
             </time>
           </div>
