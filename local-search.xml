@@ -880,6 +880,33 @@
   
   
   <entry>
+    <title>IDEA热部署</title>
+    <link href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/"/>
+    <url>/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-引入spring-devtools"><a href="#1-引入spring-devtools" class="headerlink" title="1. 引入spring-devtools"></a>1. 引入spring-devtools</h1><p>在项目的pom.xml文件中，添加spring-devtools的依赖</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure><p>同时在其中的<build>标签的<plugins>内添加</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fork</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">fork</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure><h1 id="2-设置idea"><a href="#2-设置idea" class="headerlink" title="2. 设置idea"></a>2. 设置idea</h1><ul><li>在File =&gt; Settings =&gt; Build, Execution, Deployment =&gt; Compiler 中勾选Build Project automatically</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111804.png" alt="x"></p><ul><li>快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111848.png"></p><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111912.png"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>日常</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>IDEA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>【Java设计模式】4.单件模式</title>
     <link href="/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/"/>
     <url>/2019/12/20/%E5%8D%95%E4%BB%B6%E6%A8%A1%E5%BC%8F/</url>
@@ -928,33 +955,6 @@
       <tag>cookie与session</tag>
       
       <tag>web技术</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>IDEA热部署</title>
-    <link href="/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/"/>
-    <url>/2019/12/20/idea%E7%83%AD%E9%83%A8%E7%BD%B2/</url>
-    
-    <content type="html"><![CDATA[<h1 id="1-引入spring-devtools"><a href="#1-引入spring-devtools" class="headerlink" title="1. 引入spring-devtools"></a>1. 引入spring-devtools</h1><p>在项目的pom.xml文件中，添加spring-devtools的依赖</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-devtools<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure><p>同时在其中的<build>标签的<plugins>内添加</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">plugin</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">configuration</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">fork</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">fork</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">configuration</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">plugin</span>&gt;</span><br></code></pre></td></tr></table></figure><h1 id="2-设置idea"><a href="#2-设置idea" class="headerlink" title="2. 设置idea"></a>2. 设置idea</h1><ul><li>在File =&gt; Settings =&gt; Build, Execution, Deployment =&gt; Compiler 中勾选Build Project automatically</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111804.png" alt="x"></p><ul><li>快捷键 ctrl + alt + shift + /，选择Registry，勾上Compiler autoMake allow when app running</li></ul><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111848.png"></p><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200602111912.png"></p>]]></content>
-    
-    
-    <categories>
-      
-      <category>日常</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Java</tag>
-      
-      <tag>IDEA</tag>
       
     </tags>
     
