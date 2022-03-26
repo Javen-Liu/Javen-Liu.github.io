@@ -267,7 +267,7 @@
 </li>
 <li><p>另一典中典之无解典：斐波那契数列（不要在意无优化的递归嘛，优化了运行效率上去了，我下面写的计算运行时间的逻辑一直得到0就很尴尬唉</p>
 </li>
-<li><p><img src="http://81.68.78.36/image/mac/image-20211213212558456.png" srcset="/img/loading.gif" lazyload alt="image-20211213212558456"></p>
+<li><p><img src="https://lox.matrix-world.top/image/mac/image-20211213212558456.png" srcset="/img/loading.gif" lazyload alt="image-20211213212558456"></p>
 <p>（另一典中典了属于是</p>
 </li>
 </ol>
@@ -287,7 +287,7 @@
 <p>对于大于400M的，则使用线程池将获取的字节流直接先保存到文件系统中，减轻系统内存压力，然后再通过输入流读取，节省部分内存。</p>
 <p>我这种做法其实也只是我自己拍脑袋想出来，并无实际验证效果如何，在快完工准备去实验这部分的时候老师那边就来活了。。。</p>
 <h3 id="服务器状态检测"><a href="#服务器状态检测" class="headerlink" title="服务器状态检测"></a>服务器状态检测</h3><p>这一部分借助了开源项目<a target="_blank" rel="noopener" href="https://github.com/oshi/oshi">oshi</a>，获取系统当前的状态信息，然后通过netty作为两个心跳链接的基础框架。</p>
-<p><img src="http://81.68.78.36/image/mac/image-20211219192710917.png" srcset="/img/loading.gif" lazyload alt="image-20211219192710917"></p>
+<p><img src="https://lox.matrix-world.top/image/mac/image-20211219192710917.png" srcset="/img/loading.gif" lazyload alt="image-20211219192710917"></p>
 <p>client方通过心跳检测，每5s向server端发送当前系统状态数据。</p>
 <p>而server端如果10s没有收到连接另一端client发送来的信息，就会发送检测信息，连续3次发送并且没有收到回应，则会断开连接。</p>
 <p>只可惜服务器端的做完了，还差前端一点的时候，来活了，导致这个的前端展示没有做出来，还有上面打包压缩策略临界值也没有做测试。</p>

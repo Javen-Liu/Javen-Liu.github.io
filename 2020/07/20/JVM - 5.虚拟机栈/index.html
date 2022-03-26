@@ -257,7 +257,7 @@
 <p>主管Java程序的运行，它保存方法的局部变量、部分结果，并参与方法的调用和返回。</p>
 </li>
 </ul>
-<p><img src="http://81.68.78.36/image/img/20200720101835.png" srcset="/img/loading.gif" lazyload alt="大概示意图"></p>
+<p><img src="https://lox.matrix-world.top/image/img/20200720101835.png" srcset="/img/loading.gif" lazyload alt="大概示意图"></p>
 <ul>
 <li><p>栈的优点：</p>
 <p>栈是一种快速有效的分配存储方式，访问速度仅次于程序计数器</p>
@@ -277,7 +277,7 @@
 <li>执行引擎运行的所有字节码指令只针对当前栈帧进行操作</li>
 <li>如果在该方法中调用了其他方法，对应的新的栈帧会被创建出来，放在栈的顶端，称为新的当前帧</li>
 </ul>
-<p><img src="http://81.68.78.36/image/img/20200720105414.png" srcset="/img/loading.gif" lazyload alt="栈运行图"></p>
+<p><img src="https://lox.matrix-world.top/image/img/20200720105414.png" srcset="/img/loading.gif" lazyload alt="栈运行图"></p>
 <ul>
 <li>不同线程中所包含的栈帧是不允许存在相互引用的，即不可能在一个栈帧之中引用另外一个线程的栈帧</li>
 <li>如果当前方法调用了其他方法，方法返回之际，当前栈帧会传回此方法的执行结果给前一个栈帧，接着，虚拟机会丢弃当前栈帧，使得前一个栈帧重新成为当前栈帧</li>
@@ -313,7 +313,7 @@
 <li>如果需要访问局部变量表中一个64bit的局部变量值时，只需要使用前一个索引即可。（比如long和double）</li>
 <li>如果当前帧是由构造方法或者实例方法创建的，那么<strong>该对象引用this将会存放在index为0的slot处</strong>，其余的参数按照参数表顺序继续排列</li>
 </ul>
-<p><img src="http://81.68.78.36/image/img/20200720134405.png" srcset="/img/loading.gif" lazyload alt="slot"></p>
+<p><img src="https://lox.matrix-world.top/image/img/20200720134405.png" srcset="/img/loading.gif" lazyload alt="slot"></p>
 <h2 id="3-静态变量与局部变量的对比"><a href="#3-静态变量与局部变量的对比" class="headerlink" title="3. 静态变量与局部变量的对比"></a>3. 静态变量与局部变量的对比</h2><ul>
 <li>参数表分配完毕之后，再根据方法体内定义的变量的顺序和作用域分配</li>
 <li>我们知道类变量表有两次初始化阶段，第一次是在“准备阶段“，执行系统初始化，对类变量设置零值，另一次是在”初始化“阶段，赋予程序员在代码中定义的初始值</li>
@@ -328,7 +328,7 @@
 <li>操作数栈，在方法执行过程中，根据字节码指令，往栈中写入数据或提取数据，即入栈（push）/ 出栈（pop）</li>
 <li>某些字节码指令将值压入操作数栈，其余的字节码指令将操作数取出栈，使用他们后在把结果压入栈，例如：执行复制、交换、求和等操作</li>
 </ul>
-<p><img src="http://81.68.78.36/image/img/20200722170326.png" srcset="/img/loading.gif" lazyload alt="操作数栈出栈与入栈"></p>
+<p><img src="https://lox.matrix-world.top/image/img/20200722170326.png" srcset="/img/loading.gif" lazyload alt="操作数栈出栈与入栈"></p>
 <ul>
 <li>操作数栈，<strong>主要用于保存计算过程的中间结果，同时作为计算过程中变量临时的存储空间</strong></li>
 <li>操作数栈就是JVM执行引擎的一个工作区，当一个方法开始执行的时候，一个新的栈帧也会随之被创建出来，<strong>这个方法的操作数栈是空的</strong></li>
@@ -347,7 +347,7 @@
 <li>每一个栈帧内部都包含一个<strong>指向运行时常量池中该栈帧所属方法的应用</strong>。包含这个引用的目的就是为了支持当前方法的代码能够实现动态链接（Dynamic Linking）。比如：invokedynamic指令</li>
 <li>在Java源文件被编译到字节码文件中时，所有的变量和方法引用都作为符号应用（Symbolic Reference）保存在class文件的常量池中。比如：描述一个方法调用了另外的其他方法时，就是通过常量池中指向方法的符号应用来表示的，那么<strong>动态链接的作用就是为了将这些符号引用转化为调用方法的直接引用</strong></li>
 </ul>
-<p><img src="http://81.68.78.36/image/img/20200722191045.png" srcset="/img/loading.gif" lazyload alt="动态链接"></p>
+<p><img src="https://lox.matrix-world.top/image/img/20200722191045.png" srcset="/img/loading.gif" lazyload alt="动态链接"></p>
 <h1 id="方法的调用"><a href="#方法的调用" class="headerlink" title="方法的调用"></a>方法的调用</h1><h3 id="1-解析与分派"><a href="#1-解析与分派" class="headerlink" title="1. 解析与分派"></a>1. 解析与分派</h3><p>在JVM中，将符号引用转化为调用方法的直接引用与方法的绑定机制相关</p>
 <ul>
 <li><p>静态链接：</p>
@@ -402,7 +402,7 @@
 <li>否则，按照继承关系从下往上依次对c的各个父类进行第2步的搜索和验证过程</li>
 <li>如果始终没有找到合适的方法，则抛出 java.lang.AbstractMethodError 异常</li>
 </ol>
-<h3 id="5-虚方法表："><a href="#5-虚方法表：" class="headerlink" title="5. 虚方法表："></a>5. 虚方法表：</h3><p><img src="http://81.68.78.36/image/img/20200724163925.png" srcset="/img/loading.gif" lazyload alt="虚方法表"></p>
+<h3 id="5-虚方法表："><a href="#5-虚方法表：" class="headerlink" title="5. 虚方法表："></a>5. 虚方法表：</h3><p><img src="https://lox.matrix-world.top/image/img/20200724163925.png" srcset="/img/loading.gif" lazyload alt="虚方法表"></p>
 <h1 id="方法返回地址"><a href="#方法返回地址" class="headerlink" title="方法返回地址"></a>方法返回地址</h1><ul>
 <li>存放调用该方法的pc寄存器的值</li>
 <li>一个方法的结束，有两种方式：1.正常执行完成；2.出现未处理的异常，非正常退出</li>

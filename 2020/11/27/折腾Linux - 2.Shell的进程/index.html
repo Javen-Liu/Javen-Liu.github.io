@@ -266,7 +266,7 @@
 <p>对于shell自身的 builtin 指令，shell 都会在其自身的主线程中，进行执行的操作。</p>
 <p>而对于非shell本身自带的指令，在linux中，其会使用系统提供的 fork 接口，来创建一个子进程，然后在子进程中运行该指令。</p>
 <p>并且在子进程中运行指令时，主线程，也就是shell所在的进程，会等待子进程的执行结果。</p>
-<p><img src="http://81.68.78.36/image/img/20201127213109.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://lox.matrix-world.top/image/img/20201127213109.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="shell中的-“-amp-”-指令"><a href="#shell中的-“-amp-”-指令" class="headerlink" title="shell中的 “&amp;” 指令"></a>shell中的 “&amp;” 指令</h2><p>先做一个实验，在shell中，我们进入到之前frp的文件夹，输入：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./frps -c ./frps.ini<br></code></pre></td></tr></table></figure>
 
@@ -282,23 +282,23 @@
 <p>此时我们发现，我们的 shell 竟然还可以继续输入命令并且运行。</p>
 <p>这正好证实了我们的说法，程序运行在子进程中，同时 shell 的主进程并没有等待子进程程序运行完毕。</p>
 <p>这样不就实现了让 frps 程序在后台运行的效果了嘛。</p>
-<p><img src="http://81.68.78.36/image/img/20201128101914.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://lox.matrix-world.top/image/img/20201128101914.png" srcset="/img/loading.gif" lazyload></p>
 <p>上图的终端里，下面开启了我们的程序（作为示范），上面使用</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">ps -ef | grep frps<br></code></pre></td></tr></table></figure>
 
 <p>指令，可以看到后台（也就是子进程）是在运行着 frps 的，而且下面的终端主线程并没有等待该终端子线程程序运行结束。</p>
 <h2 id="但是。。。"><a href="#但是。。。" class="headerlink" title="但是。。。"></a>但是。。。</h2><p>但是 &amp; 指令，只是将程序放在了shell的子进程中运行，那如果shell主进程关闭了，子进程会怎么样呢？</p>
 <p>此时我们将下方的终端关闭。并在上面的终端里继续输入 ps -ef | grep frps 指令，会发现：</p>
-<p><img src="http://81.68.78.36/image/img/20201128102422.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://lox.matrix-world.top/image/img/20201128102422.png" srcset="/img/loading.gif" lazyload></p>
 <p>程序被关闭了，也就是说子进程也关闭了。</p>
 <p>难道想要内网穿透，还得必须打开一个终端？</p>
 <h2 id="nohup"><a href="#nohup" class="headerlink" title="nohup"></a>nohup</h2><p>nohup（全称应该是 “no hangup”）这个指令，可以让运行的程序忽略 HUP 信号。</p>
 <p>那么何为HUP信号呢？每当与当前程序运行所在的进程相关的shell关闭时，也就是shell的主进程关闭时，会向子进程发送该信号，使其正在运行的程序关闭。</p>
 <p>如果使用了nohup指令，则会使当前的程序忽略掉 HUP 信号，也就是你的shell关闭后，其仍然可以继续运行，同时将输出信息，输出到当前目录下的 nohup.out。我们可以在nohup.out里查看程序运行的日志。</p>
 <p>OK，那我们再来实验：</p>
-<p><img src="http://81.68.78.36/image/img/20201128103518.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://lox.matrix-world.top/image/img/20201128103518.png" srcset="/img/loading.gif" lazyload></p>
 <p>这次我们使用了nohup指令。然后我们关闭掉下方的shell，也就是启动 frps 程序的主线程。</p>
-<p><img src="http://81.68.78.36/image/img/20201128103615.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://lox.matrix-world.top/image/img/20201128103615.png" srcset="/img/loading.gif" lazyload></p>
 <p>可以看到，我们将下方的shell关闭后，frps 程序仍然在运行中，我们可以通过 ps 指令与万能的 grep 指令找到他。</p>
 <p>这样我们也就不用把终端一直挂着，而是随用随关闭。内网穿透就像暗地里的守护者一样，不在我们的视野范围内活动，但是没有他，我们就无法从自己的内网访问我们的服务器了。</p>
 <h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>本文从进程的角度，以frps为例，说明了linux中关于shell进程的问题。</p>
