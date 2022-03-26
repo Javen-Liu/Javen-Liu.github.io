@@ -257,15 +257,15 @@
 </blockquote>
 <h1 id="AOP的使用"><a href="#AOP的使用" class="headerlink" title="AOP的使用"></a>AOP的使用</h1><h2 id="切面（pointcut）"><a href="#切面（pointcut）" class="headerlink" title="切面（pointcut）"></a>切面（pointcut）</h2><p>首先需要定义切面。具体的文档以及使用方法我在此就不赘述了，<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop">Spring文档</a>写的非常清楚。并且由于使用注解相对于xml配置来说，方便很多，所以我在这里用注解的方式来实现。</p>
 <p>因为我们会在小程序与后台交互的过程中使用token，所以首先配置好切面，即pointcut。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210417164334892-20210418132220350.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210417164334892-20210418132220350.png" srcset="/img/loading.gif" lazyload></p>
 <p>由于项目不公开，所以一部分我打码了，不过应该可以理解我的意思，spring提供的API已经非常全面且好用，可以支持各种不同的需求。切面其实也就是确定AOP要作用于的方法。</p>
 <h2 id="通知（advice）"><a href="#通知（advice）" class="headerlink" title="通知（advice）"></a>通知（advice）</h2><p>这里我是用的是 <strong>@Around</strong> 通知。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210417170114220.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210417170114220.png" srcset="/img/loading.gif" lazyload></p>
 <p>我们在切面所在方法执行前，对header中的token进行解析，并将其装入到当前请求所在环境的RequestAttributes中，这样我们就不用在切面方法执行时，传入参数。直接将这些参数放到请求的环境中，让controller中方法按需求获取，操作空间更大，也不用强制满足方法参数的约束。</p>
 <p>同时为了获取参数更加方便，我封装了一个工具类，省去了重复写获取参数的代码。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">RequestContextHolder.getRequestAttributes().getAttribute(key, RequestAttributes.SCOPE_REQUEST)<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210417171106415.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210417171106415.png" srcset="/img/loading.gif" lazyload></p>
 <p>并且我们知道，每当一个请求过来时，实际上前端控制器是会为每一个请求创建一个线程（简要来说，Spring的实现在此基础上肯定进行了更复杂的封装以满足高吞吐量的需求）。</p>
 <p>而我将参数保存时， <strong>RequestContextHolder.setRequestAttributes()</strong> 中范围设置为了SCOPE_REQUEST，也就是说当前请求所在的线程，都是可以获取到的。也避免了多个请求来时，导致参数被覆盖而出现问题。</p>
 <h1 id="由AOP引发的思考"><a href="#由AOP引发的思考" class="headerlink" title="由AOP引发的思考"></a>由AOP引发的思考</h1><p>AOP的实现原理，完全使用java语言自身特性来实现。</p>
@@ -273,7 +273,7 @@
 <p>JDK的动态代理有一个问题，就是他代理的类，必须是接口的实现类，否则无法生成代理类。</p>
 <p>那么既然我们知道了JDK动态代理是基于生成动态代理类，我们能不能自己尝试写一个呢？</p>
 <h1 id="手动实现动态代理"><a href="#手动实现动态代理" class="headerlink" title="手动实现动态代理"></a>手动实现动态代理</h1><h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>在开始写动态代理前，我们先看看静态代理。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418133747115.png" srcset="/img/loading.gif" lazyload alt="静态代理"></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210418133747115.png" srcset="/img/loading.gif" lazyload alt="静态代理"></p>
 <p>实际上如果是静态代理，其实就是代理对象（Proxy对象）将实际的实现类对象（Impl对象）包装在自己内部，当主程序通过多态调用接口类（Interface对象）方法时，代理类可以在实际的实现类方法调用的前、后进行自己的操作。</p>
 <p>不过既然它是静态代理，因此调用的方式、先后顺序以及其代理的接口类都是写死的，极其不通用，所以我们才需要实现“动态”，来满足各种需求。</p>
 <h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>我实现的动态代理，其实和静态代理很相似，只不过对于代理的对象，可以进行自定义，同时代理对象的操作也可以定制。</p>
@@ -296,16 +296,16 @@
 <li>对文件进行编译，生成 $Proxy0.class 字节码文件</li>
 <li>通过 java 的反射机制，动态加载  $Proxy0.class 字节码文件，并在jvm中生成对应的Class类对象，并实例化生成对象，返回方法调用</li>
 </ol>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141300704.png" srcset="/img/loading.gif" lazyload alt="Test.java 用于测试"></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210418141300704.png" srcset="/img/loading.gif" lazyload alt="Test.java 用于测试"></p>
 <p>完成后创建一个Test类，进行测试。</p>
 <p>首先创建一个实现了invoke方法的 InvocationHandler 对象实例，然后通过 UserPersistenceProxy 类的 newInstance 静态方法，生成代理后的对象。</p>
 <p>调用接口类中的方法，根据多态，其会自动判别调用的方法。</p>
 <p>其中 UserInterface 如下图。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141625056.png" srcset="/img/loading.gif" lazyload alt="接口类"></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210418141625056.png" srcset="/img/loading.gif" lazyload alt="接口类"></p>
 <p>而接口的实现类如下图。</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141645757.png" srcset="/img/loading.gif" lazyload alt="实现类"></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210418141645757.png" srcset="/img/loading.gif" lazyload alt="实现类"></p>
 <p>此时我们运行该测试，最终 terminal 输出如下：</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/mac/image-20210418141723345.png" srcset="/img/loading.gif" lazyload alt="最终运行结果"></p>
+<p><img src="http://81.68.78.36/image/mac/image-20210418141723345.png" srcset="/img/loading.gif" lazyload alt="最终运行结果"></p>
 <p>确实实现了动态生成字节码，并代理的效果。并且代理类确实是在运行时生成并加载的，相比于静态代理，更加的灵活。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在自己实现了简单的动态代理后，对于动态代理的实现方式，就有了一些自己的理解。</p>
 <p>对于我自己个人来讲，我不太喜欢死记硬背。相反，我更喜欢自己尝试去理解，通过探索、理解的过程，来让大脑自己记住，而不是强迫大脑去记忆。</p>

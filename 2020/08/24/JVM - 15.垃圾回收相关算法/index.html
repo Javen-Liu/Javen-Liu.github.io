@@ -256,7 +256,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200824163626.png" srcset="/img/loading.gif" lazyload alt="循环引用"></p>
+<p><img src="http://81.68.78.36/image/img/20200824163626.png" srcset="/img/loading.gif" lazyload alt="循环引用"></p>
 <h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ul>
 <li>引用计数算法，是很多语言的资源回收选择，例如Python，它同时支持引用计数和垃圾收集机制</li>
 <li>具体哪种最优是看具体场景，有些大规模的实践中仅保留技术机制，以提高吞吐量</li>
@@ -277,7 +277,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200824170230.png" srcset="/img/loading.gif" lazyload alt="可达性分析算法"></p>
+<p><img src="http://81.68.78.36/image/img/20200824170230.png" srcset="/img/loading.gif" lazyload alt="可达性分析算法"></p>
 <h2 id="GC-Roots"><a href="#GC-Roots" class="headerlink" title="GC Roots"></a>GC Roots</h2><p>在Java语言中，GC Roots包括以下几类元素：</p>
 <ul>
 <li>虚拟机栈中引用的对象，比如：各个线程被调用的方法中时用到的参数、局部变量等</li>
@@ -288,7 +288,7 @@
 <li>Java虚拟机内部的引用，比如基本数据类型对应的Class对象，一些常驻的异常对象（如：NullPointerException、OutOfMemoryError），系统累计加载器等</li>
 <li>反应Java虚拟机内部情况的JMXBean、JVMTI中注册的回调、本地代码缓存等</li>
 </ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200824172028.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/img/20200824172028.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>除了这些固定的GC Roots集合以外，根据用户选用的垃圾收集器以及当前回收的内存区域不同，还可以有其他对象“临时性”地加入，共同构成完整GC Roots集合。比如：分代收集和局部回收（Partial GC）</li>
 <li>如果只针对Java堆中的某一块区域进行垃圾回收（比如：典型的只针对新生代），必须考虑到内存区域是虚拟机自己的实现细节，更不是孤立封闭的，这个区域的对象完全有可能被其他区域的对象所引用，这时候就需要一并将关联的区域对象也加入GC Roots集合中去考虑，才能保证可达性分析的准确性</li>
@@ -332,7 +332,7 @@
 <li>标记：Collector从引用的根节点开始遍历，标记所有被引用的对象。一般是在对象的Header中记录为可达对象</li>
 <li>清除：Collector对堆内存从头到尾进行线性的遍历，如果发现某个对象在其Header中没有标记为可达对象，则将其回收</li>
 </ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200828151731.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/img/20200828151731.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
 <li>效率不太高</li>
 <li>在进行GC时，需要停止整个程序，导致用户体验差</li>
@@ -343,7 +343,7 @@
 </ul>
 <h1 id="清除阶段：幅值算法"><a href="#清除阶段：幅值算法" class="headerlink" title="清除阶段：幅值算法"></a>清除阶段：幅值算法</h1><h2 id="背景-1"><a href="#背景-1" class="headerlink" title="背景"></a>背景</h2><p>为了解决标记-清除算法在垃圾收集效率方面的缺陷，M.L.Minsky于1963年发表了著名的论文，“使用双存储区的Lisp语言垃圾收集器CA LISP Garbage Collector Algorithm Using Serial Secondary Storage”。其在论文中描述的算法被人们称为幅值（Copying）算法</p>
 <h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>将活着的内存空间分为两块，每次只使用其中一块，在垃圾回收时将正在使用的内存中的存活对象复制到未被使用的内存块中，之后清除正在使用的内存块中的所有对象，交换两个内存角色，最后完成垃圾回收</p>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200828153302.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/img/20200828153302.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
 <li>没有标记和清除过程，实现简单，运行高效</li>
 <li>幅值过去以后保证空间的连续性，不会出现“碎片”问题</li>
@@ -361,7 +361,7 @@
 <li>第二阶段将所有的存活对象压缩到内存的一端，按顺序排放</li>
 <li>之后清除边界外的所有空间</li>
 </ul>
-<p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200828155104.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="http://81.68.78.36/image/img/20200828155104.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h2><ul>
 <li>消除了标记-清除算法当中，内存区域分散的缺点，我们需要给新对象分配内存时，JVM只需要持有一个内存的起始地址即可</li>
 <li>消除了复制算法中，内存减半的高额代价</li>
@@ -371,7 +371,7 @@
 <li>移动对象的同时，如果对象被其他对象引用，则还需要调整引用的地址</li>
 <li>移动过程中，需要全称暂停用户应用程序，即STW</li>
 </ul>
-<h1 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h1><p><img src="https://gitee.com/Javen-Liu/blogimage/raw/master/img/20200828161433.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h1><p><img src="http://81.68.78.36/image/img/20200828161433.png" srcset="/img/loading.gif" lazyload></p>
 <p>效率上来说，复制算法是比较不错的，但是却浪费了太多的内存</p>
 <p>为了尽量兼顾上面提到的三个指标，标记-整理算法相对来说跟平滑一些，但是效率上不尽如人意，它比复制算法多了一个标记的阶段，比标记-清除多了一个整理内存的阶段</p>
 <h1 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h1><p>Q：难道就没有一种最好的算法吗？</p>
