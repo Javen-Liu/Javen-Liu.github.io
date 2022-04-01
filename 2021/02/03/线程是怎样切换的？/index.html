@@ -271,7 +271,7 @@
 <p>后来人们发现汇编语言还是有点晦涩难懂，而且不断地操作那些寄存器，太麻烦了，就不能更方便一些吗？对，这就是后来的C语言。</p>
 <p>总结，也就是说，我们写出来的C语言文件，都是通过gcc（GNU C Complier）来进行编译，转成CPU能直接理解的机械码，让CPU来运行。</p>
 <p>实际上CPU是不认识C语言是什么的，它只会不厌其烦，或者说应该叫，锲而不舍地运行CS：IP指向的下一条机械码（CS：IP本文就不展开介绍了，这又涉及到计算机的基础知识，不清楚的读者建议去搜索，或者看看计算机相关的基础书籍），我们先用我们好理解的C语言写出程序，然后通过gcc这样一个工具，把它变成机械码，让CPU执行。</p>
-<p><img src="https://lox.matrix-world.top/image/mac/image-20210314202800431.png" srcset="/img/loading.gif" lazyload alt="C语言运行起来的过程"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210314202800431.png" srcset="/img/loading.gif" lazyload alt="C语言运行起来的过程"></p>
 <p>总结：我们平常用的高级语言，例如C语言，实质上是使用编译器将其转化为了机械指令，然后CPU运行的就是编译后的机械指令。</p>
 <h1 id="那么Java中的线程，和上面说的C语言有什么联系呢？"><a href="#那么Java中的线程，和上面说的C语言有什么联系呢？" class="headerlink" title="那么Java中的线程，和上面说的C语言有什么联系呢？"></a>那么Java中的线程，和上面说的C语言有什么联系呢？</h1><p>是这样的，用《操作系统真象还原》书中所说的，我们平时使用高级语言（C、Java、python等等）写出来的程序，都是“半成品”。</p>
 <p>为什么说是半成品呢，因为我们的程序在运行时，是属于“用户态”的，是无法使用包括但不限于：读写硬盘（也就是IO操作）、读写内存等操作的。这些操作是由“内核态”的程序来提供的，这些操作是实打实会影响计算机的行为，所以“内核态”的程序（也就是操作系统）不放心用户，害怕用户乱操作会把电脑弄坏，因此操作系统会把这些操作封装起来，只提供一定的接口，让我们“用户态”的程序来调用。</p>
@@ -316,11 +316,11 @@
 <p>那么如果我们直接修改了CS：IP，跳到别的线程了，本来寄存器就少，当前线程全部使用了，切换后的线程要运行，就得把原来寄存器中的值被覆盖了。</p>
 <p>当我们试图切换回来时，原来线程运行时，寄存器的值找不到了，那程序再往下运行就可能出事了。</p>
 <p>所以我们在修改CS：IP前，还要把各种寄存器保存起来，放到一个规定好的数据结构中保存。</p>
-<h2 id="具体的切换代码"><a href="#具体的切换代码" class="headerlink" title="具体的切换代码"></a>具体的切换代码</h2><p><img src="https://lox.matrix-world.top/image/mac/image-20210321192317260.png" srcset="/img/loading.gif" lazyload alt="switch.S"></p>
+<h2 id="具体的切换代码"><a href="#具体的切换代码" class="headerlink" title="具体的切换代码"></a>具体的切换代码</h2><p><img src="https://image.matrix-world.top/image/mac/image-20210321192317260.png" srcset="/img/loading.gif" lazyload alt="switch.S"></p>
 <p>可以看到，在7到12行，是将切换前的线程的上下文进行保存。</p>
 <p>接着从16行开始，加载下一个线程的环境。</p>
 <p>在切换线程时，此时esp指向的栈中，数据的分布入上图所示。</p>
-<h2 id="整个线程切换的流程图"><a href="#整个线程切换的流程图" class="headerlink" title="整个线程切换的流程图"></a>整个线程切换的流程图</h2><p><img src="https://lox.matrix-world.top/image/mac/image-20210321193225049.png" srcset="/img/loading.gif" lazyload alt="线程切换的流程图"></p>
+<h2 id="整个线程切换的流程图"><a href="#整个线程切换的流程图" class="headerlink" title="整个线程切换的流程图"></a>整个线程切换的流程图</h2><p><img src="https://image.matrix-world.top/image/mac/image-20210321193225049.png" srcset="/img/loading.gif" lazyload alt="线程切换的流程图"></p>
 <ol>
 <li>可以看到，每当定时器计时结束，会像①一样，进入中断处理程序</li>
 <li>此时，在中断处理程序中，会判断当前线程（也就是线程A）的时间片是否用完，如果用完，意味着就要切换了</li>

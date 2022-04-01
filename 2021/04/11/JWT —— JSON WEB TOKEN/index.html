@@ -279,7 +279,7 @@
 <li>服务器验证token并从中取出有用的信息</li>
 </ul>
 <h2 id="JWT的构成"><a href="#JWT的构成" class="headerlink" title="JWT的构成"></a>JWT的构成</h2><p>JWT包含了三部分：header、payload 以及 signature</p>
-<p><img src="https://lox.matrix-world.top/image/mac/image-20210411174631309.png" srcset="/img/loading.gif" lazyload alt="JWT"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210411174631309.png" srcset="/img/loading.gif" lazyload alt="JWT"></p>
 <h3 id="header（头部）"><a href="#header（头部）" class="headerlink" title="header（头部）"></a>header（头部）</h3><p>header包含了两部分内容：</p>
 <ol>
 <li>声明类型，这里是jwt</li>
@@ -322,7 +322,7 @@
 <p>直接使用JWT是存在问题的，我们项目的初衷是想隐藏用户id之类的敏感信息，不使其以明文的形式暴露在HTTP请求中，JWT中payload几乎可以说是明文的，不符合要求。</p>
 <p>不过可以借鉴JWT的思路，同时再使用对称加密算法，将信息加密，避免了明文传输。</p>
 <p>看了不少博客以及文章之后，我们项目最终确定使用加密token来保存信息，并且将信息发送给客户端，让客户端保存。时序图如下：</p>
-<p><img src="https://lox.matrix-world.top/image/mac/image-20210411185533818.png" srcset="/img/loading.gif" lazyload alt="前后端交互时序图"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210411185533818.png" srcset="/img/loading.gif" lazyload alt="前后端交互时序图"></p>
 <p>其他再具体的细节就不方便说了，因为实验室的项目和别人是有合作的，因此就不便透露了。</p>
 <p>目前来说，效果还可以，避免用户个别信息明文传输的目标的确是实现了。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>

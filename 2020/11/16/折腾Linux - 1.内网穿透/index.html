@@ -249,7 +249,7 @@
 <p>结果那必然是失败啊，根本ping不通啊。拍查了半天，原来我的电脑是连接的校园网，而实验室的服务器（下面简称服务器）在另外一个网络内，这怎么可能访问嘛。</p>
 <p>查了很多资料，发现有两种种解决方法，分别是路由器端口映射和内网穿透。这就是本篇博客的内容了。</p>
 <h1 id="为什么两个内网下的设备无法连通？"><a href="#为什么两个内网下的设备无法连通？" class="headerlink" title="为什么两个内网下的设备无法连通？"></a>为什么两个内网下的设备无法连通？</h1><p>解答这个问题，需要了解网络模型、公网内网</p>
-<h2 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h2><p><img src="https://lox.matrix-world.top/image/img/20201116165352.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h2><p><img src="https://image.matrix-world.top/image/img/20201116165352.png" srcset="/img/loading.gif" lazyload></p>
 <p>OSI 七层网络模型由国际标准化组织进行制定，它是正统意义上的国际标准。但其实现过于复杂，且制定周期过长，在其整套标准推出之前，TCP/IP 模型已经在全球范围内被广泛使用，所以 TCP/IP 模型才是事实上的国际标准。TCP/IP 模型定义了应用层、传输层、网际层、网络接口层这四层网络结构，但并没有给出网络接口层的具体内容，因此在学习和开发中，通常将网络接口层替换为 OSI 七层模型中的数据链路层和物理层来进行理解。</p>
 <p><strong>网络接口层</strong>的知识就比较偏向底层硬件。我们平常的做的应用，基本上是在<strong>网际层IP</strong>以及<strong>传输层</strong>的基础上，进行连接，同时在应用层进行各种应用。</p>
 <h2 id="公网与内网"><a href="#公网与内网" class="headerlink" title="公网与内网"></a>公网与内网</h2><ol>
@@ -270,13 +270,13 @@
 <p>而如果想用私有地址与Internet连接来访问公网，那该怎么做？这就需要将<strong>私有IP地址</strong>转换成<strong>公网IP地址</strong>，与外部连接。所以，我们平时使用的路由器中会装有一个叫做 <strong>NAT（网络地址转换）</strong> 的软件，我们的路由器中会至少会有一个有效的<strong>公网IP</strong>，<strong>NAT</strong>会将我们的<strong>私有地址</strong>转成路由器中的<strong>公网IP</strong>与外部Internet连接。而同样的，因为使用的是路由器中的<strong>公共的公网IP</strong>来连接Internet，所以这个内网中的PC在Internet中显示的都是路由器的<strong>公共IP</strong>，这样做不仅提供了一定程度的安全，也可以有效的减缓可用的IP地址空间的枯竭问题。</p>
 <p>比较典型的例子就是，我们学校的校园网，就是一个很大的内网，我们在内网中连接wifi，并上网，实际上仍然通过的是 <strong>NAT（网络地址转换）</strong>转换为公网IP来建立连接。</p>
 <h2 id="解决疑惑"><a href="#解决疑惑" class="headerlink" title="解决疑惑"></a>解决疑惑</h2><p>两个设备之间建立连接，相互传送数据，数据会被由多个协议进行封装，即 应用层 - 传输层 - 网络层 - 网络接口层。</p>
-<p><img src="https://lox.matrix-world.top/image/img/20201116172011.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201116172011.png" srcset="/img/loading.gif" lazyload></p>
 <p>我们的设备是连接了路由器的，路由器下的所有设备都连接在该路由器的子网下，简言之，我们的设备都躲在路由器后。</p>
 <p>我们访问一个网站，或建立一个连接，最终都是以路由器的IP发送出去。</p>
 <p>但因为我们的设备A是主动访问一个公网服务器，路由器在建立连接后，是可以根据我们主动的访问时，网络协议中的信息，而将公网服务器发回来的信息，正确地发送给我们的设备A。</p>
-<p><img src="https://lox.matrix-world.top/image/img/20201116184031.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201116184031.png" srcset="/img/loading.gif" lazyload></p>
 <p>可是如果另外一个设备B，想要主动地来访问我们的设备A，这个时候，设备B访问的是路由器的IP。而路由器其实也不明白，设备B到底是想和内网下哪一个设备进行连接，因为内网下的设备对外暴露出来的，都是路由器的IP。</p>
-<p><img src="https://lox.matrix-world.top/image/img/image-20201116184203613.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/image-20201116184203613.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h2 id="1-路由器端口映射"><a href="#1-路由器端口映射" class="headerlink" title="1.路由器端口映射"></a>1.路由器端口映射</h2><p>路由器端口映射，原理就是指定路由器的一个固定端口（比如6000），使所有访问路由器IP（121.40.XXX.XXX:6000）的数据或信息，都转发到指定设备A的指定端口（例如22端口，用于SSH）。</p>
 <p>那么最终的效果就是我直接访问 121.40.XXX.XXX:6000，路由器知道是转发给设备A的22端口，那我就可以访问到内网中，设备A的22端口了。</p>
 <p>但是设备A除了我设置好的22端口，其他端口仍然还是无法访问，如果想要访问另一个端口，需要在路由器的端口映射中加入响应的映射配置即可。</p>
@@ -285,7 +285,7 @@
 <p>但是frp唯一一个要求就是你需要有个自己的云服务器，并且云服务器有公网IP。</p>
 <p>这不，我正好有个阿里云学生机，虽然学生机啥都不行，但它便宜啊！而且还带公网IP，要什么自行车？！</p>
 <p>frp的具体原理图如下：</p>
-<p><img src="https://lox.matrix-world.top/image/img/20201117170928.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201117170928.png" srcset="/img/loading.gif" lazyload></p>
 <p>下面就开始我们的配置</p>
 <h3 id="2-1-frp服务端安装配置"><a href="#2-1-frp服务端安装配置" class="headerlink" title="2.1 frp服务端安装配置"></a>2.1 frp服务端安装配置</h3><p>这里服务端，就是我们的阿里云服务器，使其作为frp的server端，接收client的连接</p>
 <p>首先我们在终端依次输入下面的命令</p>
@@ -293,7 +293,7 @@
 
 <p>这里注意一点，由于服务器使用的是centos，因此一定要选的linux，其次amd64代表了设备的架构，一般都是amd64。如果选择错误的平台类型，自然下载下来的文件是无法运行的。</p>
 <p>解压之后的文件目录如下图</p>
-<p><img src="https://lox.matrix-world.top/image/img/20201117172039.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201117172039.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中 frpc_remote_ftp.ini 以及 nohup.out 是后续加进来的，如果解压后目录里没有是正常的。</p>
 <p>此时，我们输入：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim frps.ini<br><span class="hljs-meta">#</span><span class="bash"> 如果提示没有权限，则在命令前加上 sudo ，并输入root的密码即可</span><br><span class="hljs-meta">#</span><span class="bash"> 例如：sudo vim frps.ini</span><br></code></pre></td></tr></table></figure>
@@ -306,7 +306,7 @@
 <p>此时，我们在当前 frp 文件的目录下输入：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./frps -c ./frps.ini<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://lox.matrix-world.top/image/img/20201117172600.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201117172600.png" srcset="/img/loading.gif" lazyload></p>
 <p>如果命令行出现上述输出，则表示启动成功，接下来就是内网设备启动 frpc 连接到 frps</p>
 <h3 id="2-2-frp客户端配置"><a href="#2-2-frp客户端配置" class="headerlink" title="2.2 frp客户端配置"></a>2.2 frp客户端配置</h3><p>在我们的内网设备中，仍然需要下载 frp。下载以及解压的方式同 [2.1frp服务器端配置](#2.1 frp服务端安装配置) 一样。</p>
 <p>解压后，进入目录，因为内网设备是作为 client ，连接到 server，因此我们启动的是 frpc。</p>
@@ -319,10 +319,10 @@
 <p>修改完毕并退出后，我们在命令行中输入：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">./frpc -c ./frpc.ini<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://lox.matrix-world.top/image/img/20201117173924.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201117173924.png" srcset="/img/loading.gif" lazyload></p>
 <p>如果没有黄色报错，那么久启动成功了</p>
 <h3 id="2-3连接测试"><a href="#2-3连接测试" class="headerlink" title="2.3连接测试"></a>2.3连接测试</h3><p>此时我们打开自己电脑的 xshell，创建一个新的连接：</p>
-<p><img src="https://lox.matrix-world.top/image/img/20201118143303.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20201118143303.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中 “名称” 可以随便填，“主机” 填的就是我们公网IP设备的IP地址（例如 121.XXX.XXX.XXX），端口号一定要与frp客户端配置中的 remote_port 相同。</p>
 <p>配置好之后，点击确定，然后连接即可。</p>
 <p>当然这一步作者只简单描述了步骤，关于具体xshell的操作，可以自行谷歌。</p>

@@ -250,11 +250,11 @@
 <li>在方法结束后，堆中的对象不会马上被移除，仅仅在垃圾收集的时候才会别移除</li>
 <li>堆，是GC执行垃圾回收的重点区域</li>
 </ul>
-<p><img src="https://lox.matrix-world.top/image/img/20200728210153.png" srcset="/img/loading.gif" lazyload alt="堆"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200728210153.png" srcset="/img/loading.gif" lazyload alt="堆"></p>
 <hr>
-<h2 id="2-内存细分"><a href="#2-内存细分" class="headerlink" title="2. 内存细分"></a>2. 内存细分</h2><p><img src="https://lox.matrix-world.top/image/img/20200728210818.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-内存细分"><a href="#2-内存细分" class="headerlink" title="2. 内存细分"></a>2. 内存细分</h2><p><img src="https://image.matrix-world.top/image/img/20200728210818.png" srcset="/img/loading.gif" lazyload></p>
 <hr>
-<h2 id="3-堆内部结构"><a href="#3-堆内部结构" class="headerlink" title="3. 堆内部结构"></a>3. 堆内部结构</h2><p><img src="https://lox.matrix-world.top/image/img/20200728211631.png" srcset="/img/loading.gif" lazyload alt="堆内部结构"></p>
+<h2 id="3-堆内部结构"><a href="#3-堆内部结构" class="headerlink" title="3. 堆内部结构"></a>3. 堆内部结构</h2><p><img src="https://image.matrix-world.top/image/img/20200728211631.png" srcset="/img/loading.gif" lazyload alt="堆内部结构"></p>
 <h1 id="设置堆内存大小与OOM"><a href="#设置堆内存大小与OOM" class="headerlink" title="设置堆内存大小与OOM"></a>设置堆内存大小与OOM</h1><h2 id="1-堆空间大小的设置"><a href="#1-堆空间大小的设置" class="headerlink" title="1. 堆空间大小的设置"></a>1. 堆空间大小的设置</h2><ul>
 <li>Java堆区用于存储Java对象实例，那么堆的大小在JVM启动时就已经设定好了，大家可以通过选项 <strong>“-Xmx”</strong> 和 <strong>“-Xms”</strong> 来进行设置</li>
 <li>“-Xms” 用于表示堆区的起始内存，等价于 -XX:InitialHeapSize</li>
@@ -273,7 +273,7 @@
 <li>Java堆区进一步细分的话，可以划分为年轻代（YoungGen）和老年代（OldGen）</li>
 <li>其中年轻代又可划分为Eden空间、Survivor0空间和Survivor1空间（有时也叫from区、to区）</li>
 </ul>
-<p><img src="https://lox.matrix-world.top/image/img/20200729101709.png" srcset="/img/loading.gif" lazyload alt="年轻代和老年代"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200729101709.png" srcset="/img/loading.gif" lazyload alt="年轻代和老年代"></p>
 <ul>
 <li>在HotSpot中，Eden空间和另外两个Survivor空间缺省所占比例是8:1:1</li>
 <li>当然开发人员可以通过 “-XX:SurvivorRatio” 来调整这个空间比例，例如-XX:SurvivorRatio=8</li>
@@ -291,7 +291,7 @@
 <li>在养老区，相对悠闲。当养老区内存不足时，会触发GC：Major GC，进行养老区的内存清理</li>
 <li>若养老区执行了Major GC之后发现仍然无法进行对象的保存，就会产生OOM异常</li>
 </ol>
-<h2 id="2-对象分配的特殊情况"><a href="#2-对象分配的特殊情况" class="headerlink" title="2. 对象分配的特殊情况"></a>2. 对象分配的特殊情况</h2><p><img src="https://lox.matrix-world.top/image/img/20200729110625.png" srcset="/img/loading.gif" lazyload alt="特殊情况"></p>
+<h2 id="2-对象分配的特殊情况"><a href="#2-对象分配的特殊情况" class="headerlink" title="2. 对象分配的特殊情况"></a>2. 对象分配的特殊情况</h2><p><img src="https://image.matrix-world.top/image/img/20200729110625.png" srcset="/img/loading.gif" lazyload alt="特殊情况"></p>
 <h1 id="Minor-GC、Major-GC、Full-GC"><a href="#Minor-GC、Major-GC、Full-GC" class="headerlink" title="Minor GC、Major GC、Full GC"></a>Minor GC、Major GC、Full GC</h1><h2 id="1-GC概述"><a href="#1-GC概述" class="headerlink" title="1. GC概述"></a>1. GC概述</h2><p>JVM在进行GC时，并非每次都对上面三个内存区域一起回收，大部分时候回收的都是指新生代</p>
 <p>针对HotSpot VM的实现，它里面的GC按照回收区域又分为两大类型：一种是部分收集（Partial GC），一种是整堆收集（Full GC）</p>
 <ul>
@@ -361,10 +361,10 @@
 <li>默认情况下，TLAB空间的内存非常小，**仅占有整个Eden空间的1%**，当然我们可以通过选项 “-XX:TLABWasteTargetPercent” 设置TLAB空间所占用Eden空间的百分比大小</li>
 <li>一旦对象在TLAB空间分配内存失败，JVM就会尝试着通过<strong>使用加锁机制</strong>确保数据操作的原子性，从而直接在Eden空间中分配内存</li>
 </ul>
-<p><img src="https://lox.matrix-world.top/image/img/20200730163429.png" srcset="/img/loading.gif" lazyload alt="内存分配"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200730163429.png" srcset="/img/loading.gif" lazyload alt="内存分配"></p>
 <h1 id="小结：堆空间的参数设置"><a href="#小结：堆空间的参数设置" class="headerlink" title="小结：堆空间的参数设置"></a>小结：堆空间的参数设置</h1><p>官网说明：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html">https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html</a></p>
-<p><img src="https://lox.matrix-world.top/image/img/20200731155117.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="https://lox.matrix-world.top/image/img/20200731155252.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200731155117.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200731155252.png" srcset="/img/loading.gif" lazyload></p>
 <p>在发生Minor GC之前，虚拟机会<strong>检查老年代最大可用的连续空间是否大于新生代所有对象的总空间</strong></p>
 <p>如果大于，则此次Minor GC是安全的</p>
 <p>如果小于，则虚拟机会查看-XX:HandlePromotionFailure设置值是否允许担保失败</p>

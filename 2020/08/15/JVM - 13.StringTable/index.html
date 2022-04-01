@@ -265,8 +265,8 @@
 </li>
 <li>Java 8中字符串常量在堆中</li>
 </ul>
-<p><img src="https://lox.matrix-world.top/image/img/20200817160832.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="https://lox.matrix-world.top/image/img/20200817160856.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200817160832.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200817160856.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>为什么StringTable要调整？</strong></p>
 <ol>
 <li>permSize默认比较小</li>
@@ -278,7 +278,7 @@
 <li>只要其中有一个是变量，结果就在堆中。<strong>拼接变量的原理是StringBuilder</strong></li>
 <li>如果拼接的结果调用intern()方法，则主动将常量池中还没有的字符创对象放入池中，并返回此对象的地址</li>
 </ol>
-<p><img src="https://lox.matrix-world.top/image/img/20200817170054.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200817170054.png" srcset="/img/loading.gif" lazyload></p>
 <ol>
 <li>字符串拼接操作不一定使用的是StringBuilder，如果拼接符号左右两百年都是字符串变量或常量引用，则仍然使用编译器优化，即非StringBuilder的方式</li>
 <li>针对于final修饰类、方法、基本数据类型、引用数据类型的量的结构时，能用final尽量使用final</li>
@@ -294,7 +294,7 @@
 <p>通俗点讲，Interned String 就是确保字符串在内存里只有一份拷贝，这样可以节约内存空间，加快字符串操作任务的执行速度。注意，这个值会被存放在字符串内部池（String Intern Pool）</p>
 <hr>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><strong>Q：new String(“ab”)会创建几个对象？</strong></p>
-<p><img src="https://lox.matrix-world.top/image/img/20200818205305.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200818205305.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>A：</strong>2个，一个是”ab”字符串常量，放在常量池中，另一个是new出来的String对象实例</p>
 <h1 id="StringTable的垃圾回收"><a href="#StringTable的垃圾回收" class="headerlink" title="StringTable的垃圾回收"></a>StringTable的垃圾回收</h1><p>-XX:+PrintStringTableStatistics，用来查看字符串信息</p>
 <h1 id="G1中的String去重操作"><a href="#G1中的String去重操作" class="headerlink" title="G1中的String去重操作"></a>G1中的String去重操作</h1><ul>

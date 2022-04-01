@@ -240,8 +240,8 @@
             <h1 style="display: none">JVM 笔记 - 9 方法区</h1>
             
             <div class="markdown-body">
-              <h1 id="栈、堆、方法区的交互关系"><a href="#栈、堆、方法区的交互关系" class="headerlink" title="栈、堆、方法区的交互关系"></a>栈、堆、方法区的交互关系</h1><h2 id="1-运行时数据区结构图"><a href="#1-运行时数据区结构图" class="headerlink" title="1. 运行时数据区结构图"></a>1. 运行时数据区结构图</h2><p><img src="https://lox.matrix-world.top/image/img/20200803170016.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="2-栈、堆、方法区的关系"><a href="#2-栈、堆、方法区的关系" class="headerlink" title="2. 栈、堆、方法区的关系"></a>2. 栈、堆、方法区的关系</h2><p><img src="https://lox.matrix-world.top/image/img/20200803170335.png" srcset="/img/loading.gif" lazyload></p>
+              <h1 id="栈、堆、方法区的交互关系"><a href="#栈、堆、方法区的交互关系" class="headerlink" title="栈、堆、方法区的交互关系"></a>栈、堆、方法区的交互关系</h1><h2 id="1-运行时数据区结构图"><a href="#1-运行时数据区结构图" class="headerlink" title="1. 运行时数据区结构图"></a>1. 运行时数据区结构图</h2><p><img src="https://image.matrix-world.top/image/img/20200803170016.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-栈、堆、方法区的关系"><a href="#2-栈、堆、方法区的关系" class="headerlink" title="2. 栈、堆、方法区的关系"></a>2. 栈、堆、方法区的关系</h2><p><img src="https://image.matrix-world.top/image/img/20200803170335.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="方法区的理解"><a href="#方法区的理解" class="headerlink" title="方法区的理解"></a>方法区的理解</h1><h2 id="1-方法区在哪里？"><a href="#1-方法区在哪里？" class="headerlink" title="1. 方法区在哪里？"></a>1. 方法区在哪里？</h2><p>《Java虚拟机规范》中明确说明：“尽管所以的方法区在逻辑上是属于堆的一部分，但一些简单的实现可能不会选择去进行垃圾收集或者进行压缩”，但对于HotSpot JVM而言，方法区还有一个别名叫做Non-Heap，目的就是为了和堆分开。</p>
 <p>所以方法区看做是一块独立于Java堆的内存空间。</p>
 <h2 id="2-基本理解"><a href="#2-基本理解" class="headerlink" title="2. 基本理解"></a>2. 基本理解</h2><ul>
@@ -251,7 +251,7 @@
 <li>方法区的大小决定了系统可以保存多少个类，如果系统定义了太多类，导致方法区溢出，虚拟机同样会抛出：java.lang.OutOfMemoryError: Metaspace</li>
 <li>关闭JVM就会释放这个区域的内存</li>
 </ul>
-<p><img src="https://lox.matrix-world.top/image/img/20200803174517.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200803174517.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="设置方法区大小与OOM"><a href="#设置方法区大小与OOM" class="headerlink" title="设置方法区大小与OOM"></a>设置方法区大小与OOM</h1><h2 id="1-设置方法区内存的大小"><a href="#1-设置方法区内存的大小" class="headerlink" title="1. 设置方法区内存的大小"></a>1. 设置方法区内存的大小</h2><ul>
 <li>方法区的大小不必是固定的，jvm可以根据应用的需要动态调整</li>
 <li>jdk7及以前：<ul>
@@ -274,7 +274,7 @@
 <li>如果是内存泄露，可进一步通过工具查看泄露对象到GC Roots的引用链。于是就能找到泄露对象是通过怎样的路径与GC Roots相关联并导致垃圾回收器无法自动回收他们的。掌握了泄露对象的类型信息，以及GC Roots引用链的信息，就可以比较准确地定位出泄露代码的位置</li>
 <li>如果不存在内存泄露，换句话说就是内存中的对象却是都还必须存活着，那就应当检查虚拟机的堆参数，与机器武理内存对比看是否可以调大，从代码检查是否存在某些对象生命周期过长、持有状态时间过长的情况，尝试减少程序运行期间的内存消耗</li>
 </ol>
-<h1 id="方法区的内部结构"><a href="#方法区的内部结构" class="headerlink" title="方法区的内部结构"></a>方法区的内部结构</h1><h2 id="1-方法区存储什么？"><a href="#1-方法区存储什么？" class="headerlink" title="1. 方法区存储什么？"></a>1. 方法区存储什么？</h2><p><img src="https://lox.matrix-world.top/image/img/20200804174820.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="方法区的内部结构"><a href="#方法区的内部结构" class="headerlink" title="方法区的内部结构"></a>方法区的内部结构</h1><h2 id="1-方法区存储什么？"><a href="#1-方法区存储什么？" class="headerlink" title="1. 方法区存储什么？"></a>1. 方法区存储什么？</h2><p><img src="https://image.matrix-world.top/image/img/20200804174820.png" srcset="/img/loading.gif" lazyload></p>
 <p>方法区用于存储已被虚拟机加载的<strong>类型信息、常量、静态变量、即时编译器编译后的代码缓存</strong>等</p>
 <h2 id="2-方法区内部结构"><a href="#2-方法区内部结构" class="headerlink" title="2. 方法区内部结构"></a>2. 方法区内部结构</h2><h3 id="类型信息"><a href="#类型信息" class="headerlink" title="类型信息"></a>类型信息</h3><p>对每个加载的类型（类class、接口interface、枚举enum、注解annotation），JVM必须在方法区中存储一下类型信息：</p>
 <ul>
@@ -300,7 +300,7 @@
 <li>静态变量和类关联在一起，随着类的加载而加载，它们成为类数据在逻辑上的一部分</li>
 <li>类变量被类的所有实例共享，即时没有类实例时也可以访问</li>
 </ul>
-<h2 id="3-运行时常量池-VS-常量池"><a href="#3-运行时常量池-VS-常量池" class="headerlink" title="3. 运行时常量池 VS 常量池"></a>3. 运行时常量池 VS 常量池</h2><p><img src="https://lox.matrix-world.top/image/img/20200805173907.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="3-运行时常量池-VS-常量池"><a href="#3-运行时常量池-VS-常量池" class="headerlink" title="3. 运行时常量池 VS 常量池"></a>3. 运行时常量池 VS 常量池</h2><p><img src="https://image.matrix-world.top/image/img/20200805173907.png" srcset="/img/loading.gif" lazyload></p>
 <ul>
 <li>方法区，内部包含了运行时常量池</li>
 <li>字节码文件，内部包含了常量池</li>
@@ -329,7 +329,7 @@
 <li><p>首先明确：只有HotSpot有永久代</p>
 </li>
 <li><p>HotSpot中方法区的变化：</p>
-<p><img src="https://lox.matrix-world.top/image/img/20200806162557.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200806162557.png" srcset="/img/loading.gif" lazyload></p>
 </li>
 </ol>
 <h1 id="方法区的垃圾回收"><a href="#方法区的垃圾回收" class="headerlink" title="方法区的垃圾回收"></a>方法区的垃圾回收</h1><p>有些人认为方法区是没有垃圾收集行为的，其实不然。《Java虚拟机规范》对方法区的约束是非常宽松的，提到过可以不要求虚拟机在方法区中实现垃圾收集。事实上也确实有未实现或未能完整实现方法区类型卸载的收集器存在（例如JDK11中的ZGC就不支持类卸载）</p>

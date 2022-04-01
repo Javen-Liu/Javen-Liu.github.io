@@ -241,14 +241,14 @@
             
             <div class="markdown-body">
               <h1 id="类加载器与类的加载过程"><a href="#类加载器与类的加载过程" class="headerlink" title="类加载器与类的加载过程"></a>类加载器与类的加载过程</h1><h2 id="类加载的阶段"><a href="#类加载的阶段" class="headerlink" title="类加载的阶段"></a>类加载的阶段</h2><p>类加载阶段包括<strong>加载（Loading）阶段</strong>、<strong>链接（Linking）阶段 <strong>和 <strong>初始化（Initialization）阶段</strong>，其中链接阶段包含了</strong>验证（Verification）、准备（Preparation）、解析（Resolution）</strong></p>
-<p><img src="https://lox.matrix-world.top/image/img/20200716101934.png" srcset="/img/loading.gif" lazyload alt="类加载阶段"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200716101934.png" srcset="/img/loading.gif" lazyload alt="类加载阶段"></p>
 <ul>
 <li>类加载器子系统负责从文件系统或者网络中加载Class文件，class文件在文件开头有特定的文件标识</li>
 <li>ClassLoader只负责class文件的加载，至于是否可以运行，则由Execution Engine决定</li>
 <li>加载的类信息存放在一块称为 <strong>方法区</strong> 的内存空间。除了类的信息外，方法区中还会有存放运行时常量池信息，还可能包括字符串字面量和数字常量</li>
 </ul>
 <p>类加载器ClassLoader角色</p>
-<p><img src="https://lox.matrix-world.top/image/img/20200716101702.png" srcset="/img/loading.gif" lazyload alt="类加载器的角色"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200716101702.png" srcset="/img/loading.gif" lazyload alt="类加载器的角色"></p>
 <h2 id="加载（Loading）阶段"><a href="#加载（Loading）阶段" class="headerlink" title="加载（Loading）阶段"></a>加载（Loading）阶段</h2><p>加载阶段包括：</p>
 <ol>
 <li>通过一个类的全限定名获取定义此类的二进制字节流</li>
@@ -291,7 +291,7 @@
 <li>JVM支持两种类型的类加载器，分别为<strong>引导式加载器</strong>（Bootstrap ClassLoader）和<strong>自定义类加载器</strong>（User-Defined ClassLoader）</li>
 <li>从概念上讲，自定义类加载器一般指的是程序中有开发人员自定义的一类类加载器，但是Java虚拟机规范并没这么定义，而是<strong>将所有派生于抽象类ClassLoader的类加载器都划分为自定义类加载器</strong>。</li>
 </ul>
-<p><img src="https://lox.matrix-world.top/image/img/20200717155939.png" srcset="/img/loading.gif" lazyload alt="类加载器"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200717155939.png" srcset="/img/loading.gif" lazyload alt="类加载器"></p>
 <blockquote>
 <p>这里的四者之间的关系是包含关系，不是上层下层，也不是子父类的继承关系</p>
 </blockquote>
@@ -333,7 +333,7 @@
 <li>如果父类加载器还存在其父类加载器，则进一步向上委托，一次递归，请求最终将达到顶层的启动类加载器；</li>
 <li>如果父类加载器可以完成类加载任务，就成功返回，倘若父类加载器无法完成此加载任务，子加载器才会尝试自己去加载，这就是双亲委派机制。</li>
 </ol>
-<p><img src="https://lox.matrix-world.top/image/img/20200717182509.png" srcset="/img/loading.gif" lazyload alt="双亲委派机制"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200717182509.png" srcset="/img/loading.gif" lazyload alt="双亲委派机制"></p>
 <h2 id="为什么用双亲委派？"><a href="#为什么用双亲委派？" class="headerlink" title="为什么用双亲委派？"></a>为什么用双亲委派？</h2><ul>
 <li>避免类被重复加载</li>
 <li>保护程序安全，防止核心API被恶意篡改</li>
