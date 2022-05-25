@@ -4,6 +4,60 @@
   
   
   <entry>
+    <title>RNN与LSTM</title>
+    <link href="/2022/05/25/RNN%E4%B8%8ELSTM/"/>
+    <url>/2022/05/25/RNN%E4%B8%8ELSTM/</url>
+    
+    <content type="html"><![CDATA[<h1 id="前因后果"><a href="#前因后果" class="headerlink" title="前因后果"></a>前因后果</h1><p>最近在搞论文，做的是基于rPPG的情感识别。</p><p>其中用到的网络中，出现了我之前经常听室友说过，但我从来没怎么去了解的Encoder与Decoder。</p><p>我的第一反应是：难道不是解析HTTP的编码器与解码器？</p><p>并且这个网络里面，使用到了Encoder-Decoder的思想， 我看不懂，但我大受震撼。</p><p>为了弄清楚网络，我就只能去网上冲浪，看看有没有相关的博客或者视频，讲这个结构的。</p><p>那么回到开始，什么是rPPG？</p><h1 id="rPPG简介"><a href="#rPPG简介" class="headerlink" title="rPPG简介"></a>rPPG简介</h1><p>rPPG，全称remote photoplethysmograph，即<strong>远程</strong>光电容积脉搏波。</p><p>PPG信号全名叫做光电容积脉搏波，也是一种信号，类似于ECG信号，一般通过手指进行测量，通过对该信号进行处理也可以提取出心率值；其原理如下图，由于人的心脏跳动，导致血管中血容量发生变化，其对于光的反射与透射情况会发生改变，这时通过一个设备来接受反射的光线，可以测量出光线强度的变化，一次推导出脉搏。</p><p><img src="http://qiniucdn.matrix-world.top/image-20220525110940700.png" alt="PPG的原理"></p><p>rPPG则是后来衍生出的名称，是通过远程测量的一种信号，即基于视频进行测量得到的信号，通过该信号可以计算出心率。由此可以看出，ECG，PPG，rPPG都是一种可以提取心率的信号，不同的是它们的测量方式不一样，需要的设备不一样。</p><p>所以简而言之，我的这个方向，仍然是通过计算机视觉来解决问题，这样可以实现非接触式的测量，还是很有发展前景的。</p><h1 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>提到Encoder与Decoder，就不得不先说说RNN。</p><p>RNN全称为Recurrent Neural Networks，翻译为循环神经网络。</p><p>人类在思考时，每一秒的思考，都不会是完全独立的。人每一时刻的思维与思考，或多或少都会和以前的信息相关联。</p><p>当你读一篇文章，或者一个句子的时候，对于当前词汇的理解，都是建立在对于之前词汇的理解之上的。</p><p>比如一个句子：我爱打篮球</p><p>当你读到 <strong>篮球</strong> 时，结合了上一个词 <strong>打</strong>，你会理解到这是一个组合词，表达的意思是 <strong>打篮球</strong> 这么一个动作。同时结合前面 <strong>我</strong> 以及 <strong>爱</strong> ，你会解读出 <strong>我</strong> 喜欢 <strong>打篮球</strong> 这个状态。</p><p>所以你在理解句子时，不会把一切都扔掉，重新开始思考，你的思考是有持续性的。</p><p>而传统的神经网络做不到这些，这是神经网络的一个缺点。</p><p>例如，假设你想对电影中每一点发生的事件进行分类，传统的神经网络很难通过其对电影中先前事件的推理，来推理后续事件。</p><h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>所以就有人提出了RNN的概念。下面是RNN的基本网络结构：</p><p><img src="http://qiniucdn.matrix-world.top/image-20220525112954727.png" alt="RNN基本结构"></p><p>可以很清楚的看到，RNN中包含了循环。每一个 <strong>t</strong> 时间输入的 <strong>Xt</strong> ，其送入了 <strong>A</strong> 中，同时其还包括了 <strong>t-1</strong> 时刻 <strong>A</strong> 的输出。</p><p>将这个图平坦铺开，可能会更好理解一些：</p><p><img src="http://qiniucdn.matrix-world.top/image-20220525113436241.png" alt="铺开的RNN"></p><p>这种链状性质表明，循环神经网络与序列和列表密切相关，这种结构决定了循环神经网络在处理序列型数据时，有天然的优势。</p><p>但是读者看到这个结构，应该也能想到一个问题，那就是我从最开始时刻送入的 <strong>X1</strong> 数据，会一直延续到 <strong>Xt</strong> ，也就是 <strong>Long-Term</strong>。</p><h2 id="Long-Term的缺点"><a href="#Long-Term的缺点" class="headerlink" title="Long-Term的缺点"></a>Long-Term的缺点</h2><p>RNN的一个优点是，它们可能能够将以前的信息连接到当前任务，例如，使用以前的视频帧可能有助于理解当前帧。如果RNN能够做到这一点，它们将非常有用。但RNN真的可以吗？不好说。</p><p>有的时候，我们在理解一个句子的时候，实际上只需要携带前面较少的信息，就可以很好地进行推理。</p><p>而上面RNN的结构，就会导致网络的记忆能力过于 <strong>强大</strong> （虽然越早进入网络的输入 <strong>X</strong> ，在后续的 <strong>A</strong> 中占比可能会越来越小），我们在做推断的时候，可能根本不需要那么早的信息。甚至这些信息还会对网络的推理产生负面的影响。</p><p>但是也不能说，一定要把之前的信息全部丢掉。</p><p>理论上，RNN完全能够处理这种 <strong>Long-Term</strong> ，一个人可以仔细地为他们挑选参数来解决这种形式的玩具问题。遗憾的是，在实践中，RNN似乎无法学习它们。</p><p>既然都是<del>人工智能</del>深度学习了，那有没有一种网络，可以很 <strong>智能</strong> 地记忆呢？:smirk:</p><h1 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h1><p>感谢先驱 <strong>Hochreiter &amp; Schmidhuber</strong> 于1997（我还没出生）提出了LSTM，一个非常经典的、特殊的RNN，并在后续工作中得到了许多人的改进和推广。</p><h2 id="经典LSTM"><a href="#经典LSTM" class="headerlink" title="经典LSTM"></a>经典LSTM</h2><p>结构如下：</p><p><img src="http://qiniucdn.matrix-world.top/image-20220525144204591.png" alt="经典LSTM"></p><p>经典的LSTM有三个门（Gate），分别为遗忘门（Forget Gate）、输入门（Input Gate）以及输出门（Output Gate）</p><h2 id="遗忘门（Forget-Gate）"><a href="#遗忘门（Forget-Gate）" class="headerlink" title="遗忘门（Forget Gate）"></a>遗忘门（Forget Gate）</h2><p><img src="http://qiniucdn.matrix-world.top/image-20220525151058774.png" alt="遗忘门"></p><p>遗忘门的公式为：</p><p>$$<br>f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)<br>$$<br>这里将 <strong>h(t-1)</strong> 与 <strong>Xt</strong> 拼接后，与 <strong>Wf</strong> 矩阵相乘，并且加上了 <strong>bf</strong> 偏执矩阵，最后通过 <strong>Sigmoid</strong> 函数来激活，最后输出 <strong>0</strong> 或者 <strong>1</strong> ，该输出与 <strong>C(t-1)</strong> 相乘，决定了 <strong>C(t-1)</strong> 是否保留。</p><p><strong>f(t)</strong> 由 t-1 时刻的 h(t-1) 以及 t 时刻的 Xt 计算出来，并且只有 0 和 1，分别代表了保留与遗忘，就像一个门电路一样，所以将其称为了 <strong>Forget Gate</strong></p><h2 id="输入门"><a href="#输入门" class="headerlink" title="输入门"></a>输入门</h2><p><img src="http://qiniucdn.matrix-world.top/image-20220525152203531.png" alt="输入门"></p><p>输入门的公式为：<br>$$<br>i_t = \sigma(W_i\cdot[h_{t-1},x_t]+b_i)<br>$$</p><p>$$<br>\widetilde{C_t}=tanh(W_c\cdot[h_{t-1},x_t]+b_C)<br>$$</p><p>这里的 <strong>it</strong> 就是 Input Gate，决定了网络是否保存当前的输入</p><p><img src="http://qiniucdn.matrix-world.top/image-20220525152452688.png" alt="输出的Ct"></p><p>最终的Ct公式为：<br>$$<br>C_t=f_t<em>C_{t-1}+i_t</em>\widetilde{C_t}<br>$$</p><h2 id="输出门"><a href="#输出门" class="headerlink" title="输出门"></a>输出门</h2><p><img src="http://qiniucdn.matrix-world.top/image-20220525152631523.png" alt="输出门"></p><p>输出门也很好理解了，就是决定网络是否要将当前计算出来的结果（其实也就是Ct）输出。其公式为：<br>$$<br>o_t=\sigma(W_o\cdot[h_{t-1},x_t]+b_o)<br>$$</p><p>$$<br>h_t=o_t*tanh(C_t)<br>$$</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实花里胡哨的一堆门，其核心思想就是通过当前时刻的输入 <strong>Xt</strong> 以及上一时刻输入的 <strong>h(t-1)</strong> 来计算：</p><ol><li>是否要把上一时刻的输出保留，通俗点说就是是否要保存记忆</li><li>是否要把当前时刻的输入，加入到网络中，通俗点说就是记忆里是否要加入新的数据</li><li>是否要把当前时刻的结果，输出，通俗点就是是否要把记忆力的数据，输出出去</li></ol><h1 id="说了这么多，那么和encoder与decoder啥关系呢？"><a href="#说了这么多，那么和encoder与decoder啥关系呢？" class="headerlink" title="说了这么多，那么和encoder与decoder啥关系呢？"></a>说了这么多，那么和encoder与decoder啥关系呢？</h1><h2 id="encoder与decoder的概念"><a href="#encoder与decoder的概念" class="headerlink" title="encoder与decoder的概念"></a>encoder与decoder的概念</h2><p>其实encoder与decoder这样一个结构，只是个概念，或者说思想。</p><p>E-D大多数时候还是用于NLP相关的场景中，尤其是sequence-to-sequence，也就是输入序列，输出序列。</p><p>并且sequence2sequence也可以解决输入序列与输出序列在形状与大小上不同的问题。</p><p>比如一句话：<strong>我是中国人</strong></p><p>在分词的时候，会将其分为</p><ul><li>我</li><li>是</li><li>中国</li><li>人</li></ul><p>但是将其翻译后，应该为 <strong>I am chinese</strong>，其分词为：</p><ul><li>I</li><li>am</li><li>chinese</li></ul><p>可以很明显的看出来，输入的序列长度为4，输出的序列为3。</p><p>所以就使用encoder将输入序列编码（encode）为固定长度的中间信息，最后使用decoder将中间信息解码（decode）为输出。</p><p><img src="http://qiniucdn.matrix-world.top/image-20220525154956240.png" alt="encoder与decoder"></p><h2 id="论文中的encoder与decoder"><a href="#论文中的encoder与decoder" class="headerlink" title="论文中的encoder与decoder"></a>论文中的encoder与decoder</h2><p>我在复现 PhysNet 论文时，使用作者提供的代码。在阅读其代码的时候，我一直很迷惑作者在论文中提出的E-D，到底在哪里呢？</p><p>而且在看了RNN以及encoder-decoder的文章以及视频后，更加困惑着，网络结构根本没有这么复杂啊！</p><p>直到昨天，在闲暇之余，突然想到encoder-decoder只是一种思想，没有规定说一定要使用RNN以及LSTM。</p><p>我重新看了看代码，以及作者的一部分注释，我才明白了E-D思想是怎么体现的。</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">self.upsample = nn.Sequential(<br>            nn.ConvTranspose3d(in_channels=<span class="hljs-number">64</span>, out_channels=<span class="hljs-number">64</span>, kernel_size=(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>), stride=(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>),<br>                               padding=(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)),  <span class="hljs-comment"># [1, 128, 32]</span><br>            nn.BatchNorm3d(<span class="hljs-number">64</span>),<br>            nn.ELU(),<br>        )<br>self.upsample2 = nn.Sequential(<br>            nn.ConvTranspose3d(in_channels=<span class="hljs-number">64</span>, out_channels=<span class="hljs-number">64</span>, kernel_size=(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>), stride=(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>),<br>                               padding=(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)),  <span class="hljs-comment"># [1, 128, 32]</span><br>            nn.BatchNorm3d(<span class="hljs-number">64</span>),<br>            nn.ELU(),<br>        )<br></code></pre></td></tr></table></figure><p>这里用到了 nn.ConvTranspose3d 这个转置卷积函数，简要来说，是将卷积后大小缩小的矩阵，通过转置卷积，将其恢复到卷积前的大小（虽然数据已经变了）</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">x = self.ConvBlock8(x)  <span class="hljs-comment"># x [64, T/4, 8, 8]</span><br>x = self.ConvBlock9(x)  <span class="hljs-comment"># x [64, T/4, 8, 8]</span><br><br>x = self.upsample(x)  <span class="hljs-comment"># x [64, T/2, 8, 8]</span><br>x = self.upsample2(x)  <span class="hljs-comment"># x [64, T, 8, 8]</span><br></code></pre></td></tr></table></figure><p>在上述代码中，x的形状经过了多层的卷积操作，大小变为了 [64, T/4, 8, 8]，而最开始输入的大小为 [3, T, 128, 128]，我们想要将其第二个维度的大小，从T/4变回T，就可以使用 self.upsample 中的转置卷积操作。</p><p>其encode与decode分别是：</p><ul><li>encode：将原信号进行卷积以及时域最大池化，所以时间维度的大小从T不断地变为T/4</li><li>decode：为了将时间维度大小恢复，使用了两次转置卷积，将时间维度大小恢复为T</li></ul><p>虽然有点抽象，但是也大概理解了E-D的思路。</p><p>至于为啥这个操作有用，我目前还没领悟出来，还得多做实验。</p><h1 id="参考与鸣谢"><a href="#参考与鸣谢" class="headerlink" title="参考与鸣谢"></a>参考与鸣谢</h1><ol><li>李宏毅老师的RNN讲解视频：<a href="https://www.bilibili.com/video/BV1Qy4y1h7nF?p=1">李宏毅机器学习-RNN网络（中英文）_哔哩哔哩_bilibili</a></li><li>写的非常好的一个博客，但是是生肉：<a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks – colah’s blog</a></li><li>转置矩阵讲解1：<a href="https://zhuanlan.zhihu.com/p/115070523">转置卷积(Transpose Convolution) - 知乎 (zhihu.com)</a></li><li>转置矩阵讲解2：<a href="https://zhuanlan.zhihu.com/p/113525131">转置卷积（反卷积） - 知乎 (zhihu.com)</a></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>深度学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>2022</tag>
+      
+      <tag>深度学习</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>带团队心路历程与总结</title>
+    <link href="/2022/01/25/%E5%B8%A6%E5%9B%A2%E9%98%9F%E6%9C%89%E6%84%9F/"/>
+    <url>/2022/01/25/%E5%B8%A6%E5%9B%A2%E9%98%9F%E6%9C%89%E6%84%9F/</url>
+    
+    <content type="html"><![CDATA[<h1 id="带团队心路历程与总结"><a href="#带团队心路历程与总结" class="headerlink" title="带团队心路历程与总结"></a>带团队心路历程与总结</h1><h2 id="写这边文章的缘由"><a href="#写这边文章的缘由" class="headerlink" title="写这边文章的缘由"></a>写这边文章的缘由</h2><p>上一篇总结里说到了，12月我们开始了一个新项目。</p><p>我作为负责人之一（实际上基本就是我在指挥大家），第一次带领了7个人一起开发项目。</p><p>写这篇文章的时候，是1月25日。</p><p>此时项目也大概进入维护阶段，断断续续地修修补补。</p><p>这一个月多一点的时间里，如果让我自己对自己这一个月来的领导水平，以10分制来评价的话，我认为自己得到的是5分。</p><p>Why 5？</p><p>没有什么为什么，因为自己做的不够及格，没有脸面去拿6分。</p><p>所以才有了这篇文章，以此来回顾与总结自己做的不好的地方，并且作为教训，警示自己。</p><h2 id="一个月以来的开发过程"><a href="#一个月以来的开发过程" class="headerlink" title="一个月以来的开发过程"></a>一个月以来的开发过程</h2><h3 id="1-需求分析与原型图设计"><a href="#1-需求分析与原型图设计" class="headerlink" title="1.需求分析与原型图设计"></a>1.需求分析与原型图设计</h3><p>最开始拿到需求文档，实在是太过于简略了，我们以建立数据库模型为起源来进行分析，将其转化为了数据模型。并且对于文档中的功能，进行了原型图设计。</p><p>原型图设计部分我们尽可能地去按照文档中说的，加入对应的功能。</p><p>发给甲方后，甲方感觉也并没有很上心，在差不多可以了之后，就进入了开发阶段。</p><h3 id="2-开发阶段-第1～2周"><a href="#2-开发阶段-第1～2周" class="headerlink" title="2.开发阶段 - 第1～2周"></a>2.开发阶段 - 第1～2周</h3><p>由于我们的目标在一开始设计的较为明确，就是按照原型图来做，并且数据模型一开始也设计了出来，所以开发的比较快。</p><p>在开始开发前，我作为负责人，把依赖、共用包之类的东西全部搭建好了，并且规定了git提交的模板。同时这次有部分功能涉及到excel导出，所以我也把excel工具包做了出来。</p><p>这样的开发时间大概持续了两个星期，中间周日我们就直接放假，不得不说，7个人开发起来，速度还是很快的，git提交数蹭蹭往上涨。</p><p>这段时间学弟们离考试也还有段时间，所以大家全身心地投入到开发中。</p><p>我们的开发模式是将几个模块分工，每个人负责一个模块。同时由于我们组前端只有一个，为了减轻那位学弟的负担，我让他负责前端工程的总体搭建，其他人就在其基础上进行开发。</p><p>由于之前项目我们使用了element来做web，让我们3个做后台的也把前端做的像个样子，所以这个项目也理所应当地使用了vue + element。</p><h3 id="3-开发阶段-第3周"><a href="#3-开发阶段-第3周" class="headerlink" title="3.开发阶段 - 第3周"></a>3.开发阶段 - 第3周</h3><p>到了第三个星期，学弟们接连有考试，所以后面的任务我就安排给我了我们研二的四个人。</p><p>开发人数减少，速度也就下来了。好在之前我抓进度抓的不错，其实这个时候后台加上前端以及弄的七七八八了，主要页面也都搭建完成了。</p><p>所以第三周我们就用来开发小程序。由于我们都是一群后台，所以小程序开发出来的只能说是能看，而且代码质量堪忧。</p><p>在这周末，甲方来看我们的系统。很烦的一点就是，甲方提的意见里，不少都是原型图中没有的。</p><p>尤其是甲方说了一个之前提都没提的地方，还来一句：“这是客户强调过的”。当时血压就上来了。你怎么不早说啊？</p><p>后来演示了一整天，把问题都记录下来之后，零零总总有50个问题。本来这个系统就只花了不到三周时间做出来的，结果不仅要修改，还要添加新需求，真的很让人恼火。</p><p>关键是很多需求文档里没有，甲方也不说，不问他们也不提。甚至有些都是问了他们，他们再去问客户。</p><h3 id="4-开发阶段-第4周"><a href="#4-开发阶段-第4周" class="headerlink" title="4.开发阶段 - 第4周"></a>4.开发阶段 - 第4周</h3><p>这一周我们基本上都回家了。大家都是10号回的家。</p><p>回到家了，我们坚持每天早上9点半和晚上8点开个会，安排并汇总任务。</p><p>这一周可以说是压力很大，甲方那边的管理方式我实在是不能赞同。他们的想法是先做出一版，根据做的来提意见修改。也就是说他们自己根本没有思考产品做成什么样。</p><p>或者说他们也只是习惯了通过开源的“若依”项目修改出来的界面，对于我们界面的设计，这里觉得不行，那里觉得不行。</p><p>可是，最开始原型图不就是为了给你们确认做成这样吗？有问题你提啊，或者你把原型图做出来啊。</p><p>这一周我们真的是天天干到9-10点，就这还差点快改不完。</p><p>尤其那周最后几天，我感觉自己负能量爆棚，加上看知乎，没事给我推35岁危机的话题，搞得我压抑的很。</p><p>而且我夹在中间真的非常难。老师把项目丢给我们，问都不问，让一群学生去分析需求，自己当产品经理、美工。</p><p>甲方又是不懂管理，就按照经典的“田园敏捷开发”来管理我们，没事就是催。</p><p>而我又不给同学们发钱，又得我指挥，我和同学们又是同届的，我凭啥逼他们啊？甲方催的又是我，那一天甲方甚至找老师要了我的电话，直接打电话催我。</p><p>我真的是有委屈说不出，没钱拿还扛着压力，太难了。</p><h3 id="5-维护阶段-第5周"><a href="#5-维护阶段-第5周" class="headerlink" title="5.维护阶段 - 第5周"></a>5.维护阶段 - 第5周</h3><p>开年后11号我们又开始了工作，主要就是收尾以及满足客户那边的需求，而且慢慢地我也把任务交给学弟们了，开始总结总结并准备我的论文开题以及实习。</p><h2 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h2><h3 id="1-没有贯彻敏捷开发的实践方法"><a href="#1-没有贯彻敏捷开发的实践方法" class="headerlink" title="1.没有贯彻敏捷开发的实践方法"></a>1.没有贯彻敏捷开发的实践方法</h3><p>敏捷开发中有一种实践，叫做<strong>Scrum</strong>。</p><h4 id="1）每两周一迭代并评审"><a href="#1）每两周一迭代并评审" class="headerlink" title="1）每两周一迭代并评审"></a>1）每两周一迭代并评审</h4><p>大概的流程为，2周一个迭代周期，并且2周结束的前几天开评审会，评审迭代的结果。</p><p>在这一点上，我们做的并不是很好，并且这也和甲方那边有关系，甲方有些云里雾里，并没有自己很明确的规划，走一步看一步，客户一催，他们也催，我们根本无暇来做这个内部评审。</p><p>同时需求也并不明确，很多需求都是我们问了甲方，甲方才问客户。</p><h4 id="2）立会"><a href="#2）立会" class="headerlink" title="2）立会"></a>2）立会</h4><p>每天我们线上都会开会议，但是由于我心太软，会议总是我来主持并安排事情。</p><p>实际上应该是将模块分下去后，给定期限，然后让同学们自己安排时间，并在早晨立会上说清楚自己今天<strong>完成</strong>什么，而不是今天<strong>要</strong>、<strong>应该完成</strong>什么。造成了大家的任务都是我来安排，没有任务就无所谓，形成一种依赖，确实不是很好，也都把压力堆到我这里。</p><h4 id="3）整体流程不规范"><a href="#3）整体流程不规范" class="headerlink" title="3）整体流程不规范"></a>3）整体流程不规范</h4><p>之前做了需求分析以及原型图后，我们就草草开始做，并没有注意各种事项。包括需求分析以及原型图的确认，我查了很多资料，才发现正规一点的，都是要发邮件来确认，免责。</p><p>我们就是没有注意这些，拿起来就干，甲方提出一些问题，包括他们之前遗漏的东西，就扯不清楚，不做也不是、做也不是。</p><p>以后自己带团队还是要注意这些。</p><h3 id="2-给自己的压力太大"><a href="#2-给自己的压力太大" class="headerlink" title="2.给自己的压力太大"></a>2.给自己的压力太大</h3><p>老师把项目交给我，就不闻不问了基本上。</p><p>而且直接让我与甲方进行沟通与联系，我也是第一次与商业公司做对接。</p><p>好多方面是真的不懂，很多事情想太多，总想着做不完怎么怎么样。</p><p>适当的压力确实没问题，但是这样push太久，容易产生厌烦的心理，也为沟通出现差错埋下了伏笔。</p><p>以后工作了，在这些方面一定要注意，包括规范化的流程等。</p><h3 id="3-前期工作没做好"><a href="#3-前期工作没做好" class="headerlink" title="3.前期工作没做好"></a>3.前期工作没做好</h3><p>这一点就是典型的学生思维，想着做就完事了。</p><p>实际上现在复盘，发现就是因为前期工作没做足，导致甲方变需求也没办法。</p><p>而且我也明白了，项目时间不合理，做不完，申请就完事了，而且无脑加人也没用，很多任务无法分解，这方面也要多注意。做的完就按照预期，出现问题了及时上报。</p><p>当然这个甲方就这样了，无所谓，以后到公司了，除非是签了军令状，一般合理安排之后，出现问题导致无法按期，及时上报，讨论解决才是正道，而不是干着急弄的自己睡不着觉。</p><p>都按照规范化流程来做，前期少给自己埋坑，才是正解。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>个人总结</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>2022</tag>
+      
+      <tag>个人总结</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>我的 2021 下半年 - 个人的一些感想与总结</title>
     <link href="/2021/12/13/%E6%88%91%E7%9A%842021%E4%B8%8B%E5%8D%8A%E5%B9%B4%20-%20%E4%B8%AA%E4%BA%BA%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%83%B3%E4%B8%8E%E6%80%BB%E7%BB%93/"/>
     <url>/2021/12/13/%E6%88%91%E7%9A%842021%E4%B8%8B%E5%8D%8A%E5%B9%B4%20-%20%E4%B8%AA%E4%BA%BA%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%83%B3%E4%B8%8E%E6%80%BB%E7%BB%93/</url>
@@ -211,9 +265,9 @@
     
     <tags>
       
-      <tag>2020</tag>
-      
       <tag>个人总结</tag>
+      
+      <tag>2020</tag>
       
     </tags>
     
@@ -645,9 +699,9 @@
     
     <tags>
       
-      <tag>2020</tag>
-      
       <tag>个人总结</tag>
+      
+      <tag>2020</tag>
       
     </tags>
     

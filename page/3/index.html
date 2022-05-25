@@ -192,6 +192,130 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/08/03/JVM%20-%209.%E6%96%B9%E6%B3%95%E5%8C%BA/" target="_self">
+          <img src="https://image.matrix-world.top/image/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 9 方法区">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/08/03/JVM%20-%209.%E6%96%B9%E6%B3%95%E5%8C%BA/" target="_self">
+          JVM 笔记 - 9 方法区
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/08/03/JVM%20-%209.%E6%96%B9%E6%B3%95%E5%8C%BA/" target="_self">
+          
+          
+            
+          
+          栈、堆、方法区的交互关系1. 运行时数据区结构图
+2. 栈、堆、方法区的关系
+方法区的理解1. 方法区在哪里？《Java虚拟机规范》中明确说明：“尽管所以的方法区在逻辑上是属于堆的一部分，但一些简单的实现可能不会选择去进行垃圾收集或者进行压缩”，但对于HotSpot JVM而言，方法区还有一个别名叫做Non-Heap，目的就是为了和堆分开。
+所以方法区看做是一块独立于Java堆的内存空间。
+2. 
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-08-03 16:47" pubdate>
+              2020-08-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/JVM/">JVM</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JVM/">JVM</a>
+            
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/07/28/JVM%20-%208.%E5%A0%86/" target="_self">
+          <img src="https://image.matrix-world.top/image/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 8 堆">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/07/28/JVM%20-%208.%E5%A0%86/" target="_self">
+          JVM 笔记 - 8 堆
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/07/28/JVM%20-%208.%E5%A0%86/" target="_self">
+          
+          
+            
+          
+          堆的核心概述1. 概述
+一个JVM实例只存在一个堆内存，堆也是Java内存管理的核心区域
+Java堆区在JVM启动的时候被创建，其空间大小也就确定了。是JVM管理的最大一块内存空间，且大小是可以调节的
+《Java虚拟机规范》规定，堆可以处于物理不连续的内存空间中，但在逻辑上它应该是被视为连续的
+所有线程共享Java堆，在这里还可以划分线程私有的缓冲区（Thread Local Allocation
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-07-28 20:38" pubdate>
+              2020-07-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/JVM/">JVM</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/JVM/">JVM</a>
+            
+              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/07/25/JVM%20-%207.%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88/" target="_self">
           <img src="https://image.matrix-world.top/image/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 7 本地方法栈">
         </a>
@@ -425,9 +549,9 @@ Java虚拟机栈
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/2020/">2020</a>
-            
               <a href="/tags/%E4%B8%AA%E4%BA%BA%E6%80%BB%E7%BB%93/">个人总结</a>
+            
+              <a href="/tags/2020/">2020</a>
             
           </div>
         
@@ -681,138 +805,6 @@ ClassLoader只负责c
               <a href="/tags/JVM/">JVM</a>
             
               <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/07/10/JVM%20-%201.JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" target="_self">
-          <img src="https://image.matrix-world.top/image/img/2020-7-18-1595057081263.png" srcset="/img/loading.gif" lazyload alt="JVM 笔记 - 1 JVM与Java体系结构">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/07/10/JVM%20-%201.JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" target="_self">
-          JVM 笔记 - 1 JVM与Java体系结构
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/07/10/JVM%20-%201.JVM%E4%B8%8EJava%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" target="_self">
-          
-          
-            
-          
-          JVM与Java体系结构JVM的整体结构HotSpot VM是目前市面上高性能虚拟机的代表作之一。
-它采用解释器与解释编译期并存的架构。
-
-JVM的架构模型Java编译器输入的指令流基本上是一种基于 栈的指令集架构，另外一种指令集架构则是基于 寄存器的指令集架构。
-两者之间的区别：
-基于栈式架构的特点：
-
-设计和实现更简单，适用于资源受限的系统；
-避开了寄存器的分配难题：使用零地址指令方式分配；
-
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-07-10 12:31" pubdate>
-              2020-07-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/JVM/">JVM</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/JVM/">JVM</a>
-            
-              <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2020/06/04/Crafting%20Interpreters-%5B2%5D/" target="_self">
-          <img src="https://image.matrix-world.top/image/img/2020-6-3-1591197410391.png" srcset="/img/loading.gif" lazyload alt="Crafting Interpreters -  A Map of the Territory">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/06/04/Crafting%20Interpreters-%5B2%5D/" target="_self">
-          Crafting Interpreters -  A Map of the Territory
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2020/06/04/Crafting%20Interpreters-%5B2%5D/" target="_self">
-          
-          
-            
-          
-          Crafting Interpreters - [1-2] A Map of the Territory
-你一定要有一副地图，否则在这个世界里你只能像无头苍蝇般。在《指环王》中，我从未让任何人在某一天走得超过他的极限。
-​    - J.R.R.Tolkien
-
-我们不想像无头苍蝇一般，所以在我们动身之前，一起来看看语言实现人员所描绘的领域。它将帮助我们了解我们要去哪里
-首先，让我来速记一下。这本
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-06-04 17:27" pubdate>
-              2020-06-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/Crafting-Interpreters/">Crafting Interpreters</a>
-            
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E8%A7%A3%E9%87%8A%E5%99%A8/">解释器</a>
-            
-              <a href="/tags/%E5%A4%96%E6%96%87%E4%B9%A6%E7%B1%8D/">外文书籍</a>
-            
-              <a href="/tags/Crafting-Interpreters/">Crafting Interpreters</a>
             
           </div>
         

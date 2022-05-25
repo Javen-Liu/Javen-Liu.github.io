@@ -1,0 +1,621 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/image/thunder.png">
+  <link rel="icon" href="/image/thunder.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Javen">
+  <meta name="keywords" content="LSTM">
+  
+  <title>RNN与LSTM - Javen 的个人空间</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"blog.matrix-world.top","root":"/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"da9e9551b8bd3e9ae9c4cbb811816c40","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/">&nbsp;<strong>Javen's blog</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/image/wallhaven.jpg') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="RNN与LSTM">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-05-25 10:30" pubdate>
+        2022年5月25日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      28
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">RNN与LSTM</h1>
+            
+            <div class="markdown-body">
+              <h1 id="前因后果"><a href="#前因后果" class="headerlink" title="前因后果"></a>前因后果</h1><p>最近在搞论文，做的是基于rPPG的情感识别。</p>
+<p>其中用到的网络中，出现了我之前经常听室友说过，但我从来没怎么去了解的Encoder与Decoder。</p>
+<p>我的第一反应是：难道不是解析HTTP的编码器与解码器？</p>
+<p>并且这个网络里面，使用到了Encoder-Decoder的思想， 我看不懂，但我大受震撼。</p>
+<p>为了弄清楚网络，我就只能去网上冲浪，看看有没有相关的博客或者视频，讲这个结构的。</p>
+<p>那么回到开始，什么是rPPG？</p>
+<h1 id="rPPG简介"><a href="#rPPG简介" class="headerlink" title="rPPG简介"></a>rPPG简介</h1><p>rPPG，全称remote photoplethysmograph，即<strong>远程</strong>光电容积脉搏波。</p>
+<p>PPG信号全名叫做光电容积脉搏波，也是一种信号，类似于ECG信号，一般通过手指进行测量，通过对该信号进行处理也可以提取出心率值；其原理如下图，由于人的心脏跳动，导致血管中血容量发生变化，其对于光的反射与透射情况会发生改变，这时通过一个设备来接受反射的光线，可以测量出光线强度的变化，一次推导出脉搏。</p>
+<p><img src="http://qiniucdn.matrix-world.top/image-20220525110940700.png" srcset="/img/loading.gif" lazyload alt="PPG的原理"></p>
+<p>rPPG则是后来衍生出的名称，是通过远程测量的一种信号，即基于视频进行测量得到的信号，通过该信号可以计算出心率。由此可以看出，ECG，PPG，rPPG都是一种可以提取心率的信号，不同的是它们的测量方式不一样，需要的设备不一样。</p>
+<p>所以简而言之，我的这个方向，仍然是通过计算机视觉来解决问题，这样可以实现非接触式的测量，还是很有发展前景的。</p>
+<h1 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a>RNN</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>提到Encoder与Decoder，就不得不先说说RNN。</p>
+<p>RNN全称为Recurrent Neural Networks，翻译为循环神经网络。</p>
+<p>人类在思考时，每一秒的思考，都不会是完全独立的。人每一时刻的思维与思考，或多或少都会和以前的信息相关联。</p>
+<p>当你读一篇文章，或者一个句子的时候，对于当前词汇的理解，都是建立在对于之前词汇的理解之上的。</p>
+<p>比如一个句子：我爱打篮球</p>
+<p>当你读到 <strong>篮球</strong> 时，结合了上一个词 <strong>打</strong>，你会理解到这是一个组合词，表达的意思是 <strong>打篮球</strong> 这么一个动作。同时结合前面 <strong>我</strong> 以及 <strong>爱</strong> ，你会解读出 <strong>我</strong> 喜欢 <strong>打篮球</strong> 这个状态。</p>
+<p>所以你在理解句子时，不会把一切都扔掉，重新开始思考，你的思考是有持续性的。</p>
+<p>而传统的神经网络做不到这些，这是神经网络的一个缺点。</p>
+<p>例如，假设你想对电影中每一点发生的事件进行分类，传统的神经网络很难通过其对电影中先前事件的推理，来推理后续事件。</p>
+<h2 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h2><p>所以就有人提出了RNN的概念。下面是RNN的基本网络结构：</p>
+<p><img src="http://qiniucdn.matrix-world.top/image-20220525112954727.png" srcset="/img/loading.gif" lazyload alt="RNN基本结构"></p>
+<p>可以很清楚的看到，RNN中包含了循环。每一个 <strong>t</strong> 时间输入的 <strong>Xt</strong> ，其送入了 <strong>A</strong> 中，同时其还包括了 <strong>t-1</strong> 时刻 <strong>A</strong> 的输出。</p>
+<p>将这个图平坦铺开，可能会更好理解一些：</p>
+<p><img src="http://qiniucdn.matrix-world.top/image-20220525113436241.png" srcset="/img/loading.gif" lazyload alt="铺开的RNN"></p>
+<p>这种链状性质表明，循环神经网络与序列和列表密切相关，这种结构决定了循环神经网络在处理序列型数据时，有天然的优势。</p>
+<p>但是读者看到这个结构，应该也能想到一个问题，那就是我从最开始时刻送入的 <strong>X1</strong> 数据，会一直延续到 <strong>Xt</strong> ，也就是 <strong>Long-Term</strong>。</p>
+<h2 id="Long-Term的缺点"><a href="#Long-Term的缺点" class="headerlink" title="Long-Term的缺点"></a>Long-Term的缺点</h2><p>RNN的一个优点是，它们可能能够将以前的信息连接到当前任务，例如，使用以前的视频帧可能有助于理解当前帧。如果RNN能够做到这一点，它们将非常有用。但RNN真的可以吗？不好说。</p>
+<p>有的时候，我们在理解一个句子的时候，实际上只需要携带前面较少的信息，就可以很好地进行推理。</p>
+<p>而上面RNN的结构，就会导致网络的记忆能力过于 <strong>强大</strong> （虽然越早进入网络的输入 <strong>X</strong> ，在后续的 <strong>A</strong> 中占比可能会越来越小），我们在做推断的时候，可能根本不需要那么早的信息。甚至这些信息还会对网络的推理产生负面的影响。</p>
+<p>但是也不能说，一定要把之前的信息全部丢掉。</p>
+<p>理论上，RNN完全能够处理这种 <strong>Long-Term</strong> ，一个人可以仔细地为他们挑选参数来解决这种形式的玩具问题。遗憾的是，在实践中，RNN似乎无法学习它们。</p>
+<p>既然都是<del>人工智能</del>深度学习了，那有没有一种网络，可以很 <strong>智能</strong> 地记忆呢？:smirk:</p>
+<h1 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h1><p>感谢先驱 <strong>Hochreiter &amp; Schmidhuber</strong> 于1997（我还没出生）提出了LSTM，一个非常经典的、特殊的RNN，并在后续工作中得到了许多人的改进和推广。</p>
+<h2 id="经典LSTM"><a href="#经典LSTM" class="headerlink" title="经典LSTM"></a>经典LSTM</h2><p>结构如下：</p>
+<p><img src="http://qiniucdn.matrix-world.top/image-20220525144204591.png" srcset="/img/loading.gif" lazyload alt="经典LSTM"></p>
+<p>经典的LSTM有三个门（Gate），分别为遗忘门（Forget Gate）、输入门（Input Gate）以及输出门（Output Gate）</p>
+<h2 id="遗忘门（Forget-Gate）"><a href="#遗忘门（Forget-Gate）" class="headerlink" title="遗忘门（Forget Gate）"></a>遗忘门（Forget Gate）</h2><p><img src="http://qiniucdn.matrix-world.top/image-20220525151058774.png" srcset="/img/loading.gif" lazyload alt="遗忘门"></p>
+<p>遗忘门的公式为：</p>
+<p>$$<br>f_t = \sigma(W_f \cdot [h_{t-1}, x_t] + b_f)<br>$$<br>这里将 <strong>h(t-1)</strong> 与 <strong>Xt</strong> 拼接后，与 <strong>Wf</strong> 矩阵相乘，并且加上了 <strong>bf</strong> 偏执矩阵，最后通过 <strong>Sigmoid</strong> 函数来激活，最后输出 <strong>0</strong> 或者 <strong>1</strong> ，该输出与 <strong>C(t-1)</strong> 相乘，决定了 <strong>C(t-1)</strong> 是否保留。</p>
+<p><strong>f(t)</strong> 由 t-1 时刻的 h(t-1) 以及 t 时刻的 Xt 计算出来，并且只有 0 和 1，分别代表了保留与遗忘，就像一个门电路一样，所以将其称为了 <strong>Forget Gate</strong></p>
+<h2 id="输入门"><a href="#输入门" class="headerlink" title="输入门"></a>输入门</h2><p><img src="http://qiniucdn.matrix-world.top/image-20220525152203531.png" srcset="/img/loading.gif" lazyload alt="输入门"></p>
+<p>输入门的公式为：<br>$$<br>i_t = \sigma(W_i\cdot[h_{t-1},x_t]+b_i)<br>$$</p>
+<p>$$<br>\widetilde{C_t}=tanh(W_c\cdot[h_{t-1},x_t]+b_C)<br>$$</p>
+<p>这里的 <strong>it</strong> 就是 Input Gate，决定了网络是否保存当前的输入</p>
+<p><img src="http://qiniucdn.matrix-world.top/image-20220525152452688.png" srcset="/img/loading.gif" lazyload alt="输出的Ct"></p>
+<p>最终的Ct公式为：<br>$$<br>C_t=f_t<em>C_{t-1}+i_t</em>\widetilde{C_t}<br>$$</p>
+<h2 id="输出门"><a href="#输出门" class="headerlink" title="输出门"></a>输出门</h2><p><img src="http://qiniucdn.matrix-world.top/image-20220525152631523.png" srcset="/img/loading.gif" lazyload alt="输出门"></p>
+<p>输出门也很好理解了，就是决定网络是否要将当前计算出来的结果（其实也就是Ct）输出。其公式为：<br>$$<br>o_t=\sigma(W_o\cdot[h_{t-1},x_t]+b_o)<br>$$</p>
+<p>$$<br>h_t=o_t*tanh(C_t)<br>$$</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实花里胡哨的一堆门，其核心思想就是通过当前时刻的输入 <strong>Xt</strong> 以及上一时刻输入的 <strong>h(t-1)</strong> 来计算：</p>
+<ol>
+<li>是否要把上一时刻的输出保留，通俗点说就是是否要保存记忆</li>
+<li>是否要把当前时刻的输入，加入到网络中，通俗点说就是记忆里是否要加入新的数据</li>
+<li>是否要把当前时刻的结果，输出，通俗点就是是否要把记忆力的数据，输出出去</li>
+</ol>
+<h1 id="说了这么多，那么和encoder与decoder啥关系呢？"><a href="#说了这么多，那么和encoder与decoder啥关系呢？" class="headerlink" title="说了这么多，那么和encoder与decoder啥关系呢？"></a>说了这么多，那么和encoder与decoder啥关系呢？</h1><h2 id="encoder与decoder的概念"><a href="#encoder与decoder的概念" class="headerlink" title="encoder与decoder的概念"></a>encoder与decoder的概念</h2><p>其实encoder与decoder这样一个结构，只是个概念，或者说思想。</p>
+<p>E-D大多数时候还是用于NLP相关的场景中，尤其是sequence-to-sequence，也就是输入序列，输出序列。</p>
+<p>并且sequence2sequence也可以解决输入序列与输出序列在形状与大小上不同的问题。</p>
+<p>比如一句话：<strong>我是中国人</strong></p>
+<p>在分词的时候，会将其分为</p>
+<ul>
+<li>我</li>
+<li>是</li>
+<li>中国</li>
+<li>人</li>
+</ul>
+<p>但是将其翻译后，应该为 <strong>I am chinese</strong>，其分词为：</p>
+<ul>
+<li>I</li>
+<li>am</li>
+<li>chinese</li>
+</ul>
+<p>可以很明显的看出来，输入的序列长度为4，输出的序列为3。</p>
+<p>所以就使用encoder将输入序列编码（encode）为固定长度的中间信息，最后使用decoder将中间信息解码（decode）为输出。</p>
+<p><img src="http://qiniucdn.matrix-world.top/image-20220525154956240.png" srcset="/img/loading.gif" lazyload alt="encoder与decoder"></p>
+<h2 id="论文中的encoder与decoder"><a href="#论文中的encoder与decoder" class="headerlink" title="论文中的encoder与decoder"></a>论文中的encoder与decoder</h2><p>我在复现 PhysNet 论文时，使用作者提供的代码。在阅读其代码的时候，我一直很迷惑作者在论文中提出的E-D，到底在哪里呢？</p>
+<p>而且在看了RNN以及encoder-decoder的文章以及视频后，更加困惑着，网络结构根本没有这么复杂啊！</p>
+<p>直到昨天，在闲暇之余，突然想到encoder-decoder只是一种思想，没有规定说一定要使用RNN以及LSTM。</p>
+<p>我重新看了看代码，以及作者的一部分注释，我才明白了E-D思想是怎么体现的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python">self.upsample = nn.Sequential(<br>            nn.ConvTranspose3d(in_channels=<span class="hljs-number">64</span>, out_channels=<span class="hljs-number">64</span>, kernel_size=(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>), stride=(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>),<br>                               padding=(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)),  <span class="hljs-comment"># [1, 128, 32]</span><br>            nn.BatchNorm3d(<span class="hljs-number">64</span>),<br>            nn.ELU(),<br>        )<br>self.upsample2 = nn.Sequential(<br>            nn.ConvTranspose3d(in_channels=<span class="hljs-number">64</span>, out_channels=<span class="hljs-number">64</span>, kernel_size=(<span class="hljs-number">4</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>), stride=(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>),<br>                               padding=(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>)),  <span class="hljs-comment"># [1, 128, 32]</span><br>            nn.BatchNorm3d(<span class="hljs-number">64</span>),<br>            nn.ELU(),<br>        )<br></code></pre></td></tr></table></figure>
+
+<p>这里用到了 nn.ConvTranspose3d 这个转置卷积函数，简要来说，是将卷积后大小缩小的矩阵，通过转置卷积，将其恢复到卷积前的大小（虽然数据已经变了）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">x = self.ConvBlock8(x)  <span class="hljs-comment"># x [64, T/4, 8, 8]</span><br>x = self.ConvBlock9(x)  <span class="hljs-comment"># x [64, T/4, 8, 8]</span><br><br>x = self.upsample(x)  <span class="hljs-comment"># x [64, T/2, 8, 8]</span><br>x = self.upsample2(x)  <span class="hljs-comment"># x [64, T, 8, 8]</span><br></code></pre></td></tr></table></figure>
+
+<p>在上述代码中，x的形状经过了多层的卷积操作，大小变为了 [64, T/4, 8, 8]，而最开始输入的大小为 [3, T, 128, 128]，我们想要将其第二个维度的大小，从T/4变回T，就可以使用 self.upsample 中的转置卷积操作。</p>
+<p>其encode与decode分别是：</p>
+<ul>
+<li>encode：将原信号进行卷积以及时域最大池化，所以时间维度的大小从T不断地变为T/4</li>
+<li>decode：为了将时间维度大小恢复，使用了两次转置卷积，将时间维度大小恢复为T</li>
+</ul>
+<p>虽然有点抽象，但是也大概理解了E-D的思路。</p>
+<p>至于为啥这个操作有用，我目前还没领悟出来，还得多做实验。</p>
+<h1 id="参考与鸣谢"><a href="#参考与鸣谢" class="headerlink" title="参考与鸣谢"></a>参考与鸣谢</h1><ol>
+<li>李宏毅老师的RNN讲解视频：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Qy4y1h7nF?p=1">李宏毅机器学习-RNN网络（中英文）_哔哩哔哩_bilibili</a></li>
+<li>写的非常好的一个博客，但是是生肉：<a target="_blank" rel="noopener" href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks – colah’s blog</a></li>
+<li>转置矩阵讲解1：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/115070523">转置卷积(Transpose Convolution) - 知乎 (zhihu.com)</a></li>
+<li>转置矩阵讲解2：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/113525131">转置卷积（反卷积） - 知乎 (zhihu.com)</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/2022/">2022</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/01/25/%E5%B8%A6%E5%9B%A2%E9%98%9F%E6%9C%89%E6%84%9F/">
+                        <span class="hidden-mobile">带团队心路历程与总结</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appKey":"zUznNRS8dG9TQFJI3lQ181VE","placeholder":"留下点足迹吧👣","path":"window.location.pathname","avatar":"robohash","meta":["nick","mail","link"],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":true,"serverURLs":null,"emojiCDN":null,"emojiMaps":null,"enableQQ":true,"requiredFields":[],"appid":"BNPpl7rbNHrmJvxCySHpYsoc-gzGzoHsz","appkey":"zUznNRS8dG9TQFJI3lQ181VE"},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+  <div class="statistics">
+    
+    
+
+    
+      
+        <!-- 不蒜子统计PV -->
+        <span id="busuanzi_container_site_pv" style="display: none">
+            总访问量 
+            <span id="busuanzi_value_site_pv"></span>
+             次
+          </span>
+      
+      
+        <!-- 不蒜子统计UV -->
+        <span id="busuanzi_container_site_uv" style="display: none">
+            总访客数 
+            <span id="busuanzi_value_site_uv"></span>
+             人
+          </span>
+      
+    
+  </div>
+
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.6/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?da9e9551b8bd3e9ae9c4cbb811816c40";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
