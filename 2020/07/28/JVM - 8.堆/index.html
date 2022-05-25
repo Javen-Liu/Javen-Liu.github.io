@@ -240,22 +240,28 @@
             <h1 style="display: none">JVM 笔记 - 8 堆</h1>
             
             <div class="markdown-body">
-              <h1 id="堆的核心概述"><a href="#堆的核心概述" class="headerlink" title="堆的核心概述"></a>堆的核心概述</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><ul>
+              <h1 id="堆的核心概述"><a class="markdownIt-Anchor" href="#堆的核心概述"></a> 堆的核心概述</h1>
+<h2 id="1-概述"><a class="markdownIt-Anchor" href="#1-概述"></a> 1. 概述</h2>
+<ul>
 <li>一个JVM实例只存在一个堆内存，堆也是Java内存管理的核心区域</li>
 <li>Java堆区在JVM启动的时候被创建，其空间大小也就确定了。是JVM管理的最大一块内存空间，且大小是可以调节的</li>
 <li>《Java虚拟机规范》规定，堆可以处于<strong>物理不连续</strong>的内存空间中，但在逻辑上它应该是被视为连续的</li>
 <li>所有线程共享Java堆，在这里还可以划分线程私有的缓冲区（Thread Local Allocation Buffer，TLAB）</li>
-<li>《Java虚拟机规范》中对Java堆的描述是：所有的对象实例以及数组都应当在运行时分配在堆上（<strong>“几乎”</strong>所有的对象实例都在这里分配，也就是说并不是全部）</li>
+<li>《Java虚拟机规范》中对Java堆的描述是：所有的对象实例以及数组都应当在运行时分配在堆上（**“几乎”**所有的对象实例都在这里分配，也就是说并不是全部）</li>
 <li>数组和对象可能永远不会存储在栈上，因为栈帧中保存应用，这个应用指向对象或者数组在堆中的位置</li>
 <li>在方法结束后，堆中的对象不会马上被移除，仅仅在垃圾收集的时候才会别移除</li>
 <li>堆，是GC执行垃圾回收的重点区域</li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200728210153.png" srcset="/img/loading.gif" lazyload alt="堆"></p>
-<hr>
-<h2 id="2-内存细分"><a href="#2-内存细分" class="headerlink" title="2. 内存细分"></a>2. 内存细分</h2><p><img src="https://image.matrix-world.top/image/img/20200728210818.png" srcset="/img/loading.gif" lazyload></p>
-<hr>
-<h2 id="3-堆内部结构"><a href="#3-堆内部结构" class="headerlink" title="3. 堆内部结构"></a>3. 堆内部结构</h2><p><img src="https://image.matrix-world.top/image/img/20200728211631.png" srcset="/img/loading.gif" lazyload alt="堆内部结构"></p>
-<h1 id="设置堆内存大小与OOM"><a href="#设置堆内存大小与OOM" class="headerlink" title="设置堆内存大小与OOM"></a>设置堆内存大小与OOM</h1><h2 id="1-堆空间大小的设置"><a href="#1-堆空间大小的设置" class="headerlink" title="1. 堆空间大小的设置"></a>1. 堆空间大小的设置</h2><ul>
+<p><img src="https://image.matrix-world.top/image/img/20200728210153.png" srcset="/img/loading.gif" lazyload alt="堆" /></p>
+<hr />
+<h2 id="2-内存细分"><a class="markdownIt-Anchor" href="#2-内存细分"></a> 2. 内存细分</h2>
+<p><img src="https://image.matrix-world.top/image/img/20200728210818.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<hr />
+<h2 id="3-堆内部结构"><a class="markdownIt-Anchor" href="#3-堆内部结构"></a> 3. 堆内部结构</h2>
+<p><img src="https://image.matrix-world.top/image/img/20200728211631.png" srcset="/img/loading.gif" lazyload alt="堆内部结构" /></p>
+<h1 id="设置堆内存大小与oom"><a class="markdownIt-Anchor" href="#设置堆内存大小与oom"></a> 设置堆内存大小与OOM</h1>
+<h2 id="1-堆空间大小的设置"><a class="markdownIt-Anchor" href="#1-堆空间大小的设置"></a> 1. 堆空间大小的设置</h2>
+<ul>
 <li>Java堆区用于存储Java对象实例，那么堆的大小在JVM启动时就已经设定好了，大家可以通过选项 <strong>“-Xmx”</strong> 和 <strong>“-Xms”</strong> 来进行设置</li>
 <li>“-Xms” 用于表示堆区的起始内存，等价于 -XX:InitialHeapSize</li>
 <li>“-Xmx” 则用于表示堆区的最大内存，等价于 -XX:MaxHeapSize</li>
@@ -264,8 +270,11 @@
 <li>默认情况下，初始内存大小：物理电脑内存大小 / 64</li>
 <li>最大内存大小： 物理电脑内存大小 / 4</li>
 </ul>
-<h2 id="2-OutOfMemory"><a href="#2-OutOfMemory" class="headerlink" title="2. OutOfMemory"></a>2. OutOfMemory</h2><h1 id="年轻代与老年代"><a href="#年轻代与老年代" class="headerlink" title="年轻代与老年代"></a>年轻代与老年代</h1><ul>
-<li>存储在JVM中的Java对象可以被划分为两类<ul>
+<h2 id="2-outofmemory"><a class="markdownIt-Anchor" href="#2-outofmemory"></a> 2. OutOfMemory</h2>
+<h1 id="年轻代与老年代"><a class="markdownIt-Anchor" href="#年轻代与老年代"></a> 年轻代与老年代</h1>
+<ul>
+<li>存储在JVM中的Java对象可以被划分为两类
+<ul>
 <li>一类是生命周期较短的瞬时对象，这类对象的创建和消亡都非常迅速</li>
 <li>另外一类对象的声明周期却非常长，在某些极端的情况下还能够与JVM的生命周期保持一致</li>
 </ul>
@@ -273,14 +282,16 @@
 <li>Java堆区进一步细分的话，可以划分为年轻代（YoungGen）和老年代（OldGen）</li>
 <li>其中年轻代又可划分为Eden空间、Survivor0空间和Survivor1空间（有时也叫from区、to区）</li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200729101709.png" srcset="/img/loading.gif" lazyload alt="年轻代和老年代"></p>
+<p><img src="https://image.matrix-world.top/image/img/20200729101709.png" srcset="/img/loading.gif" lazyload alt="年轻代和老年代" /></p>
 <ul>
 <li>在HotSpot中，Eden空间和另外两个Survivor空间缺省所占比例是8:1:1</li>
 <li>当然开发人员可以通过 “-XX:SurvivorRatio” 来调整这个空间比例，例如-XX:SurvivorRatio=8</li>
 <li>几乎所有的Java对象都是在Eden区被new出来的</li>
 <li>绝大部分的Java对象的销毁都是在新生代进行的，即80%的对象“朝生夕死”</li>
 </ul>
-<h1 id="对象分配过程"><a href="#对象分配过程" class="headerlink" title="对象分配过程"></a>对象分配过程</h1><h2 id="1-概述-1"><a href="#1-概述-1" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>为新对象分配内存是一件非常严谨和复杂的任务，JVM的设计者们不仅需要考虑内存如何分配，在哪里分配等问题，而且由于内存分配算法和内存回收算法密切相关，所以还需要考虑GC执行完内存回收后是否会在内存空间中产生内存碎片</p>
+<h1 id="对象分配过程"><a class="markdownIt-Anchor" href="#对象分配过程"></a> 对象分配过程</h1>
+<h2 id="1-概述-2"><a class="markdownIt-Anchor" href="#1-概述-2"></a> 1. 概述</h2>
+<p>为新对象分配内存是一件非常严谨和复杂的任务，JVM的设计者们不仅需要考虑内存如何分配，在哪里分配等问题，而且由于内存分配算法和内存回收算法密切相关，所以还需要考虑GC执行完内存回收后是否会在内存空间中产生内存碎片</p>
 <ol>
 <li>new的对象先放在伊甸园区，此区有大小限制</li>
 <li>当伊甸园的空间被填满时，程序又需要创建对象，JVM的垃圾回收器将对伊甸园区进行垃圾回收（Minor GC），将伊甸园区中的不在被其他对象所引用的对象进行销毁。再加载新的对象放到伊甸园区</li>
@@ -291,11 +302,15 @@
 <li>在养老区，相对悠闲。当养老区内存不足时，会触发GC：Major GC，进行养老区的内存清理</li>
 <li>若养老区执行了Major GC之后发现仍然无法进行对象的保存，就会产生OOM异常</li>
 </ol>
-<h2 id="2-对象分配的特殊情况"><a href="#2-对象分配的特殊情况" class="headerlink" title="2. 对象分配的特殊情况"></a>2. 对象分配的特殊情况</h2><p><img src="https://image.matrix-world.top/image/img/20200729110625.png" srcset="/img/loading.gif" lazyload alt="特殊情况"></p>
-<h1 id="Minor-GC、Major-GC、Full-GC"><a href="#Minor-GC、Major-GC、Full-GC" class="headerlink" title="Minor GC、Major GC、Full GC"></a>Minor GC、Major GC、Full GC</h1><h2 id="1-GC概述"><a href="#1-GC概述" class="headerlink" title="1. GC概述"></a>1. GC概述</h2><p>JVM在进行GC时，并非每次都对上面三个内存区域一起回收，大部分时候回收的都是指新生代</p>
+<h2 id="2-对象分配的特殊情况"><a class="markdownIt-Anchor" href="#2-对象分配的特殊情况"></a> 2. 对象分配的特殊情况</h2>
+<p><img src="https://image.matrix-world.top/image/img/20200729110625.png" srcset="/img/loading.gif" lazyload alt="特殊情况" /></p>
+<h1 id="minor-gc-major-gc-full-gc"><a class="markdownIt-Anchor" href="#minor-gc-major-gc-full-gc"></a> Minor GC、Major GC、Full GC</h1>
+<h2 id="1-gc概述"><a class="markdownIt-Anchor" href="#1-gc概述"></a> 1. GC概述</h2>
+<p>JVM在进行GC时，并非每次都对上面三个内存区域一起回收，大部分时候回收的都是指新生代</p>
 <p>针对HotSpot VM的实现，它里面的GC按照回收区域又分为两大类型：一种是部分收集（Partial GC），一种是整堆收集（Full GC）</p>
 <ul>
-<li>部分收集：不是完整收集整个Java堆的垃圾收集。其中又分为：<ul>
+<li>部分收集：不是完整收集整个Java堆的垃圾收集。其中又分为：
+<ul>
 <li>新生代收集（Minor GC / Young GC）：只是新生代的垃圾回收</li>
 <li>老年代收集（Major GC / Old GC）：只是老年代的垃圾回收（目前只有CMS GC会有单独收集老年代的行为）</li>
 <li>混合收集（Mixed GC）：收集很饿新生代以及部分老年代的垃圾收集（目前只有G1 GC会有这种行为）</li>
@@ -303,21 +318,24 @@
 </li>
 <li>整堆收集（Full GC）：收集整个Java堆和方法区的垃圾回收</li>
 </ul>
-<hr>
-<h2 id="2-新生代GC（Minor-GC）触发机制"><a href="#2-新生代GC（Minor-GC）触发机制" class="headerlink" title="2. 新生代GC（Minor GC）触发机制"></a>2. 新生代GC（Minor GC）触发机制</h2><ul>
+<hr />
+<h2 id="2-新生代gcminor-gc触发机制"><a class="markdownIt-Anchor" href="#2-新生代gcminor-gc触发机制"></a> 2. 新生代GC（Minor GC）触发机制</h2>
+<ul>
 <li>当年轻代空间不足时，就会触发Minor GC，这里的年轻代区满是指Eden区满了，Survivor区满并不会引发GC，每次Minor GC会清理年轻代的内存</li>
 <li>因为Java对象<strong>大多数都具备朝生夕灭</strong>的特性，所以Minor GC非常频繁，一般回收速度也比较快</li>
 <li>Minor GC会引发STW，暂停其他用户的线程，等垃圾回收结束，用户线程才回复运行</li>
 </ul>
-<hr>
-<h2 id="3-老年代GC（Major-GC-）触发机制："><a href="#3-老年代GC（Major-GC-）触发机制：" class="headerlink" title="3. 老年代GC（Major GC ）触发机制："></a>3. 老年代GC（Major GC ）触发机制：</h2><ul>
-<li>指发生在老年代的GC，对象从老年代消失时，我们说”Major GC”或”Full GC”发生了</li>
+<hr />
+<h2 id="3-老年代gcmajor-gc-触发机制"><a class="markdownIt-Anchor" href="#3-老年代gcmajor-gc-触发机制"></a> 3. 老年代GC（Major GC ）触发机制：</h2>
+<ul>
+<li>指发生在老年代的GC，对象从老年代消失时，我们说&quot;Major GC&quot;或&quot;Full GC&quot;发生了</li>
 <li>出现了Major GC，经常会伴随至少一次的Minor GC（但非绝对的，在Parallel Scavenge收集器的手机策略里，就有直接进行Major GC的策略选择过程）</li>
 <li>Major GC的速度一般会比Minor GC慢上10倍以上，STW的时间更长</li>
 <li>如果Major GC后，内存还不足，就报OOM了</li>
 </ul>
-<hr>
-<h2 id="4-Full-GC的触发机制"><a href="#4-Full-GC的触发机制" class="headerlink" title="4. Full GC的触发机制"></a>4. Full GC的触发机制</h2><ul>
+<hr />
+<h2 id="4-full-gc的触发机制"><a class="markdownIt-Anchor" href="#4-full-gc的触发机制"></a> 4. Full GC的触发机制</h2>
+<ul>
 <li>调用System.gc()时，系统建议执行Full GC，但是不必然执行</li>
 <li>老年代空间不足</li>
 <li>方法区空间不足</li>
@@ -327,17 +345,19 @@
 <blockquote>
 <p>Full GC是开发或者调优中尽量避免的</p>
 </blockquote>
-<h1 id="堆空间分代思想"><a href="#堆空间分代思想" class="headerlink" title="堆空间分代思想"></a>堆空间分代思想</h1><p>为什么需要把Java堆分代？不分代就不能正常工作了吗？</p>
+<h1 id="堆空间分代思想"><a class="markdownIt-Anchor" href="#堆空间分代思想"></a> 堆空间分代思想</h1>
+<p>为什么需要把Java堆分代？不分代就不能正常工作了吗？</p>
 <ul>
 <li>经研究，不同对象的生命周期不同，70-99%的对象是临时对象</li>
 <li>新生代：有Eden，两块大小相同的Survivor去构成</li>
 <li>老年代：存放新生代精力多次GC仍然存活的对象</li>
 <li>其实不分代完全可以，分代的唯一理由就是优化GC性能。如果没有分代，那所有的对象都在一块，就如同把一个学校的人都关在一个教室里。GC的时候要找到哪些对象没用，这样就会对堆的所有区域进行扫描。而很多对象都是朝生夕死的，如果分代的话，把新创建的对象放到某个地方，当GC的时候先把这块存储“朝生夕死”对象的区域进行回收，这样就会腾出很大的空间来</li>
 </ul>
-<h1 id="内存分配策略"><a href="#内存分配策略" class="headerlink" title="内存分配策略"></a>内存分配策略</h1><p>如果对象在Eden出生，并经历过第一次Minor GC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并将年龄设置为1。</p>
+<h1 id="内存分配策略"><a class="markdownIt-Anchor" href="#内存分配策略"></a> 内存分配策略</h1>
+<p>如果对象在Eden出生，并经历过第一次Minor GC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并将年龄设置为1。</p>
 <p>对象在Survivor区中，每熬过一次Minor GC，年龄就增加1岁，当它的年龄增加到一定程度（默认为15岁）时，就会被晋升到老年代区</p>
 <p>对象晋升老年代的阈值，可以通过 -XX:MaxTenuringThreshold 来设置</p>
-<hr>
+<hr />
 <p>针对不同年龄段的对象分配原则如下所示：</p>
 <ul>
 <li>优先分配到Eden</li>
@@ -346,30 +366,36 @@
 <li>动态对象年龄判断（如果Survivor区中相同年龄的所有对象大小的总和大于Survivor空间的一般，年龄大于或等于该年龄的对象可以直接进入老年代，无需等到阈值）</li>
 <li>空间分配担保：-XX:HandlePromotionFailure</li>
 </ul>
-<h1 id="为对象分配内存：TLAB"><a href="#为对象分配内存：TLAB" class="headerlink" title="为对象分配内存：TLAB"></a>为对象分配内存：TLAB</h1><h2 id="1-为什么要有TLAB（Thread-Local-Allocation-Buffer）？"><a href="#1-为什么要有TLAB（Thread-Local-Allocation-Buffer）？" class="headerlink" title="1. 为什么要有TLAB（Thread Local Allocation Buffer）？"></a>1. 为什么要有TLAB（Thread Local Allocation Buffer）？</h2><ul>
+<h1 id="为对象分配内存tlab"><a class="markdownIt-Anchor" href="#为对象分配内存tlab"></a> 为对象分配内存：TLAB</h1>
+<h2 id="1-为什么要有tlabthread-local-allocation-buffer"><a class="markdownIt-Anchor" href="#1-为什么要有tlabthread-local-allocation-buffer"></a> 1. 为什么要有TLAB（Thread Local Allocation Buffer）？</h2>
+<ul>
 <li>堆区是线程共享区域，任何线程都可以访问到堆区中的共享数据</li>
 <li>由于对象实例的创建在JVM中非常频繁，因此在并发环境下从堆区中划分内存空间是线程不安全的</li>
 <li>为了避免多个线程操作同一地址，需要使用加锁等机制，进而影响分配速度</li>
 </ul>
-<h2 id="2-什么是TLAB？"><a href="#2-什么是TLAB？" class="headerlink" title="2. 什么是TLAB？"></a>2. 什么是TLAB？</h2><ul>
+<h2 id="2-什么是tlab"><a class="markdownIt-Anchor" href="#2-什么是tlab"></a> 2. 什么是TLAB？</h2>
+<ul>
 <li>从内存模型而不是垃圾收集的角度，对Eden区域继续进行划分，JVM为<strong>每一个线程分配了一个私有缓冲区域</strong>，它包含在Eden空间内</li>
 <li>多线程同时分配内存时，使用TLAB可以避免一系列的非线程安全问题，同时还能够提升内存分配的吞吐量，因此我们可以将这种内存分配方式称之为<strong>快速分配策略</strong></li>
 </ul>
-<h2 id="3-说明"><a href="#3-说明" class="headerlink" title="3. 说明"></a>3. 说明</h2><ul>
+<h2 id="3-说明"><a class="markdownIt-Anchor" href="#3-说明"></a> 3. 说明</h2>
+<ul>
 <li>尽管不是所有的对象实例都能够在TLAB中成功分配，但是<strong>JVM确实是将TLAB作为内存分配的首选</strong></li>
 <li>在程序中，开发人员可以通过选项 “-XX:UseTLAB” 设置是否开启TLAB空间</li>
-<li>默认情况下，TLAB空间的内存非常小，**仅占有整个Eden空间的1%**，当然我们可以通过选项 “-XX:TLABWasteTargetPercent” 设置TLAB空间所占用Eden空间的百分比大小</li>
+<li>默认情况下，TLAB空间的内存非常小，<strong>仅占有整个Eden空间的1%</strong>，当然我们可以通过选项 “-XX:TLABWasteTargetPercent” 设置TLAB空间所占用Eden空间的百分比大小</li>
 <li>一旦对象在TLAB空间分配内存失败，JVM就会尝试着通过<strong>使用加锁机制</strong>确保数据操作的原子性，从而直接在Eden空间中分配内存</li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200730163429.png" srcset="/img/loading.gif" lazyload alt="内存分配"></p>
-<h1 id="小结：堆空间的参数设置"><a href="#小结：堆空间的参数设置" class="headerlink" title="小结：堆空间的参数设置"></a>小结：堆空间的参数设置</h1><p>官网说明：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html">https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html</a></p>
-<p><img src="https://image.matrix-world.top/image/img/20200731155117.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="https://image.matrix-world.top/image/img/20200731155252.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200730163429.png" srcset="/img/loading.gif" lazyload alt="内存分配" /></p>
+<h1 id="小结堆空间的参数设置"><a class="markdownIt-Anchor" href="#小结堆空间的参数设置"></a> 小结：堆空间的参数设置</h1>
+<p>官网说明：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html">https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html</a></p>
+<p><img src="https://image.matrix-world.top/image/img/20200731155117.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p><img src="https://image.matrix-world.top/image/img/20200731155252.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <p>在发生Minor GC之前，虚拟机会<strong>检查老年代最大可用的连续空间是否大于新生代所有对象的总空间</strong></p>
 <p>如果大于，则此次Minor GC是安全的</p>
 <p>如果小于，则虚拟机会查看-XX:HandlePromotionFailure设置值是否允许担保失败</p>
 <ul>
-<li>如果HandlePromotionFailure=true，那么会继续<strong>检查老年代最大可用连续空间是否大于历次晋升到老年代的对象的平均大小</strong><ul>
+<li>如果HandlePromotionFailure=true，那么会继续<strong>检查老年代最大可用连续空间是否大于历次晋升到老年代的对象的平均大小</strong>
+<ul>
 <li>如果大于，则尝试进行一次Minor GC，但这次GC仍然是有风险的</li>
 <li>如果小于，则改为进行一次Full GC</li>
 </ul>
@@ -377,17 +403,21 @@
 <li>如果HandlePromotionFailure=false，则直接进行一次Ful GC</li>
 </ul>
 <p>在JDK6 Update24（或JDK7）之后的规则变成，<strong>只要老年代的连续空间大于新生代对象总大小</strong>，或者<strong>历次晋升的平均大小就会进行Minor GC</strong>，否则将进行Full GC</p>
-<h1 id="堆是分配对象的唯一选择吗？"><a href="#堆是分配对象的唯一选择吗？" class="headerlink" title="堆是分配对象的唯一选择吗？"></a>堆是分配对象的唯一选择吗？</h1><h2 id="1-回答"><a href="#1-回答" class="headerlink" title="1. 回答"></a>1. 回答</h2><p>在《深入理解Java虚拟机》中，关于Java堆内存有这样一段描述：</p>
+<h1 id="堆是分配对象的唯一选择吗"><a class="markdownIt-Anchor" href="#堆是分配对象的唯一选择吗"></a> 堆是分配对象的唯一选择吗？</h1>
+<h2 id="1-回答"><a class="markdownIt-Anchor" href="#1-回答"></a> 1. 回答</h2>
+<p>在《深入理解Java虚拟机》中，关于Java堆内存有这样一段描述：</p>
 <blockquote>
 <p>随着JIT编译的发展和<strong>逃逸分析技术</strong>逐渐成熟，<strong>栈上分配、标量替换优化技术</strong>将会导致一些微妙的变化，所有的对象都分配到堆上变得不那么“绝对”了。</p>
 </blockquote>
 <p>在Java虚拟机中，对象是在Java堆内分配内存的，这是一个普遍的常识。但是，有一种特殊的情况，那就是<strong>如果经过逃逸分析（Escape Analysis）后发现，一个对象并没有逃逸出方法的话，那么就可能被优化成栈上分配</strong>。这样就无须在堆上分配内存，也无需进行垃圾回收，这也是最常见的堆外存储技术。</p>
 <p>此外，前面提到的基于OpenJDK深度定制的TaoBaoVM，其中创新的GCIH（GC invisible heap）技术实现off-heap，将生命周期较长的Java对象从heap转移至heap外，并且GC不能管理GCIH内部的Java对象，一次达到降低GC的回收频率和提升GC的回收效率的目的</p>
-<h2 id="2-逃逸分析"><a href="#2-逃逸分析" class="headerlink" title="2. 逃逸分析"></a>2. 逃逸分析</h2><ul>
+<h2 id="2-逃逸分析"><a class="markdownIt-Anchor" href="#2-逃逸分析"></a> 2. 逃逸分析</h2>
+<ul>
 <li>如何将堆上的对象分配到栈，需要使用逃逸分析手段</li>
 <li>这是一种可以有效减少Java程序中同步负载和内存堆分配压力的跨函数全局数据流分析算法</li>
 <li>通过逃逸分析，Java HotSpot编译器能够分析出一个新的对象的引用的使用范围从而决定是否要将这个对象分配到堆上</li>
-<li>逃逸分析的基本行为就是分析对象动态作用域：<ul>
+<li>逃逸分析的基本行为就是分析对象动态作用域：
+<ul>
 <li>当一个对象在方法中被定义后，对象旨在方法内部使用，则认为没有发生逃逸</li>
 <li>当一个对象在方法中被定义后，它被外部方法所引用，则认为发生了逃逸。例如作为调用参数传递到其他方法中去</li>
 </ul>

@@ -240,100 +240,118 @@
             <h1 style="display: none">JVM 笔记 - 12 执行引擎</h1>
             
             <div class="markdown-body">
-              <h1 id="执行引擎概述"><a href="#执行引擎概述" class="headerlink" title="执行引擎概述"></a>执行引擎概述</h1><ul>
+              <h1 id="执行引擎概述"><a class="markdownIt-Anchor" href="#执行引擎概述"></a> 执行引擎概述</h1>
+<ul>
 <li>执行引擎是Java虚拟机核心的组成部分之一</li>
 <li>“虚拟机”是一个相对于“物理机”的概念，这两种机器都有代码执行能力，其区别是物理机的执行引擎是直接建立在处理器、缓存、指令集和操作系统层面上的。<strong>而虚拟机的执行引擎则是由软件自行实现的，因此可以不受物理条件制约地指定指令集和执行引擎的结构体系，能够执行那些不被硬件直接支持的指令集格式</strong></li>
 <li>JVM的主要任务是负责<strong>装载字节码到其内部</strong>，但字节码并不能直接运行在操作系统之上，因为字节码指令并非等价于本地机器指令，它内部包含的仅仅是一些能够被JVM所识别的字节码指令、符号表，以及其他辅助信息</li>
 <li>那么想要让一个Java程序运行起来，执行引擎（Execution Engine）的任务就是<strong>将字节码指令解释/编译为对应平台上的本地机器指令才可以</strong>。简单来说，JVM中的执行引擎充当了将高级语言翻译为机器语言的译者。</li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200813104449.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200813104449.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <ol>
 <li>执行引擎在执行的过程中究竟需要执行什么样的字节码指令完全依赖于PC寄存器</li>
 <li>每当执行完一项指令操作后，PC寄存器就会更新下一条需要被执行的指令地址</li>
 <li>当然方法在执行的过程中，执行引擎有可能会通过存储在局部变量表中的对象引用准确定位到存储在Java堆区中的对象实例信息，以及通过对象头中的元数据指针定位到目标对象的类型信息</li>
 </ol>
-<h1 id="Java代码编译和执行过程"><a href="#Java代码编译和执行过程" class="headerlink" title="Java代码编译和执行过程"></a>Java代码编译和执行过程</h1><p>大部分的程序代码转换成物理机的目标代码或虚拟机能执行的指令集之前，都需要经过下图的各个步骤：</p>
-<p><img src="https://image.matrix-world.top/image/img/20200813104904.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="java代码编译和执行过程"><a class="markdownIt-Anchor" href="#java代码编译和执行过程"></a> Java代码编译和执行过程</h1>
+<p>大部分的程序代码转换成物理机的目标代码或虚拟机能执行的指令集之前，都需要经过下图的各个步骤：</p>
+<p><img src="https://image.matrix-world.top/image/img/20200813104904.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <p>Java代码编译是由Java源码编译器来完成，流程图如下：</p>
-<p><img src="https://image.matrix-world.top/image/img/20200813105243.png" srcset="/img/loading.gif" lazyload></p>
-<hr>
+<p><img src="https://image.matrix-world.top/image/img/20200813105243.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<hr />
 <p><strong>问题：什么是解释器（interpreter），什么是JIT编译器？</strong></p>
 <ul>
 <li>解释器：当Java虚拟机启动时，会根据预定义的规范对字节码采用逐行解释的方式执行，将每条字节码文件中的内容“翻译”为对应平台的本地机器指令执行</li>
 <li>JIT（Just In Time Compiler）编译器：虚拟机将源代码直接编译成和本地机器平台相关的机器语言</li>
 </ul>
-<h1 id="机器码、指令、汇编语言"><a href="#机器码、指令、汇编语言" class="headerlink" title="机器码、指令、汇编语言"></a>机器码、指令、汇编语言</h1><h2 id="机器码"><a href="#机器码" class="headerlink" title="机器码"></a>机器码</h2><ul>
+<h1 id="机器码-指令-汇编语言"><a class="markdownIt-Anchor" href="#机器码-指令-汇编语言"></a> 机器码、指令、汇编语言</h1>
+<h2 id="机器码"><a class="markdownIt-Anchor" href="#机器码"></a> 机器码</h2>
+<ul>
 <li>各种用二进制编码方式表示的指令，叫做机器指令码。最开始，人们就用它编写程序，这就是机器语言</li>
 <li>机器语言虽然能够被计算机理解和接受，但和人们的语言差别太大，不易被人们理解和记忆，并且用它编程容易出错</li>
 <li>用它编写的程序一经输入计算机，CPU直接读取运行，因此和其他语言编的程序相比，执行速度最快</li>
 <li>机器指令和CPU紧密相关，所以不同种类的CPU所对应的机器指令也就不同</li>
 </ul>
-<h2 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h2><ul>
+<h2 id="指令"><a class="markdownIt-Anchor" href="#指令"></a> 指令</h2>
+<ul>
 <li>由于机器码是由0和1组成的二进制序列，可读性太差，于是人们发明了指令</li>
 <li>指令就是把机器码汇总特定的0和1序列，简化成对应的指令（一般为英文缩写，如mov，inc等），可读性稍好</li>
 <li>由于不同的硬件平台，执行同一个操作，对应的机器码可能不同，所以不同的硬件平台的同一指令（比如mov），对应的机器码也可能不同</li>
 </ul>
-<h2 id="指令集"><a href="#指令集" class="headerlink" title="指令集"></a>指令集</h2><ul>
+<h2 id="指令集"><a class="markdownIt-Anchor" href="#指令集"></a> 指令集</h2>
+<ul>
 <li>不同的硬件平台，各自支持的指令，是有差别的。因此每个平台所支持的指令，称之为对应平台的指令集</li>
 </ul>
-<h2 id="汇编语言"><a href="#汇编语言" class="headerlink" title="汇编语言"></a>汇编语言</h2><ul>
+<h2 id="汇编语言"><a class="markdownIt-Anchor" href="#汇编语言"></a> 汇编语言</h2>
+<ul>
 <li>由于指令的可读性还是太差，于是人们又发明了汇编语言</li>
-<li>在汇编语言中，用<strong>助记符（Mnemonics）代替机器指令的操作码</strong>，用<strong>地址符号（Symbol）或标号（Label）</strong>代替指令或操作数的地址</li>
+<li>在汇编语言中，用<strong>助记符（Mnemonics）代替机器指令的操作码</strong>，用**地址符号（Symbol）或标号（Label）**代替指令或操作数的地址</li>
 <li>在不同的硬件平台，汇编语言对应着不同的机器语言指令集，通过汇编过程转换成机器指令</li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200813112354.png" srcset="/img/loading.gif" lazyload></p>
-<h1 id="解释器"><a href="#解释器" class="headerlink" title="解释器"></a>解释器</h1><p>JVM设计者们的初衷仅仅只是单纯地为了<strong>满足Java程序实现跨平台特性</strong>，因此避免采用静态编译的方式直接生成本地机器指令，从而诞生了实现解释器在运行时采用逐行解释字节码执行程序的想法</p>
+<p><img src="https://image.matrix-world.top/image/img/20200813112354.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h1 id="解释器"><a class="markdownIt-Anchor" href="#解释器"></a> 解释器</h1>
+<p>JVM设计者们的初衷仅仅只是单纯地为了<strong>满足Java程序实现跨平台特性</strong>，因此避免采用静态编译的方式直接生成本地机器指令，从而诞生了实现解释器在运行时采用逐行解释字节码执行程序的想法</p>
 <ul>
 <li>解释器真正意义上所承担的角色就是一个运行时“翻译者”，将字节码文件中的内容“翻译”为对应平台的本地机械指令执行</li>
 <li>当一条字节码指令被解释执行完成后，根据PC寄存器中记录的下一条需要被执行的字节码指令操作解释操作</li>
 </ul>
-<hr>
+<hr />
 <p>现状：</p>
 <ul>
 <li>由于解释器在设计和实现上非常简单，因此除了Java语言之外，还有许多高级语言同样也是基于解释器执行的，比如Python、Perl、Ruby等。但是在今天，<strong>基于解释器执行已经沦落为抵消的代名词</strong>，并且时常被一些C/C++程序员所调侃</li>
 <li>为了解决这个问题，JVM平台支持一种叫做即时编译的技术。即时编译的目的是避免函数被解释执行，而是<strong>将整个函数体译成为机器码，每次函数执行时，只执行编译后的机器码即可</strong>，种方式可以使执行效率大幅度提升</li>
 <li>不过无论何时，基于解释器的执行模式仍然为中间语言的发展做出了不可磨灭的贡献</li>
 </ul>
-<h1 id="JIT编译器"><a href="#JIT编译器" class="headerlink" title="JIT编译器"></a>JIT编译器</h1><h2 id="既然JIT编译器速度很快，那为什么HotSpot仍然还包含解释器呢？"><a href="#既然JIT编译器速度很快，那为什么HotSpot仍然还包含解释器呢？" class="headerlink" title="既然JIT编译器速度很快，那为什么HotSpot仍然还包含解释器呢？"></a>既然JIT编译器速度很快，那为什么HotSpot仍然还包含解释器呢？</h2><p>首先明确：</p>
+<h1 id="jit编译器"><a class="markdownIt-Anchor" href="#jit编译器"></a> JIT编译器</h1>
+<h2 id="既然jit编译器速度很快那为什么hotspot仍然还包含解释器呢"><a class="markdownIt-Anchor" href="#既然jit编译器速度很快那为什么hotspot仍然还包含解释器呢"></a> 既然JIT编译器速度很快，那为什么HotSpot仍然还包含解释器呢？</h2>
+<p>首先明确：</p>
 <p>当程序启动后，解释器可以马上发挥作用，省去编译时间，立即执行</p>
 <p>而编译器想要发挥作用，把代码编译为本地代码，需要一定的执行时间。但编译为本地代码后，执行效率高</p>
 <p>所以当Java虚拟机启动时，计时器可以首先发挥作用，而不必等待即时编译器全部编译完成后再执行，这样可以省去很多不必要的编译时间。随着时间的推移，编译器发挥作用，把越来越多的代码变异成本地代码，获得更高的执行效率</p>
 <p>同时，解释执行在编译器进行激进优化不成立时，作为编译器的“逃生门”</p>
-<h2 id="概念解释"><a href="#概念解释" class="headerlink" title="概念解释"></a>概念解释</h2><ul>
+<h2 id="概念解释"><a class="markdownIt-Anchor" href="#概念解释"></a> 概念解释</h2>
+<ul>
 <li>Java语言的“编译期”其实是一段“不确定”的操作过程，它可能是是指一个<strong>前端编译器</strong>，把.java文件转化为.class文件的过程</li>
 <li>也可能是<strong>后端运行期编译器</strong>（JIT编译器），把字节码转化成机器码</li>
 <li>害可能是<strong>静态提前编译器</strong>（AOT编译器，Ahead Of Time Compiler）直接把.java文件编译成本地机器代码</li>
 </ul>
-<h2 id="热点代码即探测方式"><a href="#热点代码即探测方式" class="headerlink" title="热点代码即探测方式"></a>热点代码即探测方式</h2><ul>
+<h2 id="热点代码即探测方式"><a class="markdownIt-Anchor" href="#热点代码即探测方式"></a> 热点代码即探测方式</h2>
+<ul>
 <li><strong>一个被多次调用的方法，或者是一个方法体内部循环次数较多的循环体都可以被称之为“热点代码”</strong>，因此都可以通过JIT编译器编译为本地机器指令。由于这种编译方式发生在方法的执行过程中，因此也被称之为栈上替换，简称为OSR（On Stack Replacement）编译</li>
 <li>一个方法究竟要被嗲用多少次，或者一个循环体究竟要执行多少次循环才可以达到这个标准？必然需要一个明确的阈值，这里主要依靠热点探测技术</li>
 <li>目前HotSpot VM所采用的热点探测方式是基于计数器的热点探测</li>
-<li>采用基于计数器的热点探测，HotSpot VM将会为每一个方法都建议2个不同类型的计数器，分别为方法调用计数器（Invocation Counter）和回边计数器（Back Edge Counter）<ul>
+<li>采用基于计数器的热点探测，HotSpot VM将会为每一个方法都建议2个不同类型的计数器，分别为方法调用计数器（Invocation Counter）和回边计数器（Back Edge Counter）
+<ul>
 <li>方法调用计数器用于统计方法的调用次数</li>
 <li>回边计数器则用于统计循环体执行的循环次数</li>
 </ul>
 </li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200813163312.png" srcset="/img/loading.gif" lazyload></p>
-<h2 id="HotSpot-VM可以设置程序执行方式"><a href="#HotSpot-VM可以设置程序执行方式" class="headerlink" title="HotSpot VM可以设置程序执行方式"></a>HotSpot VM可以设置程序执行方式</h2><p>缺省情况下HotSpot VM是采用解释器与即时编译器并存的架构，当然开发人员可以根据具体的应用场景，通过命令显式地为Java虚拟机指定在运行时到底是<strong>完全采用计时器</strong>执行，还是<strong>完全采用即时编译器</strong>执行，如下：</p>
+<p><img src="https://image.matrix-world.top/image/img/20200813163312.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<h2 id="hotspot-vm可以设置程序执行方式"><a class="markdownIt-Anchor" href="#hotspot-vm可以设置程序执行方式"></a> HotSpot VM可以设置程序执行方式</h2>
+<p>缺省情况下HotSpot VM是采用解释器与即时编译器并存的架构，当然开发人员可以根据具体的应用场景，通过命令显式地为Java虚拟机指定在运行时到底是<strong>完全采用计时器</strong>执行，还是<strong>完全采用即时编译器</strong>执行，如下：</p>
 <ul>
 <li>-Xint：完全采用解释器模式执行程序</li>
 <li>-Xcomp：完全采用即时编译器模式执行程序。如果即时编译出现问题，解释器会介入执行</li>
 <li>-Xmixed：采用解释器+即时编译器的混合模式共同执行程序</li>
 </ul>
-<h2 id="HotSpot-VM中JIT分类"><a href="#HotSpot-VM中JIT分类" class="headerlink" title="HotSpot VM中JIT分类"></a>HotSpot VM中JIT分类</h2><p>在HotSpot VM中内嵌有两个JIT编译器，分别为Client Compiler和Server Compiler，但大多数情况下我们简称为C1编译器和C2编译器。开发人员可以通过如下命令显式指定Java虚拟机在运行时到达地使用哪一种即时编译器，如下：</p>
+<h2 id="hotspot-vm中jit分类"><a class="markdownIt-Anchor" href="#hotspot-vm中jit分类"></a> HotSpot VM中JIT分类</h2>
+<p>在HotSpot VM中内嵌有两个JIT编译器，分别为Client Compiler和Server Compiler，但大多数情况下我们简称为C1编译器和C2编译器。开发人员可以通过如下命令显式指定Java虚拟机在运行时到达地使用哪一种即时编译器，如下：</p>
 <ul>
 <li>-client：指定Java虚拟机运行在Client模式，并使用C1编译器；C1编译器会对字节码<strong>进行简单和可靠的优化，耗时短</strong>。以达到更快的编译速度</li>
 <li>-server：指定Java虚拟机运行在Server模式，并使用C2编译器；C2编译器进行<strong>耗时较长的优化，以及激进优化</strong>。但优化的代码执行效率更高</li>
 </ul>
-<h2 id="C1和C2编译器不同的优化策略"><a href="#C1和C2编译器不同的优化策略" class="headerlink" title="C1和C2编译器不同的优化策略"></a>C1和C2编译器不同的优化策略</h2><ul>
-<li>不同的编译器上有不同的优化策略，C1编译器上主要有方法内联，去虚拟化，冗余消除<ul>
+<h2 id="c1和c2编译器不同的优化策略"><a class="markdownIt-Anchor" href="#c1和c2编译器不同的优化策略"></a> C1和C2编译器不同的优化策略</h2>
+<ul>
+<li>不同的编译器上有不同的优化策略，C1编译器上主要有方法内联，去虚拟化，冗余消除
+<ul>
 <li>方法内联：将引用的函数代码编译到引用点处，这样可以减少战争的生成，减少参数传递以及跳转过程</li>
 <li>去虚拟化：对唯一的实现类进行内敛</li>
 <li>冗余消除：在运行期间把一些不会执行的代码折叠掉</li>
 </ul>
 </li>
-<li>C2的优化主要是在全局层面，逃逸分析是优化的基础。基于逃逸分析在C2上右如下几种优化：<ul>
+<li>C2的优化主要是在全局层面，逃逸分析是优化的基础。基于逃逸分析在C2上右如下几种优化：
+<ul>
 <li>标量替换：用标量值代替聚合对象的属性值</li>
 <li>栈上分配：对于未逃逸的对象分配在栈上而不是堆上</li>
 <li>同步消除：清除同步操作，通常是synchronized</li>

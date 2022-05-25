@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.5k 字
+      1.6k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      16
+      17
        分钟
     </span>
   
@@ -240,10 +240,13 @@
             <h1 style="display: none">JVM 笔记 - 1 JVM与Java体系结构</h1>
             
             <div class="markdown-body">
-              <h1 id="JVM与Java体系结构"><a href="#JVM与Java体系结构" class="headerlink" title="JVM与Java体系结构"></a>JVM与Java体系结构</h1><h2 id="JVM的整体结构"><a href="#JVM的整体结构" class="headerlink" title="JVM的整体结构"></a>JVM的整体结构</h2><p>HotSpot VM是目前市面上高性能虚拟机的代表作之一。</p>
+              <h1 id="jvm与java体系结构"><a class="markdownIt-Anchor" href="#jvm与java体系结构"></a> JVM与Java体系结构</h1>
+<h2 id="jvm的整体结构"><a class="markdownIt-Anchor" href="#jvm的整体结构"></a> JVM的整体结构</h2>
+<p>HotSpot VM是目前市面上高性能虚拟机的代表作之一。</p>
 <p>它采用解释器与解释编译期并存的架构。</p>
-<p><img src="https://image.matrix-world.top/image/img/20200714161757.png" srcset="/img/loading.gif" lazyload alt="JVM结构"></p>
-<h2 id="JVM的架构模型"><a href="#JVM的架构模型" class="headerlink" title="JVM的架构模型"></a>JVM的架构模型</h2><p>Java编译器输入的指令流基本上是一种基于 <strong>栈的指令集架构</strong>，另外一种指令集架构则是基于 <strong>寄存器的指令集架构</strong>。</p>
+<p><img src="https://image.matrix-world.top/image/img/20200714161757.png" srcset="/img/loading.gif" lazyload alt="JVM结构" /></p>
+<h2 id="jvm的架构模型"><a class="markdownIt-Anchor" href="#jvm的架构模型"></a> JVM的架构模型</h2>
+<p>Java编译器输入的指令流基本上是一种基于 <strong>栈的指令集架构</strong>，另外一种指令集架构则是基于 <strong>寄存器的指令集架构</strong>。</p>
 <p>两者之间的区别：</p>
 <p>基于栈式架构的特点：</p>
 <ul>
@@ -261,13 +264,17 @@
 <li>在大部分情况下，基于寄存器架构的指令往往都是以一地址指令、二地址指令和三地址指令为主，而基于栈式架构的指令集却是以零地址指令为主。</li>
 </ul>
 <p>总结：由于跨平台的设计，Java的指令都是根据栈来设计的。不同平台CPU架构不同，所以不能设计为基于寄存器的架构。其优点是跨平台，指令集小，编译器容易实现；缺点则是性能下降，实现同样的功能需要更多的指令。</p>
-<h1 id="JVM的生命周期"><a href="#JVM的生命周期" class="headerlink" title="JVM的生命周期"></a>JVM的生命周期</h1><h2 id="虚拟机的启动"><a href="#虚拟机的启动" class="headerlink" title="虚拟机的启动"></a>虚拟机的启动</h2><p>Java虚拟机的启动是通过引导类加载器（bootstrap class loader）穿件一个初始类（initial class）来完成的，这个类是由虚拟机的具体实现指定的。</p>
-<h2 id="虚拟机的执行"><a href="#虚拟机的执行" class="headerlink" title="虚拟机的执行"></a>虚拟机的执行</h2><ul>
+<h1 id="jvm的生命周期"><a class="markdownIt-Anchor" href="#jvm的生命周期"></a> JVM的生命周期</h1>
+<h2 id="虚拟机的启动"><a class="markdownIt-Anchor" href="#虚拟机的启动"></a> 虚拟机的启动</h2>
+<p>Java虚拟机的启动是通过引导类加载器（bootstrap class loader）穿件一个初始类（initial class）来完成的，这个类是由虚拟机的具体实现指定的。</p>
+<h2 id="虚拟机的执行"><a class="markdownIt-Anchor" href="#虚拟机的执行"></a> 虚拟机的执行</h2>
+<ul>
 <li>一个运行中的Java虚拟机有着一个清晰的任务：执行Java程序；</li>
 <li>程序开始执行时它运行，程序结束时它就停止；</li>
 <li>执行一个所谓的Java程序的时候，真真正正在执行的是一个叫做Java虚拟机的进程。</li>
 </ul>
-<h2 id="虚拟机的退出"><a href="#虚拟机的退出" class="headerlink" title="虚拟机的退出"></a>虚拟机的退出</h2><p>有如下几种情况：</p>
+<h2 id="虚拟机的退出"><a class="markdownIt-Anchor" href="#虚拟机的退出"></a> 虚拟机的退出</h2>
+<p>有如下几种情况：</p>
 <ul>
 <li>程序正常执行结束；</li>
 <li>程序在执行过程中遇到了异常或错误而异常终止；</li>
@@ -275,65 +282,80 @@
 <li>某线程调用 Runtime 类或 System 类的 exit 方法，或 Runtime 类的 halt 方法，并且Java安全管理器也允许这次 exit 或 halt 操作；</li>
 <li>除此之外，JNI（Java Native Interface）规范描述了用JNI Invocation API来加载或卸载Java虚拟机时，Java虚拟机的退出情况。</li>
 </ul>
-<h1 id="JVM发展历程"><a href="#JVM发展历程" class="headerlink" title="JVM发展历程"></a>JVM发展历程</h1><h2 id="SUN-Classic-VM"><a href="#SUN-Classic-VM" class="headerlink" title="SUN Classic VM"></a>SUN Classic VM</h2><ul>
+<h1 id="jvm发展历程"><a class="markdownIt-Anchor" href="#jvm发展历程"></a> JVM发展历程</h1>
+<h2 id="sun-classic-vm"><a class="markdownIt-Anchor" href="#sun-classic-vm"></a> SUN Classic VM</h2>
+<ul>
 <li>第一款商用Java虚拟机</li>
 <li>内部只提供解释器，如果要使用JIT编译器则需要外挂</li>
 <li>解释器和编译器不能配合工作。</li>
 </ul>
-<h2 id="Exact-VM"><a href="#Exact-VM" class="headerlink" title="Exact VM"></a>Exact VM</h2><ul>
+<h2 id="exact-vm"><a class="markdownIt-Anchor" href="#exact-vm"></a> Exact VM</h2>
+<ul>
 <li>Exact Memory Management：准确式内存管理</li>
 <li>具备现代高性能虚拟机的雏形：热点探测，编译器和解释器混合工作</li>
 <li>只在Solaris平台短暂使用，终被HotSpot替代</li>
 </ul>
-<h2 id="HotSpot"><a href="#HotSpot" class="headerlink" title="HotSpot *"></a>HotSpot *</h2><ul>
+<h2 id="hotspot"><a class="markdownIt-Anchor" href="#hotspot"></a> HotSpot *</h2>
+<ul>
 <li>JDK6与JDK8默认的虚拟机都是HotSpot</li>
-<li>HotSpot指的是它的热点代码探测技术<ol>
+<li>HotSpot指的是它的热点代码探测技术
+<ol>
 <li>通过计数器找到最具有编译价值代码，出发即时编译或栈上替换</li>
 <li>通过编译器与解释器协同工作，在最优化的程序响应时间与最佳执行性能中取得平衡</li>
 </ol>
 </li>
 </ul>
-<h2 id="JRockit"><a href="#JRockit" class="headerlink" title="JRockit *"></a>JRockit *</h2><ul>
+<h2 id="jrockit"><a class="markdownIt-Anchor" href="#jrockit"></a> JRockit *</h2>
+<ul>
 <li>该虚拟机不太关注启动速度，其全部代码都是靠即时编译器编译执行，不包含解释器</li>
-<li>JRockit提供了全面的Java运行时解决方案组合：<ol>
+<li>JRockit提供了全面的Java运行时解决方案组合：
+<ol>
 <li>其JRockit Real Time提供以毫秒或微秒级的JVM响应时间，适合财务、军事指挥等需要</li>
 <li>MissionControl服务套件，是一组以极低开销来监控、管理和分析生产环境中的应用程序的工具</li>
 </ol>
 </li>
 <li>目前HotSpot整合了JRockit，移植了JRockit的优秀特性</li>
 </ul>
-<h2 id="J9"><a href="#J9" class="headerlink" title="J9 *"></a>J9 *</h2><ul>
+<h2 id="j9"><a class="markdownIt-Anchor" href="#j9"></a> J9 *</h2>
+<ul>
 <li>全称：IBM Technology for Java Virtual Machine，内部代号为J9</li>
 <li>市场定位与HotSpot接近</li>
 </ul>
-<h2 id="KVM-和-CDC-CLDC-HotSpot"><a href="#KVM-和-CDC-CLDC-HotSpot" class="headerlink" title="KVM 和 CDC/CLDC HotSpot"></a>KVM 和 CDC/CLDC HotSpot</h2><ul>
+<h2 id="kvm-和-cdccldc-hotspot"><a class="markdownIt-Anchor" href="#kvm-和-cdccldc-hotspot"></a> KVM 和 CDC/CLDC HotSpot</h2>
+<ul>
 <li>针对Java ME产品的虚拟机</li>
 <li>KVM简单、轻量、高度可移植性，面向更低端的设备上还维持着自己的一片市场</li>
 </ul>
-<h2 id="Azul-VM"><a href="#Azul-VM" class="headerlink" title="Azul VM"></a>Azul VM</h2><ul>
+<h2 id="azul-vm"><a class="markdownIt-Anchor" href="#azul-vm"></a> Azul VM</h2>
+<ul>
 <li>前面三大“高性能Java虚拟机”使用在通用硬件平台上</li>
 <li>Azul VM 和 BEA Liquid VM 与特定的硬件平台绑定、软硬件配合的专有虚拟机</li>
 <li>每个 Azul VM 实例都可以管理至少数十个CPU和数百GB内存的硬件资源，并提供在巨大内存范围内实现可控的GC时间的垃圾回收器、专有硬件优化的线程调度等优秀特性</li>
 <li>2010年，Azul Systems公司发布了自己的 Zing JVM，可以再通用x86平台上提供接近于Vega系统的特性</li>
 </ul>
-<h2 id="Liquid-VM"><a href="#Liquid-VM" class="headerlink" title="Liquid VM"></a>Liquid VM</h2><ul>
+<h2 id="liquid-vm"><a class="markdownIt-Anchor" href="#liquid-vm"></a> Liquid VM</h2>
+<ul>
 <li>高性能Java虚拟机中的战斗机</li>
 <li>BEA公司开发的，直接运行在自己Hypervisor系统上</li>
 <li>Liquid VM 即是现在的 JRockit VE（Virtual Edition），Liquid VM 无需操作系统的支持，或者说它自己本身实现了一个专有操作系统的必要功能，如线程调度、文件系统、网络支持等</li>
 </ul>
-<h2 id="Apache-Harmony"><a href="#Apache-Harmony" class="headerlink" title="Apache Harmony"></a>Apache Harmony</h2><ul>
+<h2 id="apache-harmony"><a class="markdownIt-Anchor" href="#apache-harmony"></a> Apache Harmony</h2>
+<ul>
 <li>它是IBM和Intel联合开发的开源JVM</li>
 <li>虽然目前没有Apache Harmony被大规模商用的案例，但是它的Java类库代码被吸纳进了Android SDK</li>
 </ul>
-<h2 id="Microsoft-JVM"><a href="#Microsoft-JVM" class="headerlink" title="Microsoft JVM"></a>Microsoft JVM</h2><ul>
+<h2 id="microsoft-jvm"><a class="markdownIt-Anchor" href="#microsoft-jvm"></a> Microsoft JVM</h2>
+<ul>
 <li>微软为了在IE3浏览器中支持Java Applets，开发了Microsoft JVM</li>
 <li>只能在windows平台运行，但确实是windows下性能最好的Java VM</li>
 </ul>
-<h2 id="TaobaoJVM"><a href="#TaobaoJVM" class="headerlink" title="TaobaoJVM"></a>TaobaoJVM</h2><ul>
+<h2 id="taobaojvm"><a class="markdownIt-Anchor" href="#taobaojvm"></a> TaobaoJVM</h2>
+<ul>
 <li>基于 openJDK 开发了自己定制版本的 AlibabaJDK</li>
 </ul>
-<h2 id="Graal-VM"><a href="#Graal-VM" class="headerlink" title="Graal VM"></a>Graal VM</h2><ul>
-<li>2018年4月，oracle Labs公开了Graal VM，号称”Run Programs Faster Anywhere”</li>
+<h2 id="graal-vm"><a class="markdownIt-Anchor" href="#graal-vm"></a> Graal VM</h2>
+<ul>
+<li>2018年4月，oracle Labs公开了Graal VM，号称&quot;Run Programs Faster Anywhere&quot;</li>
 <li>Graal VM在HotSpot VM基础上增强而成的<strong>跨语言全栈虚拟机</strong>，<strong>可以作为“任何语言”的运行平台使用</strong>，包括：Java、Scala、Groovy、Kotlin、C、C++、JS、Python等</li>
 <li>如果说HotSpot有一天真的被取代，Graal VM希望最大</li>
 </ul>

@@ -240,27 +240,35 @@
             <h1 style="display: none">JWT —— Json Web Token</h1>
             
             <div class="markdown-body">
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>JWT，可能很多读者听过，或者了解过，也可能工作的时候用到过。</p>
+              <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>JWT，可能很多读者听过，或者了解过，也可能工作的时候用到过。</p>
 <p>其全称是Json Web Token，具体的中文翻译，我在网络上也没找到比较好的说法，最多就是把token翻译为较为常用的“令牌”一词。</p>
 <p>说到JWT，不得不提session。</p>
 <p>由于HTTP请求是无状态的，打个比方，比如你使用同一个电脑，同一个浏览器，打开淘宝，点击将商品放入购物车中，然后点击购物车。</p>
 <p>在你的视角中，将商品放入购物车，然后点击购物车，都是“你”的行为，这些操作都是“你”做的。但是，服务器是怎么知道，两次请求是“你”做出来的呢？</p>
 <p>那自然需要前端与后端进行配合，识别出这两次操作，是又“你”做出来。如果不识别出来你的身份，那点击购物车查看的时候，说不定会看到别人的购物车。那就乱套了啊！</p>
 <p>所以，才会出现session与cookie，以此来解决这个问题。</p>
-<h1 id="传统的session认证"><a href="#传统的session认证" class="headerlink" title="传统的session认证"></a>传统的session认证</h1><p>我们在服务器，使用session技术，将用户的认证信息存在服务器中，并且在HTTP请求响应时，将其部分信息返回，并告诉浏览器将其保存在cookie中。</p>
+<h1 id="传统的session认证"><a class="markdownIt-Anchor" href="#传统的session认证"></a> 传统的session认证</h1>
+<p>我们在服务器，使用session技术，将用户的认证信息存在服务器中，并且在HTTP请求响应时，将其部分信息返回，并告诉浏览器将其保存在cookie中。</p>
 <p>下次客户端（或者叫前端）再发送请求时，带上cookie，服务器就能根据其中的信息，找到session中对应保存的用户信息，服务器自然就知道用户是“你”，并且把你的购物车信息返回。</p>
 <p>session确实也是很不错的解决办法，但是其存在一定的缺陷：</p>
-<h2 id="1-服务器负载量"><a href="#1-服务器负载量" class="headerlink" title="1. 服务器负载量"></a>1. 服务器负载量</h2><p>session是保存在服务器端的，虽然在小型应用中，用户的信息量不大，并且用户数量页不够多。</p>
+<h2 id="1-服务器负载量"><a class="markdownIt-Anchor" href="#1-服务器负载量"></a> 1. 服务器负载量</h2>
+<p>session是保存在服务器端的，虽然在小型应用中，用户的信息量不大，并且用户数量页不够多。</p>
 <p>但是当应用的规模变大时，用户的信息量变大，用户数量也增加，自然服务器的负载就大了。</p>
 <p>服务器程序运行时，大多数的数据都是存储在内存中，更何况是用户信息这种需要快速查找的数据。一旦存储总量变大，内存就会告急，影响服务器程序的运行。</p>
-<h2 id="2-扩展性"><a href="#2-扩展性" class="headerlink" title="2. 扩展性"></a>2. 扩展性</h2><p>如果服务器使用分布式的微服务，那么就要保证分布式服务器中，每个服务器上的用户数据具有一致性，这样就需要相应的负载均衡器，并保证多个服务器上的数据同步。</p>
+<h2 id="2-扩展性"><a class="markdownIt-Anchor" href="#2-扩展性"></a> 2. 扩展性</h2>
+<p>如果服务器使用分布式的微服务，那么就要保证分布式服务器中，每个服务器上的用户数据具有一致性，这样就需要相应的负载均衡器，并保证多个服务器上的数据同步。</p>
 <p>这样也会增加一定的负担</p>
-<h2 id="3-CSRF"><a href="#3-CSRF" class="headerlink" title="3. CSRF"></a>3. CSRF</h2><p>CSRF全称为 Cross-site request forgery，翻译为跨站请求伪造。</p>
+<h2 id="3-csrf"><a class="markdownIt-Anchor" href="#3-csrf"></a> 3. CSRF</h2>
+<p>CSRF全称为 Cross-site request forgery，翻译为跨站请求伪造。</p>
 <p>通俗点说就是网站先诱骗用户登录一些需要认证的网站，获取了对应的cookie后，通过该cookie仿造用户的身份，和服务器进行交互，以此实现攻击。</p>
 <p>可以说这是使用session与cookie的一种缺点，但其实际上通过一定的防御措施，是可以避免的，不过在本文就不赘述了，感兴趣的读者可以自己去搜索了解。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>session与cookie技术是用来解决认证问题的一种方法，其从提出到现在，虽然有些缺陷或者不足，但经过这么多年的实践以及改进，可以说已经是非常的成熟了。</p>
+<h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
+<p>session与cookie技术是用来解决认证问题的一种方法，其从提出到现在，虽然有些缺陷或者不足，但经过这么多年的实践以及改进，可以说已经是非常的成熟了。</p>
 <p>不过由于我们目前的项目前端是小程序，没有cookie（虽然cookie与JWT并不冲突），再加上学长们之前用的就是JWT的方式，所以我们的项目就用了JWT的方式。</p>
-<h1 id="JWT"><a href="#JWT" class="headerlink" title="JWT"></a>JWT</h1><h2 id="什么是JWT"><a href="#什么是JWT" class="headerlink" title="什么是JWT"></a>什么是JWT</h2><p>前面说了那么多，那么到底什么是JWT呢？</p>
+<h1 id="jwt"><a class="markdownIt-Anchor" href="#jwt"></a> JWT</h1>
+<h2 id="什么是jwt"><a class="markdownIt-Anchor" href="#什么是jwt"></a> 什么是JWT</h2>
+<p>前面说了那么多，那么到底什么是JWT呢？</p>
 <blockquote>
 <p><strong>JSON Web Token</strong> (<strong>JWT</strong>) is an Internet <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Proposed_standard">proposed standard</a> for creating data with optional signature and/or optional encryption whose <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Payload_(computing)">payload</a> holds <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/JSON">JSON</a> that asserts some number of <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Claims-based_identity">claims</a>.</p>
 <p>—— wikipedia</p>
@@ -271,32 +279,35 @@
 <p>也就是说其与session最大的不同，就是session将用户信息，保存在了服务器，每次客户端请求时，以cookie中的数据作为“索引”，在服务器session中查找对应的信息。</p>
 <p>而JWT则是直接将用户的部分信息放入到token中，并通过一定的流程进行加密，避免被人恶意解析。在客户端请求登录后，服务器将token返回，让客户端保存。在后来的请求中，客户端携带上token，服务器从token中直接可以把用户信息取出来。<strong>总而言之，就是用户信息不在服务器中保存了，而是保存在这个token中，减轻了服务器存储的压力。</strong></p>
 <p>那么很显而易见的一个问题就是，token可以被显而易见的取出来，正如cookie一样。因此我们在生成token时，要使用对称的加密算法，进行加密。既然能被获取到已然是事实了，那我们就只能通过不让别人解析有用信息的方法，防止信息泄漏。</p>
-<h2 id="JWT的流程"><a href="#JWT的流程" class="headerlink" title="JWT的流程"></a>JWT的流程</h2><ul>
+<h2 id="jwt的流程"><a class="markdownIt-Anchor" href="#jwt的流程"></a> JWT的流程</h2>
+<ul>
 <li>用户使用用户名密码（或者小程序的openid）来请求服务器</li>
 <li>服务器验证用户的信息</li>
 <li>服务器通过验证，并发给用户一个token</li>
 <li>客户端存储token，在每次请求时，都带上token</li>
 <li>服务器验证token并从中取出有用的信息</li>
 </ul>
-<h2 id="JWT的构成"><a href="#JWT的构成" class="headerlink" title="JWT的构成"></a>JWT的构成</h2><p>JWT包含了三部分：header、payload 以及 signature</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210411174631309.png" srcset="/img/loading.gif" lazyload alt="JWT"></p>
-<h3 id="header（头部）"><a href="#header（头部）" class="headerlink" title="header（头部）"></a>header（头部）</h3><p>header包含了两部分内容：</p>
+<h2 id="jwt的构成"><a class="markdownIt-Anchor" href="#jwt的构成"></a> JWT的构成</h2>
+<p>JWT包含了三部分：header、payload 以及 signature</p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210411174631309.png" srcset="/img/loading.gif" lazyload alt="JWT" /></p>
+<h3 id="header头部"><a class="markdownIt-Anchor" href="#header头部"></a> header（头部）</h3>
+<p>header包含了两部分内容：</p>
 <ol>
 <li>声明类型，这里是jwt</li>
 <li>声明加密的算法，通常直接使用HMAC SHA256</li>
 </ol>
 <p>完整的头部是下面这样的</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>  &#x27;alg&#x27;: &#x27;HS256&#x27;,<br>  &#x27;typ&#x27;: &#x27;JWT&#x27;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>然后将头部使用base64加密，得到第一部分header：</p>
 <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode">eyJhbGciOiJIUzI<span class="hljs-number">1</span><span class="hljs-symbol">NiIsInR5</span>cCI<span class="hljs-number">6</span>IkpX<span class="hljs-attr">VCJ9</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="payload（负载）"><a href="#payload（负载）" class="headerlink" title="payload（负载）"></a>payload（负载）</h3><p>负载就是存放信息的地方，其中包括了：</p>
+<h3 id="payload负载"><a class="markdownIt-Anchor" href="#payload负载"></a> payload（负载）</h3>
+<p>负载就是存放信息的地方，其中包括了：</p>
 <ol>
 <li>标准中注册的声明</li>
 <li>自定义的声明</li>
 </ol>
-<h4 id="标准中的声明有（建议但是不强制使用）："><a href="#标准中的声明有（建议但是不强制使用）：" class="headerlink" title="标准中的声明有（建议但是不强制使用）："></a>标准中的声明有（建议但是不强制使用）：</h4><ul>
+<h4 id="标准中的声明有建议但是不强制使用"><a class="markdownIt-Anchor" href="#标准中的声明有建议但是不强制使用"></a> 标准中的声明有（建议但是不强制使用）：</h4>
+<ul>
 <li><strong>iss</strong>: jwt签发者</li>
 <li><strong>sub</strong>: jwt所面向的用户</li>
 <li><strong>aud</strong>: 接收jwt的一方</li>
@@ -305,27 +316,28 @@
 <li><strong>iat</strong>: jwt的签发时间</li>
 <li><strong>jti</strong>: jwt的唯一身份标识，主要用来作为一次性token,从而回避重放攻击。</li>
 </ul>
-<h4 id="自定义的声明："><a href="#自定义的声明：" class="headerlink" title="自定义的声明："></a>自定义的声明：</h4><p>公共声明可以添加任何信息，一般是放一些不太敏感的信息，该部分实际上也是明文。</p>
+<h4 id="自定义的声明"><a class="markdownIt-Anchor" href="#自定义的声明"></a> 自定义的声明：</h4>
+<p>公共声明可以添加任何信息，一般是放一些不太敏感的信息，该部分实际上也是明文。</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;iss&quot;</span>: <span class="hljs-string">&quot;matrix-world.top&quot;</span>,<br>    <span class="hljs-attr">&quot;iat&quot;</span>: <span class="hljs-number">1500218077</span>,<br>    <span class="hljs-attr">&quot;exp&quot;</span>: <span class="hljs-number">1500218077</span>,<br>    <span class="hljs-attr">&quot;aud&quot;</span>: <span class="hljs-string">&quot;blog.matrix-world.top&quot;</span>,<br>    <span class="hljs-attr">&quot;sub&quot;</span>: <span class="hljs-string">&quot;1248540980@qq.com&quot;</span>,<br>    <span class="hljs-attr">&quot;user_id&quot;</span>: <span class="hljs-string">&quot;dc2c4eefe2d141490b6ca612e252f92e&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>使用base64加密后，得到了第二部分payload：</p>
 <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode">eyJpc<span class="hljs-number">3</span>MiOiJtYXRyaXgtd<span class="hljs-number">29</span>ybGQud<span class="hljs-name">G9</span>wIiwiaWF<span class="hljs-number">0</span>Ijox<span class="hljs-symbol">NTAwMjE4</span>MDc<span class="hljs-number">3</span>LCJleHAiOjE<span class="hljs-number">1</span>MDAyMTgw<span class="hljs-symbol">NzcsImF1</span>ZCI<span class="hljs-number">6</span>ImJsb<span class="hljs-number">2</span>cubWF<span class="hljs-number">0</span>cml<span class="hljs-number">4</span>LXd<span class="hljs-attr">vcmxkLnRvcCIsInN1</span>YiI<span class="hljs-number">6</span>IjEy<span class="hljs-symbol">NDg1</span><span class="hljs-symbol">NDA5</span>ODBAcXEuY<span class="hljs-number">29</span>tIiwidX<span class="hljs-symbol">Nlcl9</span>pZCI<span class="hljs-number">6</span>ImRjMm<span class="hljs-name">M0</span>ZWVmZTJkMTQx<span class="hljs-symbol">NDkwYjZjYTYxMmUyNTJmOTJlIn0</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="signature（签名）"><a href="#signature（签名）" class="headerlink" title="signature（签名）"></a>signature（签名）</h3><p>JWT的签名是header与payload在经过base64加密后，拼接在一起，然后使用声明的加密方式，进行加盐<strong>secret</strong>加密，就构成了签名</p>
+<h3 id="signature签名"><a class="markdownIt-Anchor" href="#signature签名"></a> signature（签名）</h3>
+<p>JWT的签名是header与payload在经过base64加密后，拼接在一起，然后使用声明的加密方式，进行加盐<strong>secret</strong>加密，就构成了签名</p>
 <figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode">JED<span class="hljs-number">8</span>D<span class="hljs-number">7</span>KhTdBBe<span class="hljs-symbol">NqLW4</span>d<span class="hljs-number">5</span><span class="hljs-symbol">N_gQr6</span>IeUfjOPw<span class="hljs-number">3</span><span class="hljs-symbol">n3</span>kXea<span class="hljs-symbol">NQ</span><br></code></pre></td></tr></table></figure>
-
 <p>最终将三个部分拼接，并使用 <strong>.</strong> 进行间隔，就生成了JWT的token</p>
-<h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><p>从上面的文字中，可以看出，实际上JWT除了最后的signature，其余部分都可以说是明文了。</p>
+<h1 id="思考"><a class="markdownIt-Anchor" href="#思考"></a> 思考</h1>
+<p>从上面的文字中，可以看出，实际上JWT除了最后的signature，其余部分都可以说是明文了。</p>
 <p>我在网络上又找到一篇文章<a target="_blank" rel="noopener" href="https://learnku.com/articles/22616">《别再使用JWT作为session系统》</a>，其思路说的也有道理，虽然目前使用JWT比较流行，但是其确实存在一些问题，其作为一次性的授权令牌就是比较好的应用。</p>
 <p>同时JWT的思路也值得借鉴，那就是将信息发给用户，让用户保存，在后续请求中带上该信息，即可减轻服务器的存储压力。</p>
 <p>我们目前的项目，需要保存用户的一些关键信息，并使用其作为索引，以查找数据库中用户更具体的信息。</p>
 <p>直接使用JWT是存在问题的，我们项目的初衷是想隐藏用户id之类的敏感信息，不使其以明文的形式暴露在HTTP请求中，JWT中payload几乎可以说是明文的，不符合要求。</p>
 <p>不过可以借鉴JWT的思路，同时再使用对称加密算法，将信息加密，避免了明文传输。</p>
 <p>看了不少博客以及文章之后，我们项目最终确定使用加密token来保存信息，并且将信息发送给客户端，让客户端保存。时序图如下：</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210411185533818.png" srcset="/img/loading.gif" lazyload alt="前后端交互时序图"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210411185533818.png" srcset="/img/loading.gif" lazyload alt="前后端交互时序图" /></p>
 <p>其他再具体的细节就不方便说了，因为实验室的项目和别人是有合作的，因此就不便透露了。</p>
 <p>目前来说，效果还可以，避免用户个别信息明文传输的目标的确是实现了。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<h1 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h1>
+<ol>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/576dbf44b2ae">什么是 JWT – JSON WEB TOKEN</a></li>
 <li><a target="_blank" rel="noopener" href="https://learnku.com/articles/22616">（译）别再使用 JWT 作为 Session 系统！问题重重且很危险。</a></li>
 <li><a target="_blank" rel="noopener" href="https://exp.newsmth.net/topic/6d3ae68713a816f3feaeebd6bb1c4cc9/6">jwt相比普通token，优势在哪？</a></li>

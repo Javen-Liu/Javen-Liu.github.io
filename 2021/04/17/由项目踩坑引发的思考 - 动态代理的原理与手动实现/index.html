@@ -240,7 +240,8 @@
             <h1 style="display: none">由项目踩坑引发的思考 - 动态代理的原理与手动实现</h1>
             
             <div class="markdown-body">
-              <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p> 最近项目中，由于明文传输user_id有一定的风险，所以采用上一片文章中的方法，将user_id以及一些数据加密为token并保存在客户端。</p>
+              <h1 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h1>
+<p>最近项目中，由于明文传输user_id有一定的风险，所以采用上一片文章中的方法，将user_id以及一些数据加密为token并保存在客户端。</p>
 <p>每次客户端请求时，携带上token，服务器解析该token获取相关数据。</p>
 <p>不过由于该项目由我们从0开始搭建的，之前没有其他项目踩坑的经历，所以在很多框架结构的设计上，埋下了不少的坑。</p>
 <p>其中之一，就是为了测试方便，一开始写controller时，传user_id等数据时，直接用的是表单形式。</p>
@@ -249,45 +250,52 @@
 <p>在思考如何解决这个问题时，突然想到之前学习spring（那都是一年以前的故事了）的时候，记得视频里面讲过AOP，即 Aspect Oriented Programming，面向切面编程。</p>
 <p>其就是解决有大量方法需要进行同样操作时，节省代码量以及便利性的一种方法。</p>
 <p>印象里以前JVM及字节码的时候，里面讲到过有些应用，就是使用动态代理，来为所有方法加上一个日志记录的操作，同时mybatis也是通过动态代理，来为mapper接口生成动态实现。</p>
-<h1 id="什么是AOP？"><a href="#什么是AOP？" class="headerlink" title="什么是AOP？"></a>什么是AOP？</h1><p>以下摘自<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xrq730/p/4919025.html">博客园的文章</a></p>
+<h1 id="什么是aop"><a class="markdownIt-Anchor" href="#什么是aop"></a> 什么是AOP？</h1>
+<p>以下摘自<a target="_blank" rel="noopener" href="https://www.cnblogs.com/xrq730/p/4919025.html">博客园的文章</a></p>
 <blockquote>
 <p>AOP（Aspect Oriented Programming），即面向切面编程，可以说是OOP（Object Oriented Programming，面向对象编程）的补充和完善。OOP引入封装、继承、多态等概念来建立一种对象层次结构，用于模拟公共行为的一个集合。不过OOP允许开发者定义纵向的关系，但并不适合定义横向的关系，例如日志功能。日志代码往往横向地散布在所有对象层次中，而与它对应的对象的核心功能毫无关系对于其他类型的代码，如安全性、异常处理和透明的持续性也都是如此，这种散布在各处的无关的代码被称为横切（cross cutting），在OOP设计中，它导致了大量代码的重复，而不利于各个模块的重用。</p>
-<p>AOP技术恰恰相反，它利用一种称为”横切”的技术，剖解开封装的对象内部，并将那些影响了多个类的公共行为封装到一个可重用模块，并将其命名为”Aspect”，即切面。所谓”切面”，简单说就是那些与业务无关，却为业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块之间的耦合度，并有利于未来的可操作性和可维护性。</p>
-<p>使用”横切”技术，AOP把软件系统分为两个部分：<strong>核心关注点</strong>和<strong>横切关注点</strong>。业务处理的主要流程是核心关注点，与之关系不大的部分是横切关注点。横切关注点的一个特点是，他们经常发生在核心关注点的多处，而各处基本相似，比如权限认证、日志、事物。AOP的作用在于分离系统中的各种关注点，将核心关注点和横切关注点分离开来。</p>
+<p>AOP技术恰恰相反，它利用一种称为&quot;横切&quot;的技术，剖解开封装的对象内部，并将那些影响了多个类的公共行为封装到一个可重用模块，并将其命名为&quot;Aspect&quot;，即切面。所谓&quot;切面&quot;，简单说就是那些与业务无关，却为业务模块所共同调用的逻辑或责任封装起来，便于减少系统的重复代码，降低模块之间的耦合度，并有利于未来的可操作性和可维护性。</p>
+<p>使用&quot;横切&quot;技术，AOP把软件系统分为两个部分：<strong>核心关注点</strong>和<strong>横切关注点</strong>。业务处理的主要流程是核心关注点，与之关系不大的部分是横切关注点。横切关注点的一个特点是，他们经常发生在核心关注点的多处，而各处基本相似，比如权限认证、日志、事物。AOP的作用在于分离系统中的各种关注点，将核心关注点和横切关注点分离开来。</p>
 </blockquote>
-<h1 id="AOP的使用"><a href="#AOP的使用" class="headerlink" title="AOP的使用"></a>AOP的使用</h1><h2 id="切面（pointcut）"><a href="#切面（pointcut）" class="headerlink" title="切面（pointcut）"></a>切面（pointcut）</h2><p>首先需要定义切面。具体的文档以及使用方法我在此就不赘述了，<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop">Spring文档</a>写的非常清楚。并且由于使用注解相对于xml配置来说，方便很多，所以我在这里用注解的方式来实现。</p>
+<h1 id="aop的使用"><a class="markdownIt-Anchor" href="#aop的使用"></a> AOP的使用</h1>
+<h2 id="切面pointcut"><a class="markdownIt-Anchor" href="#切面pointcut"></a> 切面（pointcut）</h2>
+<p>首先需要定义切面。具体的文档以及使用方法我在此就不赘述了，<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#aop">Spring文档</a>写的非常清楚。并且由于使用注解相对于xml配置来说，方便很多，所以我在这里用注解的方式来实现。</p>
 <p>因为我们会在小程序与后台交互的过程中使用token，所以首先配置好切面，即pointcut。</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210417164334892-20210418132220350.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210417164334892-20210418132220350.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <p>由于项目不公开，所以一部分我打码了，不过应该可以理解我的意思，spring提供的API已经非常全面且好用，可以支持各种不同的需求。切面其实也就是确定AOP要作用于的方法。</p>
-<h2 id="通知（advice）"><a href="#通知（advice）" class="headerlink" title="通知（advice）"></a>通知（advice）</h2><p>这里我是用的是 <strong>@Around</strong> 通知。</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210417170114220.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="通知advice"><a class="markdownIt-Anchor" href="#通知advice"></a> 通知（advice）</h2>
+<p>这里我是用的是 <strong>@Around</strong> 通知。</p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210417170114220.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <p>我们在切面所在方法执行前，对header中的token进行解析，并将其装入到当前请求所在环境的RequestAttributes中，这样我们就不用在切面方法执行时，传入参数。直接将这些参数放到请求的环境中，让controller中方法按需求获取，操作空间更大，也不用强制满足方法参数的约束。</p>
 <p>同时为了获取参数更加方便，我封装了一个工具类，省去了重复写获取参数的代码。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">RequestContextHolder.getRequestAttributes().getAttribute(key, RequestAttributes.SCOPE_REQUEST)<br></code></pre></td></tr></table></figure>
-
-<p><img src="https://image.matrix-world.top/image/mac/image-20210417171106415.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210417171106415.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <p>并且我们知道，每当一个请求过来时，实际上前端控制器是会为每一个请求创建一个线程（简要来说，Spring的实现在此基础上肯定进行了更复杂的封装以满足高吞吐量的需求）。</p>
 <p>而我将参数保存时， <strong>RequestContextHolder.setRequestAttributes()</strong> 中范围设置为了SCOPE_REQUEST，也就是说当前请求所在的线程，都是可以获取到的。也避免了多个请求来时，导致参数被覆盖而出现问题。</p>
-<h1 id="由AOP引发的思考"><a href="#由AOP引发的思考" class="headerlink" title="由AOP引发的思考"></a>由AOP引发的思考</h1><p>AOP的实现原理，完全使用java语言自身特性来实现。</p>
+<h1 id="由aop引发的思考"><a class="markdownIt-Anchor" href="#由aop引发的思考"></a> 由AOP引发的思考</h1>
+<p>AOP的实现原理，完全使用java语言自身特性来实现。</p>
 <p>我查了下相关的资料与博客，AOP使用了JDK与CGLIB的动态代理。</p>
 <p>JDK的动态代理有一个问题，就是他代理的类，必须是接口的实现类，否则无法生成代理类。</p>
 <p>那么既然我们知道了JDK动态代理是基于生成动态代理类，我们能不能自己尝试写一个呢？</p>
-<h1 id="手动实现动态代理"><a href="#手动实现动态代理" class="headerlink" title="手动实现动态代理"></a>手动实现动态代理</h1><h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><p>在开始写动态代理前，我们先看看静态代理。</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210418133747115.png" srcset="/img/loading.gif" lazyload alt="静态代理"></p>
+<h1 id="手动实现动态代理"><a class="markdownIt-Anchor" href="#手动实现动态代理"></a> 手动实现动态代理</h1>
+<h2 id="静态代理"><a class="markdownIt-Anchor" href="#静态代理"></a> 静态代理</h2>
+<p>在开始写动态代理前，我们先看看静态代理。</p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210418133747115.png" srcset="/img/loading.gif" lazyload alt="静态代理" /></p>
 <p>实际上如果是静态代理，其实就是代理对象（Proxy对象）将实际的实现类对象（Impl对象）包装在自己内部，当主程序通过多态调用接口类（Interface对象）方法时，代理类可以在实际的实现类方法调用的前、后进行自己的操作。</p>
 <p>不过既然它是静态代理，因此调用的方式、先后顺序以及其代理的接口类都是写死的，极其不通用，所以我们才需要实现“动态”，来满足各种需求。</p>
-<h2 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h2><p>我实现的动态代理，其实和静态代理很相似，只不过对于代理的对象，可以进行自定义，同时代理对象的操作也可以定制。</p>
+<h2 id="动态代理"><a class="markdownIt-Anchor" href="#动态代理"></a> 动态代理</h2>
+<p>我实现的动态代理，其实和静态代理很相似，只不过对于代理的对象，可以进行自定义，同时代理对象的操作也可以定制。</p>
 <p>比如这个项目我想在实现类方法执行前打印一句“Let’s roll”，那个项目我想在实现类方法执行后打印一句“nothing is true, every thing is permitted”，一切都可以自己定制。这样通用性就更好。</p>
-<h4 id="JDK动态代理的实现"><a href="#JDK动态代理的实现" class="headerlink" title="JDK动态代理的实现"></a>JDK动态代理的实现</h4><p>我们先来看一下JDK动态代理中，InvocationHandler类。</p>
+<h4 id="jdk动态代理的实现"><a class="markdownIt-Anchor" href="#jdk动态代理的实现"></a> JDK动态代理的实现</h4>
+<p>我们先来看一下JDK动态代理中，InvocationHandler类。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">InvocationHandler</span> </span>&#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">invoke</span><span class="hljs-params">(Object proxy, Method method, Object[] args)</span></span><br><span class="hljs-function">        <span class="hljs-keyword">throws</span> Throwable</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>其提供了proxy、method、args三个变量。</p>
 <p>proxy代表了动态生成代理类的实例对象，method代表了当前执行的方法，args则是该方法的参数。</p>
 <p>这样就可以在执行method.invoke( )，也就是执行真正实现类方法前或者后，进行各种操作。</p>
 <p>其他的我就不赘述了，读者可以自己去尝试使用JDK动态代理，然后使用如下语句，来设置保存最后的动态代理类。然后看一下生成的动态代理类，就能明白其大致原理。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">System.getProperties().put(<span class="hljs-string">&quot;sun.misc.ProxyGenerator.saveGeneratedFiles&quot;</span>,<span class="hljs-string">&quot;true&quot;</span>);<br></code></pre></td></tr></table></figure>
-
-<h4 id="自己的实现"><a href="#自己的实现" class="headerlink" title="自己的实现"></a>自己的实现</h4><p>我自己的实现就比较简陋了，没有自定义代理方法和具体实现类方法之间的顺序，只是简单地设置为先运行代理的方法，然后运行实体类方法。</p>
+<h4 id="自己的实现"><a class="markdownIt-Anchor" href="#自己的实现"></a> 自己的实现</h4>
+<p>我自己的实现就比较简陋了，没有自定义代理方法和具体实现类方法之间的顺序，只是简单地设置为先运行代理的方法，然后运行实体类方法。</p>
 <p>我的实现分为了5步</p>
 <ol>
 <li>实现InvocationHandler类，将需要运行的代码放入到接口invoke( )方法中</li>
@@ -296,18 +304,19 @@
 <li>对文件进行编译，生成 $Proxy0.class 字节码文件</li>
 <li>通过 java 的反射机制，动态加载  $Proxy0.class 字节码文件，并在jvm中生成对应的Class类对象，并实例化生成对象，返回方法调用</li>
 </ol>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210418141300704.png" srcset="/img/loading.gif" lazyload alt="Test.java 用于测试"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210418141300704.png" srcset="/img/loading.gif" lazyload alt="Test.java 用于测试" /></p>
 <p>完成后创建一个Test类，进行测试。</p>
 <p>首先创建一个实现了invoke方法的 InvocationHandler 对象实例，然后通过 UserPersistenceProxy 类的 newInstance 静态方法，生成代理后的对象。</p>
 <p>调用接口类中的方法，根据多态，其会自动判别调用的方法。</p>
 <p>其中 UserInterface 如下图。</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210418141625056.png" srcset="/img/loading.gif" lazyload alt="接口类"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210418141625056.png" srcset="/img/loading.gif" lazyload alt="接口类" /></p>
 <p>而接口的实现类如下图。</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210418141645757.png" srcset="/img/loading.gif" lazyload alt="实现类"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210418141645757.png" srcset="/img/loading.gif" lazyload alt="实现类" /></p>
 <p>此时我们运行该测试，最终 terminal 输出如下：</p>
-<p><img src="https://image.matrix-world.top/image/mac/image-20210418141723345.png" srcset="/img/loading.gif" lazyload alt="最终运行结果"></p>
+<p><img src="https://image.matrix-world.top/image/mac/image-20210418141723345.png" srcset="/img/loading.gif" lazyload alt="最终运行结果" /></p>
 <p>确实实现了动态生成字节码，并代理的效果。并且代理类确实是在运行时生成并加载的，相比于静态代理，更加的灵活。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在自己实现了简单的动态代理后，对于动态代理的实现方式，就有了一些自己的理解。</p>
+<h1 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h1>
+<p>在自己实现了简单的动态代理后，对于动态代理的实现方式，就有了一些自己的理解。</p>
 <p>对于我自己个人来讲，我不太喜欢死记硬背。相反，我更喜欢自己尝试去理解，通过探索、理解的过程，来让大脑自己记住，而不是强迫大脑去记忆。</p>
 <p>这一次的手动实现，虽然实现了基本的效果，但是任然有几个地方，因为时间和精力的问题，没有做好：</p>
 <ol>
@@ -315,9 +324,10 @@
 <li>没有自定义代理方法和实际实现类方法之间调用顺序的逻辑，我为了省事，直接写死了，后续可以借鉴JDK中 InvocationHandler 的形式。</li>
 <li>没有具体去看CGLIB的实现方式。</li>
 </ol>
-<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><script src="https://gist.github.com/Javen-Liu/460be480224c0a20dc8b2f3a693e0ebc.js"></script>
-
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<h1 id="附录"><a class="markdownIt-Anchor" href="#附录"></a> 附录</h1>
+<script src="https://gist.github.com/Javen-Liu/460be480224c0a20dc8b2f3a693e0ebc.js"></script>
+<h1 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考</h1>
+<ol>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/youzhibing/p/10464274.html">设计模式之代理，手动实现动态代理，揭秘原理实现</a></li>
 </ol>
 

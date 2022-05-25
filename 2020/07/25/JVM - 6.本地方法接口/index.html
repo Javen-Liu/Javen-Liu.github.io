@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      449 字
+      448 字
     </span>
   
 
@@ -240,16 +240,21 @@
             <h1 style="display: none">JVM 笔记 - 6 本地方法接口</h1>
             
             <div class="markdown-body">
-              <h1 id="什么是本地方法"><a href="#什么是本地方法" class="headerlink" title="什么是本地方法"></a>什么是本地方法</h1><p>简单地讲，<strong>一个Native Method就是一个Java调用非Java代码的接口</strong>。一个Native Method是这样一个Java方法：该方法的实现由非Java语言实现，比如C。这个特性并非Java所特有，很多其他的变成语言都有这一机制，比如在C++中，你可以使用extern “C” 告知C++编译器去调用一个C的函数</p>
-<h1 id="为什么要用Native-Method？"><a href="#为什么要用Native-Method？" class="headerlink" title="为什么要用Native Method？"></a>为什么要用Native Method？</h1><p>Java使用起来非常方便，然而有些层次的任务用Java实现起来不容易，或者我们对程序的效率很在意时，问题就来了</p>
+              <h1 id="什么是本地方法"><a class="markdownIt-Anchor" href="#什么是本地方法"></a> 什么是本地方法</h1>
+<p>简单地讲，<strong>一个Native Method就是一个Java调用非Java代码的接口</strong>。一个Native Method是这样一个Java方法：该方法的实现由非Java语言实现，比如C。这个特性并非Java所特有，很多其他的变成语言都有这一机制，比如在C<ins>中，你可以使用extern “C” 告知C</ins>编译器去调用一个C的函数</p>
+<h1 id="为什么要用native-method"><a class="markdownIt-Anchor" href="#为什么要用native-method"></a> 为什么要用Native Method？</h1>
+<p>Java使用起来非常方便，然而有些层次的任务用Java实现起来不容易，或者我们对程序的效率很在意时，问题就来了</p>
 <ul>
-<li><p>与Java环境外交互：</p>
+<li>
+<p>与Java环境外交互：</p>
 <p>有时Java应用需要与Java外面的环境交互，这是本地方法存在的主要原因。你可以想象Java需要和一些底层系统，如操作系统或某些硬件交流信息时的情况。本地方法正是这样一种交流机制：它为我们提供了非常简洁的接口，而且我们无需去了解Java应用之外的繁琐细节</p>
 </li>
-<li><p>与操作系统交互：</p>
+<li>
+<p>与操作系统交互：</p>
 <p>JVM支持着Java语言本身和运行时库，它是Java程序赖以生存的空间，它由一个解释器和一些连接到本地代码的库组成。然而不管怎样，它毕竟不是一个完整地系统，它经常依赖于一些底层系统的支持。这些底层系统常常是强大的操作系统。<strong>通过使用本地方法，我们得以用Java实现了jre的与底层系统的交互，甚至JVM的一些不分就是用C写的</strong></p>
 </li>
-<li><p>Sun’s Java</p>
+<li>
+<p>Sun’s Java</p>
 <p>Sun的解释器使用C实现的，这使得它能像一些普通的C一样与外部进行交互</p>
 </li>
 </ul>

@@ -240,8 +240,9 @@
             <h1 style="display: none">JVM 笔记 - 13 StringTable</h1>
             
             <div class="markdown-body">
-              <h1 id="String的基本特性"><a href="#String的基本特性" class="headerlink" title="String的基本特性"></a>String的基本特性</h1><ul>
-<li>String：字符串，使用一对””引起来表示</li>
+              <h1 id="string的基本特性"><a class="markdownIt-Anchor" href="#string的基本特性"></a> String的基本特性</h1>
+<ul>
+<li>String：字符串，使用一对&quot;&quot;引起来表示</li>
 <li>String声明为final的，不可被继承</li>
 <li>String实现了Serializable接口：表示字符串是支持序列化的；也实现了Comparable接口：表示String可以比较大小</li>
 <li>String在 jdk8 及以前内部定义了 final char[ ] value 用于存储字符串数据，jdk9 时改为了 byte[ ]</li>
@@ -250,40 +251,46 @@
 <li>在jdk6中StringTable是固定的，就是1009的长度，所以如果常量池中的字符串过多就会导致效率下降很快</li>
 <li>在jdk7中，StringTable的长度默认值是60013,1009是可设置的最小值</li>
 </ul>
-<h1 id="String的内存分配"><a href="#String的内存分配" class="headerlink" title="String的内存分配"></a>String的内存分配</h1><ul>
+<h1 id="string的内存分配"><a class="markdownIt-Anchor" href="#string的内存分配"></a> String的内存分配</h1>
+<ul>
 <li>在Java语言中有8种基本数据类型和一种比较特殊的类型String。这些类型为了使它们在运行过程中速度更快、更节省内存，都提供了一种常量池的概念。</li>
-<li>常量池就类似一个Java系统级别提供的缓存。8种基本数据类型的常量池都是系统协调的，String类型的换成常量池比较特殊。它主要使用方法有两种<ul>
+<li>常量池就类似一个Java系统级别提供的缓存。8种基本数据类型的常量池都是系统协调的，String类型的换成常量池比较特殊。它主要使用方法有两种
+<ul>
 <li>直接使用双引号生命出来的String对象会直接存储在常量池中。比如：String info = “abc”</li>
 <li>如果不是用双引号声明的String对象，可以使用String提供的intern()方法</li>
 </ul>
 </li>
 <li>Java 6以前，字符串常量池存放在永久代中</li>
-<li>Java 7对字符串的逻辑做了很大的改变，即将字符串常量池的位置调整到Java堆内<ul>
+<li>Java 7对字符串的逻辑做了很大的改变，即将字符串常量池的位置调整到Java堆内
+<ul>
 <li>所有的字符串都保存在堆（Heap）中，和其他普通对象一样，这样可以在调优应用时，仅需调整堆大小即可</li>
 <li>字符串常量池概念原本使用的比较多，但是这个改动使得我们有足够的理由让我们重新考虑在Java 7中使用String.intern()</li>
 </ul>
 </li>
 <li>Java 8中字符串常量在堆中</li>
 </ul>
-<p><img src="https://image.matrix-world.top/image/img/20200817160832.png" srcset="/img/loading.gif" lazyload></p>
-<p><img src="https://image.matrix-world.top/image/img/20200817160856.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200817160832.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p><img src="https://image.matrix-world.top/image/img/20200817160856.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <p><strong>为什么StringTable要调整？</strong></p>
 <ol>
 <li>permSize默认比较小</li>
 <li>永久代垃圾回收频率低</li>
 </ol>
-<h1 id="字符串拼接操作"><a href="#字符串拼接操作" class="headerlink" title="字符串拼接操作"></a>字符串拼接操作</h1><ol>
+<h1 id="字符串拼接操作"><a class="markdownIt-Anchor" href="#字符串拼接操作"></a> 字符串拼接操作</h1>
+<ol>
 <li>常量与常量的拼接结果在常量池，原理是<strong>编译器优化</strong></li>
 <li>常量池中不会存在相同内容的常量</li>
 <li>只要其中有一个是变量，结果就在堆中。<strong>拼接变量的原理是StringBuilder</strong></li>
 <li>如果拼接的结果调用intern()方法，则主动将常量池中还没有的字符创对象放入池中，并返回此对象的地址</li>
 </ol>
-<p><img src="https://image.matrix-world.top/image/img/20200817170054.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://image.matrix-world.top/image/img/20200817170054.png" srcset="/img/loading.gif" lazyload alt="" /></p>
 <ol>
 <li>字符串拼接操作不一定使用的是StringBuilder，如果拼接符号左右两百年都是字符串变量或常量引用，则仍然使用编译器优化，即非StringBuilder的方式</li>
 <li>针对于final修饰类、方法、基本数据类型、引用数据类型的量的结构时，能用final尽量使用final</li>
 </ol>
-<h1 id="intern-的使用"><a href="#intern-的使用" class="headerlink" title="intern()的使用"></a>intern()的使用</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>如果不是双引号声明的String对象，可以使用String提供的intern方法；intern方法会从字符串常量池中查询当年字符串是否存在，若不存在就会将当前字符串放入常量池中。</p>
+<h1 id="intern的使用"><a class="markdownIt-Anchor" href="#intern的使用"></a> intern()的使用</h1>
+<h2 id="概述"><a class="markdownIt-Anchor" href="#概述"></a> 概述</h2>
+<p>如果不是双引号声明的String对象，可以使用String提供的intern方法；intern方法会从字符串常量池中查询当年字符串是否存在，若不存在就会将当前字符串放入常量池中。</p>
 <ul>
 <li>比如：String myInfo = new String(“abc”).intern();</li>
 </ul>
@@ -292,24 +299,30 @@
 <li>(“a” + “b” + “c”).intern() == “abc”</li>
 </ul>
 <p>通俗点讲，Interned String 就是确保字符串在内存里只有一份拷贝，这样可以节约内存空间，加快字符串操作任务的执行速度。注意，这个值会被存放在字符串内部池（String Intern Pool）</p>
-<hr>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><strong>Q：new String(“ab”)会创建几个对象？</strong></p>
-<p><img src="https://image.matrix-world.top/image/img/20200818205305.png" srcset="/img/loading.gif" lazyload></p>
-<p><strong>A：</strong>2个，一个是”ab”字符串常量，放在常量池中，另一个是new出来的String对象实例</p>
-<h1 id="StringTable的垃圾回收"><a href="#StringTable的垃圾回收" class="headerlink" title="StringTable的垃圾回收"></a>StringTable的垃圾回收</h1><p>-XX:+PrintStringTableStatistics，用来查看字符串信息</p>
-<h1 id="G1中的String去重操作"><a href="#G1中的String去重操作" class="headerlink" title="G1中的String去重操作"></a>G1中的String去重操作</h1><ul>
-<li><p>背景：许多Java应用做的测试得出以下结果：</p>
+<hr />
+<h2 id="问题"><a class="markdownIt-Anchor" href="#问题"></a> 问题</h2>
+<p><strong>Q：new String(“ab”)会创建几个对象？</strong></p>
+<p><img src="https://image.matrix-world.top/image/img/20200818205305.png" srcset="/img/loading.gif" lazyload alt="" /></p>
+<p>**A：**2个，一个是&quot;ab&quot;字符串常量，放在常量池中，另一个是new出来的String对象实例</p>
+<h1 id="stringtable的垃圾回收"><a class="markdownIt-Anchor" href="#stringtable的垃圾回收"></a> StringTable的垃圾回收</h1>
+<p>-XX:+PrintStringTableStatistics，用来查看字符串信息</p>
+<h1 id="g1中的string去重操作"><a class="markdownIt-Anchor" href="#g1中的string去重操作"></a> G1中的String去重操作</h1>
+<ul>
+<li>
+<p>背景：许多Java应用做的测试得出以下结果：</p>
 <ul>
 <li>堆存活数据集合里面String对象占了25%</li>
 <li>堆存活数据集合里面重复的String对象有13.5%</li>
 <li>String对象的平均长度是45</li>
 </ul>
 </li>
-<li><p>许多大规模的Java应用的瓶颈在于内存，测试表明在这些类型的应用里面，Java堆中存活的数据集合差不多25%是String对象。更进一步，这里面差不多一半String对象都是重复的，重复的意思是说：</p>
+<li>
+<p>许多大规模的Java应用的瓶颈在于内存，测试表明在这些类型的应用里面，Java堆中存活的数据集合差不多25%是String对象。更进一步，这里面差不多一半String对象都是重复的，重复的意思是说：</p>
 <p>string1.equals(string2) = true</p>
 <p>堆上存在重复的String对象必然是一种内存的浪费。这个项目将在G1垃圾收集器中实现自动持续对重复String对象进行去重，这样就能避免浪费内存</p>
 </li>
-<li><p>实现：</p>
+<li>
+<p>实现：</p>
 <ul>
 <li>当垃圾收集器工作的时候，会访问堆上存活的对象。对每一个访问的对象都会检查是否是候选的要去重的String对象</li>
 <li>如果是，把这个对象的一个引用插入到队列中等待后续的处理。一个去重的线程在后台运行，处理这个队列。处理队列的一个元素意味着从队列删除这个元素，然后尝试去重他引用的String对象</li>
@@ -318,7 +331,8 @@
 <li>如果查找失败，char数组会被插入到hashtable，这样以后就可以共享这个数组</li>
 </ul>
 </li>
-<li><p>命令行选项：</p>
+<li>
+<p>命令行选项：</p>
 <ul>
 <li>UseStringDeduplication (bool)：开启String去重，默认是不开启的，需要手动开启</li>
 <li>PrintStringDeduplicationStatistics (bool)：打印详细的去重统计信息</li>
